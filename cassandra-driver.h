@@ -4,6 +4,7 @@
 #include <string>
 #include <map>
 #include "cassandra-parser.h"
+#include "pomdp.h"
 
 // tell flex the prototype of the lexer
 #define YY_DECL \
@@ -13,11 +14,12 @@ YY_DECL;
 
 class CassDriver {
     protected:
-        float discount;
-        std::vector<std::tuple(int, int, int
+        POMDP* pomdp;
+        float discount_factor;
+        int weight_sign;
+
     public:
-        CassDriver();
-        virtual ~CassDriver();
+        CassDriver(POMDP*);
         int result;
 
         // Scan handling
@@ -39,13 +41,14 @@ class CassDriver {
                            float prob);
         void addWeight(ElemRef source, ElemRef action, ElemRef target,
                        ElemRef obs, float weight);
-        void addObsTransition(ElemRef source, ElemRef action, ElemRef obs,
+        void addObsTransition(ElemRef action, ElemRef target, ElemRef obs,
                               float prob);
         void setDiscount(float discount);
         void setWeightSign(int sign);
         void setStates(std::vector<std::string> states);
         void setActions(std::vector<std::string> actions);
         void setObservations(std::vector<std::string> observations);
+        void setInitialDist(std::vector<ElemRef> states);
 };
 
 #endif // CASS_DRIVER_H

@@ -1,10 +1,11 @@
 #include <iostream>
-#include "cassandra-driver.h"
+#include "pomdp.h"
 
 int main (int argc, char *argv[]) {
-    CassDriver driver;
     if (argc < 2)
         exit(1);
-    driver.parse(argv[1]);
+    POMDP p(argv[1]);
+    p.isValidMdp();
+    p.print(std::cout);
     exit(EXIT_SUCCESS);
 }

@@ -67,6 +67,7 @@ MINUS            "-"
 %type <float> prob number
 %type <std::vector<std::string>> ident_list state_tail action_tail
 %type <std::vector<std::string>> obs_param_tail
+%type <std::vector<ElemRef>> start_state_list
 %type <ElemRef> state paction obs
 
 %printer {
@@ -76,6 +77,14 @@ MINUS            "-"
         yyoutput << $$.back();
     }
 } <std::vector<std::string>>;
+%printer {
+    if (!$$.empty()) {
+        for (std::vector<ElemRef>::const_iterator i = $$.begin();
+                i != $$.end() - 1; ++i)
+            yyoutput << i->name << ",";
+        yyoutput << $$.back().name;
+    }
+} <std::vector<ElemRef>>;
 %printer { yyoutput << $$.name; } <ElemRef>;
 %printer { yyoutput << $$; } <*>;
 
@@ -128,15 +137,15 @@ obs_param_tail: INT { $$.resize($1); }
 | ident_list { std::swap($$, $1); }
 ;
 
-start_state:  START COLON u_matrix
-| START COLON STRING
-| START INCLUDE COLON start_state_list
-| START EXCLUDE COLON start_state_list
+start_state:  START COLON u_matrix { assert(false); }
+| START COLON STRING { assert(false); }
+| START INCLUDE COLON start_state_list { driver.setInitialDist($4); }
+| START EXCLUDE COLON start_state_list { assert(false); }
 | /* empty */
 ;
 
-start_state_list: start_state_list state
-| state
+start_state_list: start_state_list state { std::swap($$, $1); $$.push_back($2); }
+| state { $$.push_back($1); }
 ;
 
 param_list: param_list param_spec
@@ -162,7 +171,7 @@ obs_prob_spec: O COLON obs_spec_tail
 ;
 
 obs_spec_tail: paction COLON state COLON obs prob {
-    driver.addObsTransition($3, $1, $5, $6);
+    driver.addObsTransition($1, $3, $5, $6);
 }
 | paction COLON state u_matrix { assert(false); }
 | paction u_matrix { assert(false); }
@@ -215,8 +224,8 @@ ident_list: ident_list STRING { std::swap($$, $1); $$.push_back($2); }
 | STRING { $$.push_back($1); }
 ;
 
-prob: INT { $$ = $1; }
-| FLOAT { $$ = $1; }
+prob: INT { assert($1 <= 1 && $1 >= 0); $$ = $1; }
+| FLOAT { assert($1 <= 1.0 && $1 >= 0.0); $$ = $1; }
 ;
 
 number: optional_sign INT { $$ = $1 * $2; }
