@@ -12,6 +12,9 @@
 YY_DECL;
 
 class CassDriver {
+    protected:
+        float discount;
+        std::vector<std::tuple(int, int, int
     public:
         CassDriver();
         virtual ~CassDriver();
@@ -30,6 +33,19 @@ class CassDriver {
         // Error handling
         void error(const yy::location &l, const std::string &m);
         void error(const std::string &m);
+
+        // Building an MDP
+        void addTransition(ElemRef source, ElemRef action, ElemRef target,
+                           float prob);
+        void addWeight(ElemRef source, ElemRef action, ElemRef target,
+                       ElemRef obs, float weight);
+        void addObsTransition(ElemRef source, ElemRef action, ElemRef obs,
+                              float prob);
+        void setDiscount(float discount);
+        void setWeightSign(int sign);
+        void setStates(std::vector<std::string> states);
+        void setActions(std::vector<std::string> actions);
+        void setObservations(std::vector<std::string> observations);
 };
 
 #endif // CASS_DRIVER_H

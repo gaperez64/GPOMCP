@@ -1,5 +1,5 @@
 parser: cassandra-lexer.cpp cassandra-parser.cpp cassandra-driver.h \
-	cassandra-driver.cpp
+	cassandra-driver.cpp main.cpp
 	c++ cassandra-lexer.cpp cassandra-parser.cpp \
 		cassandra-driver.cpp main.cpp -o parser
 
