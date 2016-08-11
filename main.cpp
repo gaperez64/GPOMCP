@@ -8,7 +8,6 @@ int main (int argc, char *argv[]) {
     POMDP p(argv[1]);
     assert(p.isValidMdp());
     p.print(std::cout);
-    p.makeGameBeliefConstruction();
-    p.print(std::cout);
+    p.solveGameBeliefConstruction();
     exit(EXIT_SUCCESS);
 }

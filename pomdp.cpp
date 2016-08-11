@@ -5,6 +5,7 @@
 #include <set>
 #include <iostream>
 #include "pomdp.h"
+#include "dsgame.h"
 #include "cassandra-driver.h"
 
 POMDP::POMDP() : discount_factor(0.5) { }
@@ -24,6 +25,11 @@ POMDP::POMDP(std::vector<std::string> S,
              float D) :
     states(S), actions(A), observations(O), prob_delta(P), prob_obs(PO),
     weight(W), initial_dist(I), discount_factor(D) { }
+
+POMDP::POMDP(const POMDP &other) :
+    POMDP(other.states, other.actions, other.observations, other.prob_delta,
+          other.prob_obs, other.weight, other.initial_dist,
+          other.discount_factor) { }
 
 void POMDP::setStates(std::vector<std::string> S) {
     this->states = S;
@@ -295,6 +301,23 @@ std::vector<int> POMDP::post(std::vector<int> sources, int action) {
                 std::find(sources.begin(), sources.end(), s) != sources.end())
             result.push_back(t);
     }
+    return result;
+}
+
+std::vector<float> POMDP::solveGameBeliefConstruction() {
+    //this->makeGameBeliefConstruction();
+    this->print(std::cout);
+    Game g;
+    for (std::map<std::tuple<int, int, int>, float>::iterator i =
+            this->prob_delta.begin(); i != this->prob_delta.end(); ++i) {
+        int s, a, t;
+        std::tie(s, a, t) = i->first;
+        std::cout << this->weight[i->first] << std::endl;
+        g.addTransition(s, a, t, this->weight[i->first]);
+    }
+    std::vector<float> result = g.solveGame(this->discount_factor);
+    for (int i = 0; i < result.size(); i++)
+        std::cout << "DS(" << this->states[i] << ") = " << result[i] << std::endl;
     return result;
 }
 

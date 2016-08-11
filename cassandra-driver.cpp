@@ -64,10 +64,11 @@ void CassDriver::addWeight(ElemRef source, ElemRef action, ElemRef target,
 
     if (source.type == ELEMREFTYPE_ALL)
         for (int i = 0; i < this->pomdp->getStateCount(); i++)
-            addWeightHelper1(this->pomdp, i, action, target, weight);
+            addWeightHelper1(this->pomdp, i, action, target,
+                             weight * this->weight_sign);
     else
         addWeightHelper1(this->pomdp, this->pomdp->getStateId(source.name),
-                         action, target, weight);
+                         action, target, weight * this->weight_sign);
 }
 
 void CassDriver::addObsTransition(ElemRef action, ElemRef target, ElemRef obs,

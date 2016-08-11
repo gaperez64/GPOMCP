@@ -8,7 +8,7 @@
 #include <iostream>
 
 class POMDP {
-    private:
+    protected:
         std::vector<std::string> states;
         std::vector<std::string> actions;
         std::vector<std::string> observations;
@@ -17,6 +17,8 @@ class POMDP {
         std::map<std::tuple<int, int, int>, float> weight;
         std::map<int, float> initial_dist;
         float discount_factor;
+        // eventually, we will need some mapping from states to sets of states
+        // for when we make a subset construction
 
         std::map<std::string, int> state_id_cache;
         std::map<std::string, int> action_id_cache;
@@ -27,6 +29,7 @@ class POMDP {
 
     public:
         POMDP(const std::string&);
+        POMDP(const POMDP &other);
         POMDP(std::vector<std::string>,
               std::vector<std::string>,
               std::vector<std::string>,
@@ -48,6 +51,7 @@ class POMDP {
         bool hasObsWeights();
         bool hasInitialObs();
         void makeGameBeliefConstruction();
+        std::vector<float> solveGameBeliefConstruction();
         bool hasDetObs();
         void makeObsDet();
         float getDiscFactor();
