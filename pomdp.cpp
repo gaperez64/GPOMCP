@@ -305,7 +305,7 @@ std::vector<int> POMDP::post(std::vector<int> sources, int action) {
 }
 
 std::vector<float> POMDP::solveGameBeliefConstruction() {
-    //this->makeGameBeliefConstruction();
+    this->makeGameBeliefConstruction();
     this->print(std::cout);
     Game g;
     for (std::map<std::tuple<int, int, int>, float>::iterator i =
@@ -526,4 +526,10 @@ int POMDP::getObservationId(const std::string &name) {
 
 void POMDP::setInitialDist(std::map<int, float> dist) {
     this->initial_dist = dist;
+}
+
+// method to implement in order to interface with AI-Toolbox
+AIToolbox::POMDP::Model<AIToolbox::MDP::Model> makeModel() {
+    // for a sample implementation look at:
+    // https://github.com/Svalorzen/AI-Toolbox/blob/master/test/POMDP/Utils/TigerProblem.hpp
 }

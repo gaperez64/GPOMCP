@@ -4,8 +4,11 @@ parser: cassandra-lexer.cpp cassandra-parser.cpp cassandra-driver.h \
 	c++ -O3 -std=c++11 cassandra-lexer.cpp cassandra-parser.cpp \
 		cassandra-driver.cpp pomdp.cpp dsgame.cpp main.cpp \
 		-I/usr/local/include \
+		-I/usr/local/include/eigen3 \
+		-I/Users/gaperez/Dropbox/ULB/AI-Toolbox/include \
 		-L/usr/local/lib \
-		-lz3 -o parser
+		-L/Users/gaperez/Dropbox/ULB/AI-Toolbox/build \
+		-lz3 -lAIToolboxMdp -lAIToolboxPOMDP -o parser
 
 cassandra-lexer.cpp: cassandra-parser.h cassandra.l
 	flex --outfile=cassandra-lexer.cpp cassandra.l

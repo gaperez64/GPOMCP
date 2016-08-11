@@ -6,6 +6,8 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include "AIToolbox/MDP/Model.hpp"
+#include "AIToolbox/POMDP/Model.hpp"
 
 class POMDP {
     protected:
@@ -61,6 +63,9 @@ class POMDP {
         void setInitialDist(std::map<int, float>);
         void setDiscFactor(float);
         void print(std::ostream&);
+
+        // method to implement in order to interface with AI-Toolbox
+        AIToolbox::POMDP::Model<AIToolbox::MDP::Model> makeModel();
 };
 
 #endif // POMDP_H
