@@ -180,6 +180,32 @@ bool POMDP::hasObsWeights() {
     return true;
 }
 
+bool POMDP::hasInitialObs() {
+    std::vector<int> initial_obs;
+    for (std::map<int, float>::iterator I = this->initial_dist.begin();
+            I != this->initial_dist.end(); ++I)
+        initial_obs.push_back(I->first);
+    std::sort(initial_obs.begin(), initial_obs.end());
+
+    std::vector<std::vector<int> > same_obs_states;
+    same_obs_states.resize(this->observations.size());
+    for (std::map<std::tuple<int, int>, float>::iterator PO =
+            this->prob_obs.begin(); PO != this->prob_obs.end();
+            ++PO) {
+        int s, o;
+        std::tie(s, o) = PO->first;
+        if (PO->second > 0.0)
+            same_obs_states[o].push_back(s);
+    }
+
+    for (int i = 0; i < this->observations.size(); i++) {
+        std::sort(same_obs_states[i].begin(), same_obs_states[i].end());
+        if (same_obs_states[i] == initial_obs)
+            return true;
+    }
+    return false;
+}
+
 bool POMDP::hasDetObs() {
     for (std::map<std::tuple<int, int>, float>::iterator PO =
             this->prob_obs.begin(); PO != this->prob_obs.end();
@@ -259,9 +285,162 @@ void POMDP::makeObsDet() {
     std::swap(this->initial_dist, new_initial_dist);
 }
 
+std::vector<int> POMDP::post(std::vector<int> sources, int action) {
+    std::vector<int> result;
+    for (std::map<std::tuple<int, int, int>, float>::iterator i =
+            this->prob_delta.begin(); i != this->prob_delta.end(); ++i) {
+        int s, a, t;
+        std::tie(s, a, t) = i->first;
+        if (i->second > 0 && action == a &&
+                std::find(sources.begin(), sources.end(), s) != sources.end())
+            result.push_back(t);
+    }
+    return result;
+}
+
+void POMDP::makeGameBeliefConstruction() {
+    assert(this->hasObsWeights());
+    std::set<int> initial_states;
+    bool addInitialObs = !this->hasInitialObs();
+    if (addInitialObs)
+        this->observations.push_back("init");
+    for (std::map<int, float>::iterator I = this->initial_dist.begin();
+            I != this->initial_dist.end(); ++I) {
+        if (addInitialObs)
+            this->prob_obs[std::make_tuple(I->first,
+                                           this->observations.size() - 1)] =
+                1.0;
+        initial_states.insert(I->first);
+    }
+    // create a map from observations to their states
+    std::map<int, std::vector<int> > states_per_obs;
+    for (std::map<std::tuple<int, int>, float>::iterator i =
+            this->prob_obs.begin(); i != this->prob_obs.end(); ++i) {
+        int s, obs;
+        std::tie(s, obs) = i->first;
+        states_per_obs[obs].push_back(s);
+    }
+    // we will now add a new state for each subset of an observation,
+    // also, we'll create an observation per state and link them
+    std::vector<std::string> new_states;
+    std::vector<std::string> new_observations;
+    std::map<int, float> new_initial_dist;
+    std::map<std::tuple<int, int>, float> new_prob_obs;
+    int state_count = 0;
+    for (std::map<int, std::vector<int> >::iterator i =
+            states_per_obs.begin(); i != states_per_obs.end(); ++i) {
+        int n = i->second.size();
+        assert(n < 64); // because of the trick below
+        for (unsigned long j = 1; j < (1 << n); j++) {
+            bool is_initial = true;
+            std::string name;
+            name += "{";
+            for (int k = 0; k < i->second.size(); k++) {
+                unsigned long mask = 1 << k;
+                if ((j & mask) == mask) {
+                    name += " " + this->states[i->second[k]];
+                    if (initial_states.find(i->second[k]) ==
+                            initial_states.end())
+                        is_initial = false;
+                }
+            }
+            name += " } <= " + this->observations[i->first];
+            new_states.push_back(name);
+            new_observations.push_back(name);
+            new_prob_obs[std::make_tuple(state_count, state_count)] = 1.0;
+            if (is_initial)
+                new_initial_dist[state_count] = 1.0;
+            state_count++;
+        }
+    }
+    // create the new prob_delta and weight functions
+    std::map<std::tuple<int, int, int>, float> new_prob_delta;
+    std::map<std::tuple<int, int, int>, float> new_weight;
+    state_count = 0;
+    for (std::map<int, std::vector<int> >::iterator i =
+            states_per_obs.begin(); i != states_per_obs.end(); ++i) {
+        int n = i->second.size();
+        for (unsigned long j = 1; j < (1 << n); j++) {
+            std::vector<int> states;
+            for (int k = 0; k < i->second.size(); k++) {
+                unsigned long mask = 1 << k;
+                if ((j & mask) == mask)
+                    states.push_back(i->second[k]);
+            }
+            for (int action = 0; action < this->actions.size(); action++) {
+                std::vector<int> targets = this->post(states, action);
+                std::sort(targets.begin(), targets.end());
+                // now we have to find the observation subsets which match this
+                // set
+                int state_count2 = 0;
+                for (std::map<int, std::vector<int> >::iterator i2 =
+                        states_per_obs.begin(); i2 != states_per_obs.end(); ++i2) {
+                    int n2 = i2->second.size();
+                    std::sort(i2->second.begin(), i2->second.end());
+                    std::vector<int> intersection;
+                    std::set_intersection(targets.begin(), targets.end(),
+                                          i2->second.begin(), i2->second.end(),
+                                          std::back_inserter(intersection));
+                    for (unsigned long j2 = 1; j2 < (1 << n2); j2++) {
+                        std::vector<int> target_states;
+                        for (int k2 = 0; k2 < i2->second.size(); k2++) {
+                            unsigned long mask2 = 1 << k2;
+                            if ((j2 & mask2) == mask2)
+                                target_states.push_back(i2->second[k2]);
+                        }
+                        std::sort(target_states.begin(), target_states.end());
+                        if (intersection == target_states) {
+                            // we know that the set of targets in this
+                            // observation matches the target_state set,
+                            // now we need to add an observation-level
+                            // transition and weight it according to any of the
+                            // concrete transitions
+                            new_prob_delta[std::make_tuple(state_count,
+                                                           action,
+                                                           state_count2)] = 1.0;
+                            for (std::map<std::tuple<int,
+                                    int, int>, float>::iterator iw =
+                                    this->weight.begin();
+                                    iw != this->weight.end(); ++iw) {
+                                int s, a, t;
+                                std::tie(s, a ,t) = iw->first;
+                                if (a == action &&
+                                        std::find(
+                                            states.begin(),
+                                            states.end(),
+                                            s) != states.end() &&
+                                        std::find(
+                                            target_states.begin(),
+                                            target_states.end(),
+                                            t) != states.end()) {
+                                    new_weight[std::make_tuple(state_count,
+                                                               a,
+                                                               state_count2)] =
+                                        this->weight[std::make_tuple(s, a ,t)];
+                                    break;
+                                }
+                            }
+                        }
+                        state_count2++;
+                    }
+                }
+            }
+            state_count++;
+        }
+    }
+    // update all the internal variables
+    std::swap(this->states, new_states);
+    // actions stay the same
+    std::swap(this->observations, new_observations);
+    std::swap(this->prob_delta, new_prob_delta);
+    std::swap(this->prob_obs, new_prob_obs);
+    std::swap(this->weight, new_weight);
+    std::swap(this->initial_dist, new_initial_dist);
+}
+
 void POMDP::print(std::ostream &o) {
     o << "Discount factor: " << this->discount_factor << std::endl;
-    o << "States: " << std::endl;
+    o << this->states.size() << " States: " << std::endl;
     for (std::vector<std::string>::iterator i = this->states.begin();
             i != this->states.end(); ++i)
         o << *i << std::endl;
@@ -269,11 +448,11 @@ void POMDP::print(std::ostream &o) {
     for (std::map<int, float>::iterator i = this->initial_dist.begin();
             i != this->initial_dist.end(); ++i)
         o << this->states[i->first] << " with prob " << i->second << std::endl;
-    o << "Actions: " << std::endl;
+    o << this->actions.size() << " Actions: " << std::endl;
     for (std::vector<std::string>::iterator i = this->actions.begin();
             i != this->actions.end(); ++i)
         o << *i << std::endl;
-    o << "Observations: " << std::endl;
+    o << this->observations.size() << " Observations: " << std::endl;
     for (std::vector<std::string>::iterator i = this->observations.begin();
             i != this->observations.end(); ++i)
         o << *i << std::endl;
@@ -285,7 +464,7 @@ void POMDP::print(std::ostream &o) {
         o << this->states[s] << " observed as "
           << this->observations[obs] << " with prob " << i->second << std::endl;
     }
-    o << "Transitions: " << std::endl;
+    o << this->prob_delta.size() << " Transitions: " << std::endl;
     for (std::map<std::tuple<int, int, int>, float>::iterator i =
             this->prob_delta.begin(); i != this->prob_delta.end(); ++i) {
         int s, a, t;

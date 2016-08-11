@@ -1,7 +1,7 @@
 parser: cassandra-lexer.cpp cassandra-parser.cpp cassandra-driver.h \
-	cassandra-driver.cpp main.cpp
-	c++ cassandra-lexer.cpp cassandra-parser.cpp \
-		cassandra-driver.cpp main.cpp -o parser
+	cassandra-driver.cpp main.cpp pomdp.h pomdp.cpp cassandra-parser.h
+	c++ -O3 -std=c++11 cassandra-lexer.cpp cassandra-parser.cpp \
+		cassandra-driver.cpp pomdp.cpp main.cpp -o parser
 
 cassandra-lexer.cpp: cassandra-parser.h cassandra.l
 	flex --outfile=cassandra-lexer.cpp cassandra.l

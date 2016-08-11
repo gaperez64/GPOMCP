@@ -23,6 +23,7 @@ class POMDP {
         std::map<std::string, int> observation_id_cache;
 
         POMDP();
+        std::vector<int> post(std::vector<int>, int);
 
     public:
         POMDP(const std::string&);
@@ -45,6 +46,8 @@ class POMDP {
         void weightTransition(int, int, int, float);
         bool isValidMdp();
         bool hasObsWeights();
+        bool hasInitialObs();
+        void makeGameBeliefConstruction();
         bool hasDetObs();
         void makeObsDet();
         float getDiscFactor();
