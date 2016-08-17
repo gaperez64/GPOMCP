@@ -125,6 +125,7 @@ std::vector<float> Game::solveGame(float discount_factor){
         s.add(ds(*it) == fold(max, state_expressions));
     }
     // we now add partial order information to help the SMT solver
+    int opt_count = 0;
     if (this->partial_orders.size() > 0) {
         for (std::vector<std::vector<int> >::iterator i =
                 this->partial_orders.begin(); i != this->partial_orders.end(); ++i) {
@@ -135,9 +136,11 @@ std::vector<float> Game::solveGame(float discount_factor){
                     j != order.end(); ++j) {
                 s.add(ds(*j) >= ds(prev));
                 prev = *j;
+                opt_count++;
             }
         }
     }
+    std::cout << "Added " << opt_count << " additional inequalities" << std::endl;
     
     std::cout << "Equations : " << std::endl << s << "\n";
     assert(s.check() == sat);

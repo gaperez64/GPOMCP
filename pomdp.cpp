@@ -330,28 +330,24 @@ std::vector<float> POMDP::solveGameBeliefConstruction() {
         for (std::vector<std::vector<int> >::iterator order = order_vectors.begin();
                 order != order_vectors.end(); ++order) {
             std::vector<int> head_vector;
+            std::vector<int> tail_vector;
             int to;
             std::tie(head_vector, to) =
-                this->inv_states_id[*(order->begin())];
+                this->inv_states_id[order->front()];
             std::sort(head_vector.begin(), head_vector.end());
-            if (std::includes(head_vector.begin(), head_vector.end(),
+            if (std::includes(states.begin(), states.end(),
+                              head_vector.begin(), head_vector.end())) {
+                order->insert(order->begin(), i->second);
+                found = true;
+                break;
+            }
+            std::tie(tail_vector, to) =
+                this->inv_states_id[order->back()];
+            std::sort(tail_vector.begin(), tail_vector.end());
+            if (std::includes(tail_vector.begin(), tail_vector.end(),
                               states.begin(), states.end())) {
-                for (std::vector<int>::iterator s = order->begin() + 1;
-                         s != order->end(); ++s) {
-                    std::vector<int> subset;
-                    int trash_obs;
-                    std::cout << "retrieving the subset and obs of id: "
-                              << *s << std::endl;
-                    std::tie(subset, trash_obs) = this->inv_states_id[*s];
-                    std::cout << "retrieval succeeded" << std::endl;
-                    std::sort(subset.begin(), subset.end());
-                    if (!std::includes(subset.begin(), subset.end(),
-                                       states.begin(), states.end())) {
-                        order->insert(s, i->second);
-                        found = true;
-                        break;
-                    }
-                }
+                order->push_back(i->second);
+                found = true;
                 break;
             }
         }
@@ -364,6 +360,11 @@ std::vector<float> POMDP::solveGameBeliefConstruction() {
     for (int i = 0; i < order_vectors.size(); i++) {
         if (order_vectors[i].size() >= 2) {
             g.addOrderVector(order_vectors[i]);
+            std::cout << "Order vector:" << std::endl;
+            for (int j = 0; j < order_vectors[i].size(); j++) {
+                std::cout << this->states[order_vectors[i][j]] << " => ";
+            }
+            std::cout << std::endl;
         }
     }
     std::cout << "Calling solver!" << std::endl;
