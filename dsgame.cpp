@@ -4,6 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <sstream>
 #include "z3++.h"
 #include "dsgame.h"
 
@@ -34,6 +35,10 @@ void Game::addTransition(Transition t) {
 
 void Game::addTransition(int s, int a, int d, float w) {
     addTransition(Transition(s, a, d, w));
+}
+
+void Game::addOrderVector(std::vector<int> order) {
+    this->partial_orders.push_back(order);
 }
 
 std::set<int> Game::getStates() {
@@ -119,16 +124,33 @@ std::vector<float> Game::solveGame(float discount_factor){
 
         s.add(ds(*it) == fold(max, state_expressions));
     }
+    // we now add partial order information to help the SMT solver
+    if (this->partial_orders.size() > 0) {
+        for (std::vector<std::vector<int> >::iterator i =
+                this->partial_orders.begin(); i != this->partial_orders.end(); ++i) {
+            std::vector<int> &order = *i;
+            assert(order.size() >= 2);
+            int prev = *(order.begin());
+            for (std::vector<int>::iterator j = order.begin() + 1;
+                    j != order.end(); ++j) {
+                s.add(ds(*j) >= ds(prev));
+                prev = *j;
+            }
+        }
+    }
     
     std::cout << "Equations : " << std::endl << s << "\n";
     assert(s.check() == sat);
 
     model m = s.get_model();
+    //std::cout << "Model: " << std::endl << m << std::endl;
 
     set_param("pp.decimal", true);
     std::vector<float> result(states.size());
     for (std::set<int>::iterator it = states.begin(); it!= states.end(); ++it) {
-        result[*it] = m.eval(ds(*it));
+        std::stringstream ss;
+        ss << m.eval(ds(*it));
+        result[*it] = std::stof(ss.str());
     }
     return result;        
 }

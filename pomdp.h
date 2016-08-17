@@ -19,8 +19,10 @@ class POMDP {
         std::map<std::tuple<int, int, int>, float> weight;
         std::map<int, float> initial_dist;
         float discount_factor;
-        // eventually, we will need some mapping from states to sets of states
+        // mapping from states to sets of states
         // for when we make a subset construction
+        std::map<std::tuple<std::vector<int>, int>, int> states_id;
+        std::vector<std::tuple<std::vector<int>, int> > inv_states_id;
 
         std::map<std::string, int> state_id_cache;
         std::map<std::string, int> action_id_cache;

@@ -308,13 +308,66 @@ std::vector<float> POMDP::solveGameBeliefConstruction() {
     this->makeGameBeliefConstruction();
     this->print(std::cout);
     Game g;
+    // add all transitions to game
     for (std::map<std::tuple<int, int, int>, float>::iterator i =
             this->prob_delta.begin(); i != this->prob_delta.end(); ++i) {
         int s, a, t;
         std::tie(s, a, t) = i->first;
-        std::cout << this->weight[i->first] << std::endl;
         g.addTransition(s, a, t, this->weight[i->first]);
     }
+    // provide some extra information about subsets being related
+    std::vector<std::vector<int> > order_vectors;
+    for (std::map<std::tuple<std::vector<int>, int>, int>::iterator i =
+            this->states_id.begin(); i != this->states_id.end(); ++i) {
+        std::vector<int> states;
+        int obs;
+        std::tie(states, obs) = i->first;
+        // ignore the -1 observation
+        if (obs == -1)
+            continue;
+        std::sort(states.begin(), states.end());
+        bool found = false;
+        for (std::vector<std::vector<int> >::iterator order = order_vectors.begin();
+                order != order_vectors.end(); ++order) {
+            std::vector<int> head_vector;
+            int to;
+            std::tie(head_vector, to) =
+                this->inv_states_id[*(order->begin())];
+            std::sort(head_vector.begin(), head_vector.end());
+            if (std::includes(head_vector.begin(), head_vector.end(),
+                              states.begin(), states.end())) {
+                for (std::vector<int>::iterator s = order->begin() + 1;
+                         s != order->end(); ++s) {
+                    std::vector<int> subset;
+                    int trash_obs;
+                    std::cout << "retrieving the subset and obs of id: "
+                              << *s << std::endl;
+                    std::tie(subset, trash_obs) = this->inv_states_id[*s];
+                    std::cout << "retrieval succeeded" << std::endl;
+                    std::sort(subset.begin(), subset.end());
+                    if (!std::includes(subset.begin(), subset.end(),
+                                       states.begin(), states.end())) {
+                        order->insert(s, i->second);
+                        found = true;
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+        if (!found) {
+            std::vector<int> temp;
+            temp.push_back(i->second);
+            order_vectors.push_back(temp);
+        }
+    }
+    for (int i = 0; i < order_vectors.size(); i++) {
+        if (order_vectors[i].size() >= 2) {
+            g.addOrderVector(order_vectors[i]);
+        }
+    }
+    std::cout << "Calling solver!" << std::endl;
+    // we now call the solver
     std::vector<float> result = g.solveGame(this->discount_factor);
     for (int i = 0; i < result.size(); i++)
         std::cout << "DS(" << this->states[i] << ") = " << result[i] << std::endl;
@@ -323,18 +376,16 @@ std::vector<float> POMDP::solveGameBeliefConstruction() {
 
 void POMDP::makeGameBeliefConstruction() {
     assert(this->hasObsWeights());
-    std::set<int> initial_states;
-    bool addInitialObs = !this->hasInitialObs();
-    if (addInitialObs)
-        this->observations.push_back("init");
+    std::vector<int> initial_states;
+    std::string initial_states_name;
+    initial_states_name += "{";
     for (std::map<int, float>::iterator I = this->initial_dist.begin();
             I != this->initial_dist.end(); ++I) {
-        if (addInitialObs)
-            this->prob_obs[std::make_tuple(I->first,
-                                           this->observations.size() - 1)] =
-                1.0;
-        initial_states.insert(I->first);
+        initial_states.push_back(I->first);
+        initial_states_name += " " + this->states[I->first];
     }
+    std::sort(initial_states.begin(), initial_states.end());
+    initial_states_name += " } <= init";
     // create a map from observations to their states
     std::map<int, std::vector<int> > states_per_obs;
     for (std::map<std::tuple<int, int>, float>::iterator i =
@@ -343,113 +394,109 @@ void POMDP::makeGameBeliefConstruction() {
         std::tie(s, obs) = i->first;
         states_per_obs[obs].push_back(s);
     }
+    for (std::map<int, std::vector<int> >::iterator spo =
+            states_per_obs.begin(); spo != states_per_obs.end();
+            ++spo)
+        std::sort(spo->second.begin(), spo->second.end());
     // we will now add a new state for each subset of an observation,
     // also, we'll create an observation per state and link them
+    int state_count = 0;
     std::vector<std::string> new_states;
     std::vector<std::string> new_observations;
+    // we keep track of the fact a new state = (list of states, obs)
+    std::map<std::tuple<std::vector<int>, int>, int> new_states_id;
+    std::vector<std::tuple<std::vector<int>, int> > inv_new_states_id;
     std::map<int, float> new_initial_dist;
     std::map<std::tuple<int, int>, float> new_prob_obs;
-    int state_count = 0;
-    for (std::map<int, std::vector<int> >::iterator i =
-            states_per_obs.begin(); i != states_per_obs.end(); ++i) {
-        int n = i->second.size();
-        assert(n < 64); // because of the trick below
-        for (unsigned long j = 1; j < (1 << n); j++) {
-            bool is_initial = true;
-            std::string name;
-            name += "{";
-            for (int k = 0; k < i->second.size(); k++) {
-                unsigned long mask = 1 << k;
-                if ((j & mask) == mask) {
-                    name += " " + this->states[i->second[k]];
-                    if (initial_states.find(i->second[k]) ==
-                            initial_states.end())
-                        is_initial = false;
-                }
-            }
-            name += " } <= " + this->observations[i->first];
-            new_states.push_back(name);
-            new_observations.push_back(name);
-            new_prob_obs[std::make_tuple(state_count, state_count)] = 1.0;
-            if (is_initial)
-                new_initial_dist[state_count] = 1.0;
-            state_count++;
-        }
-    }
-    // create the new prob_delta and weight functions
+    // first, we add the initial state
+    new_states.push_back(initial_states_name);
+    new_observations.push_back(initial_states_name);
+    new_initial_dist[state_count] = 1.0;
+    new_prob_obs[std::make_tuple(state_count, state_count)] = 1.0;
+    // we call the initial obs -1 because... it is not a real obs
+    new_states_id[std::make_tuple(initial_states, -1)] = state_count;
+    inv_new_states_id.push_back(std::make_tuple(initial_states, -1));
+    state_count++;
+    assert(inv_new_states_id.size() == state_count);
+    // we now add subsets by doing a DFS on the belief game
     std::map<std::tuple<int, int, int>, float> new_prob_delta;
     std::map<std::tuple<int, int, int>, float> new_weight;
-    state_count = 0;
-    for (std::map<int, std::vector<int> >::iterator i =
-            states_per_obs.begin(); i != states_per_obs.end(); ++i) {
-        int n = i->second.size();
-        for (unsigned long j = 1; j < (1 << n); j++) {
-            std::vector<int> states;
-            for (int k = 0; k < i->second.size(); k++) {
-                unsigned long mask = 1 << k;
-                if ((j & mask) == mask)
-                    states.push_back(i->second[k]);
-            }
-            for (int action = 0; action < this->actions.size(); action++) {
-                std::vector<int> targets = this->post(states, action);
-                std::sort(targets.begin(), targets.end());
-                // now we have to find the observation subsets which match this
-                // set
-                int state_count2 = 0;
-                for (std::map<int, std::vector<int> >::iterator i2 =
-                        states_per_obs.begin(); i2 != states_per_obs.end(); ++i2) {
-                    int n2 = i2->second.size();
-                    std::sort(i2->second.begin(), i2->second.end());
-                    std::vector<int> intersection;
-                    std::set_intersection(targets.begin(), targets.end(),
-                                          i2->second.begin(), i2->second.end(),
-                                          std::back_inserter(intersection));
-                    for (unsigned long j2 = 1; j2 < (1 << n2); j2++) {
-                        std::vector<int> target_states;
-                        for (int k2 = 0; k2 < i2->second.size(); k2++) {
-                            unsigned long mask2 = 1 << k2;
-                            if ((j2 & mask2) == mask2)
-                                target_states.push_back(i2->second[k2]);
-                        }
-                        std::sort(target_states.begin(), target_states.end());
-                        if (intersection == target_states) {
-                            // we know that the set of targets in this
-                            // observation matches the target_state set,
-                            // now we need to add an observation-level
-                            // transition and weight it according to any of the
-                            // concrete transitions
-                            new_prob_delta[std::make_tuple(state_count,
-                                                           action,
-                                                           state_count2)] = 1.0;
-                            for (std::map<std::tuple<int,
-                                    int, int>, float>::iterator iw =
-                                    this->weight.begin();
-                                    iw != this->weight.end(); ++iw) {
-                                int s, a, t;
-                                std::tie(s, a ,t) = iw->first;
-                                if (a == action &&
-                                        std::find(
-                                            states.begin(),
-                                            states.end(),
-                                            s) != states.end() &&
-                                        std::find(
-                                            target_states.begin(),
-                                            target_states.end(),
-                                            t) != states.end()) {
-                                    new_weight[std::make_tuple(state_count,
-                                                               a,
-                                                               state_count2)] =
-                                        this->weight[std::make_tuple(s, a ,t)];
-                                    break;
-                                }
-                            }
-                        }
-                        state_count2++;
+    std::set<int> to_process;
+    to_process.insert(0); // adding the initial state
+    while (!to_process.empty()) {
+        int current_new_state = *(to_process.begin());
+        std::vector<int> current_states;
+        int obs;
+        std::tie(current_states, obs) = inv_new_states_id[current_new_state];
+        for (int action = 0; action < this->actions.size(); action++) {
+            std::vector<int> target_states = this->post(current_states, action);
+            // it might be that the state does not have an action-successor
+            if (target_states.size() == 0)
+                continue;
+            std::sort(target_states.begin(), target_states.end());
+            for (std::map<int, std::vector<int> >::iterator spo =
+                    states_per_obs.begin(); spo != states_per_obs.end();
+                    ++spo) {
+                std::vector<int> intersection;
+                std::set_intersection(target_states.begin(),
+                                      target_states.end(),
+                                      spo->second.begin(), spo->second.end(),
+                                      std::back_inserter(intersection));
+                // if there is no action-successor in this obs, we continue
+                if (intersection.size() == 0)
+                    continue;
+                std::map<std::tuple<std::vector<int>, int>, int>::iterator
+                    found_key = new_states_id.find(
+                            std::make_tuple(intersection, spo->first));
+                int new_target;
+                if (found_key == new_states_id.end()) { // does the new target exist?
+                    std::string name;
+                    name += "{";
+                    for (std::vector<int>::iterator j = intersection.begin();
+                            j != intersection.end(); ++j) 
+                        name += " " + this->states[*j];
+                    name += " } <= " + this->observations[spo->first];
+                    new_states.push_back(name);
+                    new_observations.push_back(name);
+                    new_prob_obs[std::make_tuple(state_count, state_count)] = 1.0;
+                    new_states_id[(std::make_tuple(intersection,
+                                                   spo->first))] = state_count;
+                    inv_new_states_id.push_back(std::make_tuple(intersection,
+                                                                spo->first));
+                    // recall that this is the id of the req. new state
+                    new_target = state_count;
+                    to_process.insert(state_count);
+                    state_count++;
+                    assert(inv_new_states_id.size() == state_count);
+                } else
+                    new_target = found_key->second;
+                new_prob_delta[std::make_tuple(current_new_state,
+                                               action,
+                                               new_target)] = 1.0;
+                for (std::map<std::tuple<int,
+                        int, int>, float>::iterator iw =
+                        this->weight.begin();
+                        iw != this->weight.end(); ++iw) {
+                    int s, a, t;
+                    std::tie(s, a ,t) = iw->first;
+                    if (a == action &&
+                            std::find(
+                                current_states.begin(),
+                                current_states.end(),
+                                s) != current_states.end() &&
+                            std::find(
+                                target_states.begin(),
+                                target_states.end(),
+                                t) != target_states.end()) {
+                        new_weight[std::make_tuple(current_new_state, a,
+                                                   new_target)] =
+                            this->weight[std::make_tuple(s, a ,t)];
+                        break;
                     }
                 }
             }
-            state_count++;
         }
+        to_process.erase(current_new_state);        
     }
     // update all the internal variables
     std::swap(this->states, new_states);
@@ -459,6 +506,9 @@ void POMDP::makeGameBeliefConstruction() {
     std::swap(this->prob_obs, new_prob_obs);
     std::swap(this->weight, new_weight);
     std::swap(this->initial_dist, new_initial_dist);
+    // update mappings for subset constructions
+    std::swap(this->states_id, new_states_id);
+    std::swap(this->inv_states_id, inv_new_states_id);
 }
 
 void POMDP::print(std::ostream &o) {
