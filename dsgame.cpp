@@ -1,3 +1,4 @@
+#include <cmath>
 #include <vector>
 #include <set>
 #include <list>
@@ -31,6 +32,8 @@ void Game::addTransition(Transition t) {
     int a = t.getAction();
     succ[s].resize(a + 1);
     succ[s][a].push_back(t);
+    if (std::abs(t.getWeight()) > this->biggest_weight)
+        this->biggest_weight = std::abs(t.getWeight());
 }
 
 void Game::addTransition(int s, int a, int d, float w) {
@@ -81,7 +84,7 @@ expr disj(std::list<expr> e){
     return res;
 }
 
-std::vector<float> Game::solveGame(float discount_factor){
+std::vector<float> Game::solveGameSMT(float discount_factor) {
     char float_str [100];
 
     context c;
@@ -150,10 +153,106 @@ std::vector<float> Game::solveGame(float discount_factor){
 
     set_param("pp.decimal", true);
     std::vector<float> result(states.size());
-    for (std::set<int>::iterator it = states.begin(); it!= states.end(); ++it) {
+    for (std::set<int>::iterator it = states.begin(); it != states.end(); ++it) {
         std::stringstream ss;
         ss << m.eval(ds(*it));
         result[*it] = std::stof(ss.str());
     }
     return result;        
+}
+
+long gcd(long a, long b) {
+    if (a == 0)
+        return b;
+    else if (b == 0)
+        return a;
+
+    if (a < b)
+        return gcd(a, b % a);
+    else
+        return gcd(b, a % b);
+}
+
+std::tuple<long, long> toFraction(float input) {
+    assert(input < 1);
+    float frac = input;
+
+    const long precision = 1000000000; // This is the accuracy.
+
+    long gcd_ = gcd(frac * precision, precision);
+
+    long denominator = precision / gcd_;
+    long numerator = (frac * precision) / gcd_;
+    return std::make_tuple(numerator, denominator);
+
+}
+
+std::vector<float> Game::solveGameValIter(float discount_factor) {
+    std::set<int> states = this->getStates();
+    long numerator, denominator;
+    std::tie(numerator, denominator) = toFraction(discount_factor);
+    float temp = 1.0;
+    for (int i = 0; i < states.size(); i++)
+        temp *= (std::pow(denominator, i) - std::pow(numerator, i));
+    float D = temp * std::pow(denominator, states.size());
+    float I = 2 + (std::log(this->biggest_weight) / std::log(2))
+                + (std::log(denominator) / std::log(2))
+                * ((states.size() * (states.size() + 3)) / 2)
+                * -1
+                * (std::log(2) / std::log(discount_factor));
+    long ITER = std::ceil(I);
+    std::cout << "Value iteration requires "
+              << ITER
+              << " iterations" << std::endl;
+        
+    std::vector<float> value(states.size(), 0.0);
+
+    bool converged = false;
+    for (long i = 0; i < ITER; i++) {
+        converged = true;
+        for (std::set<int>::iterator it = states.begin(); it != states.end(); ++it) {
+            std::set<int> actions = this->availableActions(*it);
+            std::vector<float> s_values;
+            for (std::set<int>::iterator ait = actions.begin();
+                    ait != actions.end(); ++ait) {
+                std::list<Transition> successors = this->post(*it, *ait);
+                std::vector<float> sa_values;
+                for (std::list<Transition>::iterator sit = successors.begin();
+                        sit != successors.end(); ++sit)
+                    sa_values.push_back(sit->getWeight()
+                                        + discount_factor * value[sit->getDest()]);
+                s_values.push_back(*std::min_element(sa_values.begin(),
+                                                     sa_values.end()));
+            }
+            float new_value = *std::max_element(s_values.begin(),
+                                                s_values.end());
+            if (new_value != value[*it]) {
+                converged = false;
+                value[*it] = new_value;
+            }
+        }
+        if (converged) {
+            std::cout << "Early exit because of convergence at interation "
+                      << i << std::endl;
+            break;
+        }
+
+        if ((i + 1) % 10 == 0)
+            std::cout << "Iteration No.: "
+                      << i << std::endl;
+    }
+    if (!converged)
+        for (int i = 0; i < value.size(); i++)
+            value[i] = (D * value[i] + 0.5) / D;
+    return value;
+}
+
+std::vector<float> Game::solveGame(float discount_factor) {
+    std::vector<float> sol1 = solveGameValIter(discount_factor);
+    //std::vector<float> sol2 = solveGameSMT(discount_factor);
+    //for (int i = 0; i < sol1.size(); i++)
+    //    if (sol1[i] != sol2[i])
+    //        std::cout << sol1[i] << " != " << sol2[i] << std::endl;
+    //assert(sol1 == sol2);
+    return sol1;
 }

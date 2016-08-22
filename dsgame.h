@@ -17,10 +17,12 @@ class Transition {
 };
 
 class Game {
-    std::vector<std::vector<std::list<Transition> > > succ;
-    // each vector here tells us that all states j > i will have
-    // a higher value than state i
-    std::vector<std::vector<int> > partial_orders;
+    protected:
+        std::vector<std::vector<std::list<Transition> > > succ;
+        // each vector here tells us that all states j > i will have
+        // a higher value than state i
+        std::vector<std::vector<int> > partial_orders;
+        float biggest_weight;
 
     public:
         void addTransition(Transition t);
@@ -29,5 +31,7 @@ class Game {
         std::set<int> getStates();
         std::set<int> availableActions(int state);
         std::list<Transition> post(int state, int action);
+        std::vector<float> solveGameSMT(float);
+        std::vector<float> solveGameValIter(float);
         std::vector<float> solveGame(float);
 };
