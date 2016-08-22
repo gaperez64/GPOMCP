@@ -1,0 +1,896 @@
+Discount factor: 0.95
+51 States: 
+absorb
+goal
+goal2
+s1x1xS
+s1x1xE
+s1x1xW
+s1x1xN
+s1x2xS
+s1x2xE
+s1x2xW
+s1x2xN
+s1x3xS
+s1x3xE
+s1x3xW
+s1x3xN
+s1x4xS
+s1x4xE
+s1x4xW
+s1x4xN
+s2x2xS
+s2x2xE
+s2x2xW
+s2x2xN
+s2x3xS
+s2x3xE
+s2x3xW
+s2x3xN
+s3x1xS
+s3x1xE
+s3x1xW
+s3x1xN
+s3x2xS
+s3x2xE
+s3x2xW
+s3x2xN
+s3x3xS
+s3x3xE
+s3x3xW
+s3x3xN
+s3x4xS
+s3x4xE
+s3x4xW
+s3x4xN
+s4x2xS
+s4x2xE
+s4x2xW
+s4x2xN
+s4x3xS
+s4x3xE
+s4x3xW
+s4x3xN
+Initial distribution: 
+s1x2xS with prob 0.25
+s1x3xS with prob 0.25
+s2x2xS with prob 0.25
+s2x3xS with prob 0.25
+3 Actions: 
+f
+l
+r
+16 Observations: 
+flRb
+Oabs
+Flrb
+fLrb
+FlRb
+FlRB
+fLrB
+fLRB
+flRB
+FLrB
+FLrb
+Ogoal2
+flrb
+flrB
+FLRb
+Ogoal
+State-observation mapping: 
+absorb observed as Oabs with prob 1
+goal observed as Ogoal with prob 1
+goal2 observed as Ogoal2 with prob 1
+s1x1xS observed as FlRB with prob 1
+s1x1xE observed as fLRB with prob 1
+s1x1xW observed as FLRb with prob 1
+s1x1xN observed as FLrB with prob 1
+s1x2xS observed as flrB with prob 1
+s1x2xE observed as fLrb with prob 1
+s1x2xW observed as flRb with prob 1
+s1x2xN observed as Flrb with prob 1
+s1x3xS observed as flrB with prob 1
+s1x3xE observed as fLrb with prob 1
+s1x3xW observed as flRb with prob 1
+s1x3xN observed as Flrb with prob 1
+s1x4xS observed as FLrB with prob 1
+s1x4xE observed as FLRb with prob 1
+s1x4xW observed as fLRB with prob 1
+s1x4xN observed as FlRB with prob 1
+s2x2xS observed as flRb with prob 1
+s2x2xE observed as flrB with prob 1
+s2x2xW observed as Flrb with prob 1
+s2x2xN observed as fLrb with prob 1
+s2x3xS observed as fLrb with prob 1
+s2x3xE observed as Flrb with prob 1
+s2x3xW observed as flrB with prob 1
+s2x3xN observed as flRb with prob 1
+s3x1xS observed as FlRB with prob 1
+s3x1xE observed as fLRB with prob 1
+s3x1xW observed as FLRb with prob 1
+s3x1xN observed as FLrB with prob 1
+s3x2xS observed as flrb with prob 1
+s3x2xE observed as flrb with prob 1
+s3x2xW observed as flrb with prob 1
+s3x2xN observed as flrb with prob 1
+s3x3xS observed as flrb with prob 1
+s3x3xE observed as flrb with prob 1
+s3x3xW observed as flrb with prob 1
+s3x3xN observed as flrb with prob 1
+s3x4xS observed as FLrB with prob 1
+s3x4xE observed as FLRb with prob 1
+s3x4xW observed as fLRB with prob 1
+s3x4xN observed as FlRB with prob 1
+s4x2xS observed as FlRb with prob 1
+s4x2xE observed as flRB with prob 1
+s4x2xW observed as FLrb with prob 1
+s4x2xN observed as fLrB with prob 1
+s4x3xS observed as FLrb with prob 1
+s4x3xE observed as FlRb with prob 1
+s4x3xW observed as fLrB with prob 1
+s4x3xN observed as flRB with prob 1
+153 Transitions: 
+(absorb,f,absorb) with prob 1 and weight 0
+(absorb,l,absorb) with prob 1 and weight 0
+(absorb,r,absorb) with prob 1 and weight 0
+(goal,f,goal2) with prob 1 and weight 10000
+(goal,l,goal2) with prob 1 and weight 10000
+(goal,r,goal2) with prob 1 and weight 10000
+(goal2,f,goal2) with prob 1 and weight 0
+(goal2,l,goal2) with prob 1 and weight 0
+(goal2,r,goal2) with prob 1 and weight 0
+(s1x1xS,f,absorb) with prob 1 and weight 0
+(s1x1xS,l,s1x1xE) with prob 1 and weight 0
+(s1x1xS,r,s1x1xW) with prob 1 and weight 0
+(s1x1xE,f,s1x2xE) with prob 1 and weight 0
+(s1x1xE,l,s1x1xN) with prob 1 and weight 0
+(s1x1xE,r,s1x1xS) with prob 1 and weight 0
+(s1x1xW,f,absorb) with prob 1 and weight 0
+(s1x1xW,l,s1x1xS) with prob 1 and weight 0
+(s1x1xW,r,s1x1xN) with prob 1 and weight 0
+(s1x1xN,f,absorb) with prob 1 and weight 0
+(s1x1xN,l,s1x1xW) with prob 1 and weight 0
+(s1x1xN,r,s1x1xE) with prob 1 and weight 0
+(s1x2xS,f,s2x2xS) with prob 1 and weight 0
+(s1x2xS,l,s1x2xE) with prob 1 and weight 0
+(s1x2xS,r,s1x2xW) with prob 1 and weight 0
+(s1x2xE,f,s1x3xE) with prob 1 and weight 0
+(s1x2xE,l,s1x2xN) with prob 1 and weight 0
+(s1x2xE,r,s1x2xS) with prob 1 and weight 0
+(s1x2xW,f,s1x1xW) with prob 1 and weight 0
+(s1x2xW,l,s1x2xS) with prob 1 and weight 0
+(s1x2xW,r,s1x2xN) with prob 1 and weight 0
+(s1x2xN,f,absorb) with prob 1 and weight 0
+(s1x2xN,l,s1x2xW) with prob 1 and weight 0
+(s1x2xN,r,s1x2xE) with prob 1 and weight 0
+(s1x3xS,f,s2x3xS) with prob 1 and weight 0
+(s1x3xS,l,s1x3xE) with prob 1 and weight 0
+(s1x3xS,r,s1x3xW) with prob 1 and weight 0
+(s1x3xE,f,s1x4xE) with prob 1 and weight 0
+(s1x3xE,l,s1x3xN) with prob 1 and weight 0
+(s1x3xE,r,s1x3xS) with prob 1 and weight 0
+(s1x3xW,f,s1x2xW) with prob 1 and weight 0
+(s1x3xW,l,s1x3xS) with prob 1 and weight 0
+(s1x3xW,r,s1x3xN) with prob 1 and weight 0
+(s1x3xN,f,absorb) with prob 1 and weight 0
+(s1x3xN,l,s1x3xW) with prob 1 and weight 0
+(s1x3xN,r,s1x3xE) with prob 1 and weight 0
+(s1x4xS,f,absorb) with prob 1 and weight 0
+(s1x4xS,l,s1x4xE) with prob 1 and weight 0
+(s1x4xS,r,s1x4xW) with prob 1 and weight 0
+(s1x4xE,f,absorb) with prob 1 and weight 0
+(s1x4xE,l,s1x4xN) with prob 1 and weight 0
+(s1x4xE,r,s1x4xS) with prob 1 and weight 0
+(s1x4xW,f,s1x3xW) with prob 1 and weight 0
+(s1x4xW,l,s1x4xS) with prob 1 and weight 0
+(s1x4xW,r,s1x4xN) with prob 1 and weight 0
+(s1x4xN,f,absorb) with prob 1 and weight 0
+(s1x4xN,l,s1x4xW) with prob 1 and weight 0
+(s1x4xN,r,s1x4xE) with prob 1 and weight 0
+(s2x2xS,f,s3x2xS) with prob 1 and weight 0
+(s2x2xS,l,s2x2xE) with prob 1 and weight 0
+(s2x2xS,r,s2x2xW) with prob 1 and weight 0
+(s2x2xE,f,s2x3xE) with prob 1 and weight 0
+(s2x2xE,l,s2x2xN) with prob 1 and weight 0
+(s2x2xE,r,s2x2xS) with prob 1 and weight 0
+(s2x2xW,f,absorb) with prob 1 and weight 0
+(s2x2xW,l,s2x2xS) with prob 1 and weight 0
+(s2x2xW,r,s2x2xN) with prob 1 and weight 0
+(s2x2xN,f,s1x2xN) with prob 1 and weight 0
+(s2x2xN,l,s2x2xW) with prob 1 and weight 0
+(s2x2xN,r,s2x2xE) with prob 1 and weight 0
+(s2x3xS,f,s3x3xS) with prob 1 and weight 0
+(s2x3xS,l,s2x3xE) with prob 1 and weight 0
+(s2x3xS,r,s2x3xW) with prob 1 and weight 0
+(s2x3xE,f,absorb) with prob 1 and weight 0
+(s2x3xE,l,s2x3xN) with prob 1 and weight 0
+(s2x3xE,r,s2x3xS) with prob 1 and weight 0
+(s2x3xW,f,s2x2xW) with prob 1 and weight 0
+(s2x3xW,l,s2x3xS) with prob 1 and weight 0
+(s2x3xW,r,s2x3xN) with prob 1 and weight 0
+(s2x3xN,f,s1x3xN) with prob 1 and weight 0
+(s2x3xN,l,s2x3xW) with prob 1 and weight 0
+(s2x3xN,r,s2x3xE) with prob 1 and weight 0
+(s3x1xS,f,absorb) with prob 1 and weight 0
+(s3x1xS,l,s3x1xE) with prob 1 and weight 0
+(s3x1xS,r,s3x1xW) with prob 1 and weight 0
+(s3x1xE,f,s3x2xE) with prob 1 and weight 0
+(s3x1xE,l,s3x1xN) with prob 1 and weight 0
+(s3x1xE,r,s3x1xS) with prob 1 and weight 0
+(s3x1xW,f,absorb) with prob 1 and weight 0
+(s3x1xW,l,s3x1xS) with prob 1 and weight 0
+(s3x1xW,r,s3x1xN) with prob 1 and weight 0
+(s3x1xN,f,absorb) with prob 1 and weight 0
+(s3x1xN,l,s3x1xW) with prob 1 and weight 0
+(s3x1xN,r,s3x1xE) with prob 1 and weight 0
+(s3x2xS,f,s4x2xS) with prob 1 and weight 0
+(s3x2xS,l,s3x2xE) with prob 1 and weight 0
+(s3x2xS,r,s3x2xW) with prob 1 and weight 0
+(s3x2xE,f,s3x3xE) with prob 1 and weight 0
+(s3x2xE,l,s3x2xN) with prob 1 and weight 0
+(s3x2xE,r,s3x2xS) with prob 1 and weight 0
+(s3x2xW,f,s3x1xW) with prob 1 and weight 0
+(s3x2xW,l,s3x2xS) with prob 1 and weight 0
+(s3x2xW,r,s3x2xN) with prob 1 and weight 0
+(s3x2xN,f,s2x2xN) with prob 1 and weight 0
+(s3x2xN,l,s3x2xW) with prob 1 and weight 0
+(s3x2xN,r,s3x2xE) with prob 1 and weight 0
+(s3x3xS,f,s4x3xS) with prob 1 and weight 0
+(s3x3xS,l,s3x3xE) with prob 1 and weight 0
+(s3x3xS,r,s3x3xW) with prob 1 and weight 0
+(s3x3xE,f,s3x4xE) with prob 1 and weight 0
+(s3x3xE,l,s3x3xN) with prob 1 and weight 0
+(s3x3xE,r,s3x3xS) with prob 1 and weight 0
+(s3x3xW,f,s3x2xW) with prob 1 and weight 0
+(s3x3xW,l,s3x3xS) with prob 1 and weight 0
+(s3x3xW,r,s3x3xN) with prob 1 and weight 0
+(s3x3xN,f,s2x3xN) with prob 1 and weight 0
+(s3x3xN,l,s3x3xW) with prob 1 and weight 0
+(s3x3xN,r,s3x3xE) with prob 1 and weight 0
+(s3x4xS,f,absorb) with prob 1 and weight 0
+(s3x4xS,l,s3x4xE) with prob 1 and weight 0
+(s3x4xS,r,s3x4xW) with prob 1 and weight 0
+(s3x4xE,f,absorb) with prob 1 and weight 0
+(s3x4xE,l,s3x4xN) with prob 1 and weight 0
+(s3x4xE,r,s3x4xS) with prob 1 and weight 0
+(s3x4xW,f,s3x3xW) with prob 1 and weight 0
+(s3x4xW,l,s3x4xS) with prob 1 and weight 0
+(s3x4xW,r,s3x4xN) with prob 1 and weight 0
+(s3x4xN,f,absorb) with prob 1 and weight 0
+(s3x4xN,l,s3x4xW) with prob 1 and weight 0
+(s3x4xN,r,s3x4xE) with prob 1 and weight 0
+(s4x2xS,f,goal) with prob 1 and weight 0
+(s4x2xS,l,goal) with prob 1 and weight 0
+(s4x2xS,r,goal) with prob 1 and weight 0
+(s4x2xE,f,goal) with prob 1 and weight 0
+(s4x2xE,l,goal) with prob 1 and weight 0
+(s4x2xE,r,goal) with prob 1 and weight 0
+(s4x2xW,f,goal) with prob 1 and weight 0
+(s4x2xW,l,goal) with prob 1 and weight 0
+(s4x2xW,r,goal) with prob 1 and weight 0
+(s4x2xN,f,goal) with prob 1 and weight 0
+(s4x2xN,l,goal) with prob 1 and weight 0
+(s4x2xN,r,goal) with prob 1 and weight 0
+(s4x3xS,f,absorb) with prob 1 and weight 0
+(s4x3xS,l,absorb) with prob 1 and weight 0
+(s4x3xS,r,absorb) with prob 1 and weight 0
+(s4x3xE,f,absorb) with prob 1 and weight 0
+(s4x3xE,l,absorb) with prob 1 and weight 0
+(s4x3xE,r,absorb) with prob 1 and weight 0
+(s4x3xW,f,absorb) with prob 1 and weight 0
+(s4x3xW,l,absorb) with prob 1 and weight 0
+(s4x3xW,r,absorb) with prob 1 and weight 0
+(s4x3xN,f,absorb) with prob 1 and weight 0
+(s4x3xN,l,absorb) with prob 1 and weight 0
+(s4x3xN,r,absorb) with prob 1 and weight 0
+Discount factor: 0.95
+54 States: 
+{ s1x2xS s1x3xS s2x2xS s2x3xS } <= init
+{ s2x2xS } <= flRb
+{ s2x3xS } <= fLrb
+{ s3x2xS s3x3xS } <= flrb
+{ s2x3xE } <= Flrb
+{ s1x2xE s1x3xE } <= fLrb
+{ s2x2xE } <= flrB
+{ s1x2xW s1x3xW } <= flRb
+{ s2x2xW } <= Flrb
+{ s2x3xW } <= flrB
+{ s3x2xS } <= flrb
+{ s3x3xS } <= flrb
+{ s4x2xS } <= FlRb
+{ s4x3xS } <= FLrb
+{ s3x2xE s3x3xE } <= flrb
+{ s3x2xW s3x3xW } <= flrb
+{ absorb } <= Oabs
+{ s2x3xN } <= flRb
+{ s1x3xE } <= fLrb
+{ s1x4xE } <= FLRb
+{ s1x2xN s1x3xN } <= Flrb
+{ s1x2xS s1x3xS } <= flrB
+{ s2x2xN } <= fLrb
+{ s1x2xW } <= flRb
+{ s1x1xW } <= FLRb
+{ s3x2xE } <= flrb
+{ s3x2xW } <= flrb
+{ s3x3xE } <= flrb
+{ s3x3xW } <= flrb
+{ goal } <= Ogoal
+{ s3x4xE } <= FLRb
+{ s3x2xN s3x3xN } <= flrb
+{ s3x1xW } <= FLRb
+{ s1x3xN } <= Flrb
+{ s1x3xS } <= flrB
+{ s1x4xN } <= FlRB
+{ s1x4xS } <= FLrB
+{ s1x2xN } <= Flrb
+{ s1x2xS } <= flrB
+{ s1x1xS } <= FlRB
+{ s1x1xN } <= FLrB
+{ s3x2xN } <= flrb
+{ s3x3xN } <= flrb
+{ goal2 } <= Ogoal2
+{ s3x4xN } <= FlRB
+{ s3x4xS } <= FLrB
+{ s3x1xS } <= FlRB
+{ s3x1xN } <= FLrB
+{ s1x3xW } <= flRb
+{ s1x4xW } <= fLRB
+{ s1x2xE } <= fLrb
+{ s1x1xE } <= fLRB
+{ s3x4xW } <= fLRB
+{ s3x1xE } <= fLRB
+Initial distribution: 
+{ s1x2xS s1x3xS s2x2xS s2x3xS } <= init with prob 1
+3 Actions: 
+f
+l
+r
+54 Observations: 
+{ s1x2xS s1x3xS s2x2xS s2x3xS } <= init
+{ s2x2xS } <= flRb
+{ s2x3xS } <= fLrb
+{ s3x2xS s3x3xS } <= flrb
+{ s2x3xE } <= Flrb
+{ s1x2xE s1x3xE } <= fLrb
+{ s2x2xE } <= flrB
+{ s1x2xW s1x3xW } <= flRb
+{ s2x2xW } <= Flrb
+{ s2x3xW } <= flrB
+{ s3x2xS } <= flrb
+{ s3x3xS } <= flrb
+{ s4x2xS } <= FlRb
+{ s4x3xS } <= FLrb
+{ s3x2xE s3x3xE } <= flrb
+{ s3x2xW s3x3xW } <= flrb
+{ absorb } <= Oabs
+{ s2x3xN } <= flRb
+{ s1x3xE } <= fLrb
+{ s1x4xE } <= FLRb
+{ s1x2xN s1x3xN } <= Flrb
+{ s1x2xS s1x3xS } <= flrB
+{ s2x2xN } <= fLrb
+{ s1x2xW } <= flRb
+{ s1x1xW } <= FLRb
+{ s3x2xE } <= flrb
+{ s3x2xW } <= flrb
+{ s3x3xE } <= flrb
+{ s3x3xW } <= flrb
+{ goal } <= Ogoal
+{ s3x4xE } <= FLRb
+{ s3x2xN s3x3xN } <= flrb
+{ s3x1xW } <= FLRb
+{ s1x3xN } <= Flrb
+{ s1x3xS } <= flrB
+{ s1x4xN } <= FlRB
+{ s1x4xS } <= FLrB
+{ s1x2xN } <= Flrb
+{ s1x2xS } <= flrB
+{ s1x1xS } <= FlRB
+{ s1x1xN } <= FLrB
+{ s3x2xN } <= flrb
+{ s3x3xN } <= flrb
+{ goal2 } <= Ogoal2
+{ s3x4xN } <= FlRB
+{ s3x4xS } <= FLrB
+{ s3x1xS } <= FlRB
+{ s3x1xN } <= FLrB
+{ s1x3xW } <= flRb
+{ s1x4xW } <= fLRB
+{ s1x2xE } <= fLrb
+{ s1x1xE } <= fLRB
+{ s3x4xW } <= fLRB
+{ s3x1xE } <= fLRB
+State-observation mapping: 
+{ s1x2xS s1x3xS s2x2xS s2x3xS } <= init observed as { s1x2xS s1x3xS s2x2xS s2x3xS } <= init with prob 1
+{ s2x2xS } <= flRb observed as { s2x2xS } <= flRb with prob 1
+{ s2x3xS } <= fLrb observed as { s2x3xS } <= fLrb with prob 1
+{ s3x2xS s3x3xS } <= flrb observed as { s3x2xS s3x3xS } <= flrb with prob 1
+{ s2x3xE } <= Flrb observed as { s2x3xE } <= Flrb with prob 1
+{ s1x2xE s1x3xE } <= fLrb observed as { s1x2xE s1x3xE } <= fLrb with prob 1
+{ s2x2xE } <= flrB observed as { s2x2xE } <= flrB with prob 1
+{ s1x2xW s1x3xW } <= flRb observed as { s1x2xW s1x3xW } <= flRb with prob 1
+{ s2x2xW } <= Flrb observed as { s2x2xW } <= Flrb with prob 1
+{ s2x3xW } <= flrB observed as { s2x3xW } <= flrB with prob 1
+{ s3x2xS } <= flrb observed as { s3x2xS } <= flrb with prob 1
+{ s3x3xS } <= flrb observed as { s3x3xS } <= flrb with prob 1
+{ s4x2xS } <= FlRb observed as { s4x2xS } <= FlRb with prob 1
+{ s4x3xS } <= FLrb observed as { s4x3xS } <= FLrb with prob 1
+{ s3x2xE s3x3xE } <= flrb observed as { s3x2xE s3x3xE } <= flrb with prob 1
+{ s3x2xW s3x3xW } <= flrb observed as { s3x2xW s3x3xW } <= flrb with prob 1
+{ absorb } <= Oabs observed as { absorb } <= Oabs with prob 1
+{ s2x3xN } <= flRb observed as { s2x3xN } <= flRb with prob 1
+{ s1x3xE } <= fLrb observed as { s1x3xE } <= fLrb with prob 1
+{ s1x4xE } <= FLRb observed as { s1x4xE } <= FLRb with prob 1
+{ s1x2xN s1x3xN } <= Flrb observed as { s1x2xN s1x3xN } <= Flrb with prob 1
+{ s1x2xS s1x3xS } <= flrB observed as { s1x2xS s1x3xS } <= flrB with prob 1
+{ s2x2xN } <= fLrb observed as { s2x2xN } <= fLrb with prob 1
+{ s1x2xW } <= flRb observed as { s1x2xW } <= flRb with prob 1
+{ s1x1xW } <= FLRb observed as { s1x1xW } <= FLRb with prob 1
+{ s3x2xE } <= flrb observed as { s3x2xE } <= flrb with prob 1
+{ s3x2xW } <= flrb observed as { s3x2xW } <= flrb with prob 1
+{ s3x3xE } <= flrb observed as { s3x3xE } <= flrb with prob 1
+{ s3x3xW } <= flrb observed as { s3x3xW } <= flrb with prob 1
+{ goal } <= Ogoal observed as { goal } <= Ogoal with prob 1
+{ s3x4xE } <= FLRb observed as { s3x4xE } <= FLRb with prob 1
+{ s3x2xN s3x3xN } <= flrb observed as { s3x2xN s3x3xN } <= flrb with prob 1
+{ s3x1xW } <= FLRb observed as { s3x1xW } <= FLRb with prob 1
+{ s1x3xN } <= Flrb observed as { s1x3xN } <= Flrb with prob 1
+{ s1x3xS } <= flrB observed as { s1x3xS } <= flrB with prob 1
+{ s1x4xN } <= FlRB observed as { s1x4xN } <= FlRB with prob 1
+{ s1x4xS } <= FLrB observed as { s1x4xS } <= FLrB with prob 1
+{ s1x2xN } <= Flrb observed as { s1x2xN } <= Flrb with prob 1
+{ s1x2xS } <= flrB observed as { s1x2xS } <= flrB with prob 1
+{ s1x1xS } <= FlRB observed as { s1x1xS } <= FlRB with prob 1
+{ s1x1xN } <= FLrB observed as { s1x1xN } <= FLrB with prob 1
+{ s3x2xN } <= flrb observed as { s3x2xN } <= flrb with prob 1
+{ s3x3xN } <= flrb observed as { s3x3xN } <= flrb with prob 1
+{ goal2 } <= Ogoal2 observed as { goal2 } <= Ogoal2 with prob 1
+{ s3x4xN } <= FlRB observed as { s3x4xN } <= FlRB with prob 1
+{ s3x4xS } <= FLrB observed as { s3x4xS } <= FLrB with prob 1
+{ s3x1xS } <= FlRB observed as { s3x1xS } <= FlRB with prob 1
+{ s3x1xN } <= FLrB observed as { s3x1xN } <= FLrB with prob 1
+{ s1x3xW } <= flRb observed as { s1x3xW } <= flRb with prob 1
+{ s1x4xW } <= fLRB observed as { s1x4xW } <= fLRB with prob 1
+{ s1x2xE } <= fLrb observed as { s1x2xE } <= fLrb with prob 1
+{ s1x1xE } <= fLRB observed as { s1x1xE } <= fLRB with prob 1
+{ s3x4xW } <= fLRB observed as { s3x4xW } <= fLRB with prob 1
+{ s3x1xE } <= fLRB observed as { s3x1xE } <= fLRB with prob 1
+175 Transitions: 
+({ s1x2xS s1x3xS s2x2xS s2x3xS } <= init,f,{ s2x2xS } <= flRb) with prob 1 and weight 0
+({ s1x2xS s1x3xS s2x2xS s2x3xS } <= init,f,{ s2x3xS } <= fLrb) with prob 1 and weight 0
+({ s1x2xS s1x3xS s2x2xS s2x3xS } <= init,f,{ s3x2xS s3x3xS } <= flrb) with prob 1 and weight 0
+({ s1x2xS s1x3xS s2x2xS s2x3xS } <= init,l,{ s2x3xE } <= Flrb) with prob 1 and weight 0
+({ s1x2xS s1x3xS s2x2xS s2x3xS } <= init,l,{ s1x2xE s1x3xE } <= fLrb) with prob 1 and weight 0
+({ s1x2xS s1x3xS s2x2xS s2x3xS } <= init,l,{ s2x2xE } <= flrB) with prob 1 and weight 0
+({ s1x2xS s1x3xS s2x2xS s2x3xS } <= init,r,{ s1x2xW s1x3xW } <= flRb) with prob 1 and weight 0
+({ s1x2xS s1x3xS s2x2xS s2x3xS } <= init,r,{ s2x2xW } <= Flrb) with prob 1 and weight 0
+({ s1x2xS s1x3xS s2x2xS s2x3xS } <= init,r,{ s2x3xW } <= flrB) with prob 1 and weight 0
+({ s2x2xS } <= flRb,f,{ s3x2xS } <= flrb) with prob 1 and weight 0
+({ s2x2xS } <= flRb,l,{ s2x2xE } <= flrB) with prob 1 and weight 0
+({ s2x2xS } <= flRb,r,{ s2x2xW } <= Flrb) with prob 1 and weight 0
+({ s2x3xS } <= fLrb,f,{ s3x3xS } <= flrb) with prob 1 and weight 0
+({ s2x3xS } <= fLrb,l,{ s2x3xE } <= Flrb) with prob 1 and weight 0
+({ s2x3xS } <= fLrb,r,{ s2x3xW } <= flrB) with prob 1 and weight 0
+({ s3x2xS s3x3xS } <= flrb,f,{ s4x2xS } <= FlRb) with prob 1 and weight 0
+({ s3x2xS s3x3xS } <= flrb,f,{ s4x3xS } <= FLrb) with prob 1 and weight 0
+({ s3x2xS s3x3xS } <= flrb,l,{ s3x2xE s3x3xE } <= flrb) with prob 1 and weight 0
+({ s3x2xS s3x3xS } <= flrb,r,{ s3x2xW s3x3xW } <= flrb) with prob 1 and weight 0
+({ s2x3xE } <= Flrb,f,{ absorb } <= Oabs) with prob 1 and weight 0
+({ s2x3xE } <= Flrb,l,{ s2x3xN } <= flRb) with prob 1 and weight 0
+({ s2x3xE } <= Flrb,r,{ s2x3xS } <= fLrb) with prob 1 and weight 0
+({ s1x2xE s1x3xE } <= fLrb,f,{ s1x3xE } <= fLrb) with prob 1 and weight 0
+({ s1x2xE s1x3xE } <= fLrb,f,{ s1x4xE } <= FLRb) with prob 1 and weight 0
+({ s1x2xE s1x3xE } <= fLrb,l,{ s1x2xN s1x3xN } <= Flrb) with prob 1 and weight 0
+({ s1x2xE s1x3xE } <= fLrb,r,{ s1x2xS s1x3xS } <= flrB) with prob 1 and weight 0
+({ s2x2xE } <= flrB,f,{ s2x3xE } <= Flrb) with prob 1 and weight 0
+({ s2x2xE } <= flrB,l,{ s2x2xN } <= fLrb) with prob 1 and weight 0
+({ s2x2xE } <= flrB,r,{ s2x2xS } <= flRb) with prob 1 and weight 0
+({ s1x2xW s1x3xW } <= flRb,f,{ s1x2xW } <= flRb) with prob 1 and weight 0
+({ s1x2xW s1x3xW } <= flRb,f,{ s1x1xW } <= FLRb) with prob 1 and weight 0
+({ s1x2xW s1x3xW } <= flRb,l,{ s1x2xS s1x3xS } <= flrB) with prob 1 and weight 0
+({ s1x2xW s1x3xW } <= flRb,r,{ s1x2xN s1x3xN } <= Flrb) with prob 1 and weight 0
+({ s2x2xW } <= Flrb,f,{ absorb } <= Oabs) with prob 1 and weight 0
+({ s2x2xW } <= Flrb,l,{ s2x2xS } <= flRb) with prob 1 and weight 0
+({ s2x2xW } <= Flrb,r,{ s2x2xN } <= fLrb) with prob 1 and weight 0
+({ s2x3xW } <= flrB,f,{ s2x2xW } <= Flrb) with prob 1 and weight 0
+({ s2x3xW } <= flrB,l,{ s2x3xS } <= fLrb) with prob 1 and weight 0
+({ s2x3xW } <= flrB,r,{ s2x3xN } <= flRb) with prob 1 and weight 0
+({ s3x2xS } <= flrb,f,{ s4x2xS } <= FlRb) with prob 1 and weight 0
+({ s3x2xS } <= flrb,l,{ s3x2xE } <= flrb) with prob 1 and weight 0
+({ s3x2xS } <= flrb,r,{ s3x2xW } <= flrb) with prob 1 and weight 0
+({ s3x3xS } <= flrb,f,{ s4x3xS } <= FLrb) with prob 1 and weight 0
+({ s3x3xS } <= flrb,l,{ s3x3xE } <= flrb) with prob 1 and weight 0
+({ s3x3xS } <= flrb,r,{ s3x3xW } <= flrb) with prob 1 and weight 0
+({ s4x2xS } <= FlRb,f,{ goal } <= Ogoal) with prob 1 and weight 0
+({ s4x2xS } <= FlRb,l,{ goal } <= Ogoal) with prob 1 and weight 0
+({ s4x2xS } <= FlRb,r,{ goal } <= Ogoal) with prob 1 and weight 0
+({ s4x3xS } <= FLrb,f,{ absorb } <= Oabs) with prob 1 and weight 0
+({ s4x3xS } <= FLrb,l,{ absorb } <= Oabs) with prob 1 and weight 0
+({ s4x3xS } <= FLrb,r,{ absorb } <= Oabs) with prob 1 and weight 0
+({ s3x2xE s3x3xE } <= flrb,f,{ s3x3xE } <= flrb) with prob 1 and weight 0
+({ s3x2xE s3x3xE } <= flrb,f,{ s3x4xE } <= FLRb) with prob 1 and weight 0
+({ s3x2xE s3x3xE } <= flrb,l,{ s3x2xN s3x3xN } <= flrb) with prob 1 and weight 0
+({ s3x2xE s3x3xE } <= flrb,r,{ s3x2xS s3x3xS } <= flrb) with prob 1 and weight 0
+({ s3x2xW s3x3xW } <= flrb,f,{ s3x2xW } <= flrb) with prob 1 and weight 0
+({ s3x2xW s3x3xW } <= flrb,f,{ s3x1xW } <= FLRb) with prob 1 and weight 0
+({ s3x2xW s3x3xW } <= flrb,l,{ s3x2xS s3x3xS } <= flrb) with prob 1 and weight 0
+({ s3x2xW s3x3xW } <= flrb,r,{ s3x2xN s3x3xN } <= flrb) with prob 1 and weight 0
+({ absorb } <= Oabs,f,{ absorb } <= Oabs) with prob 1 and weight 0
+({ absorb } <= Oabs,l,{ absorb } <= Oabs) with prob 1 and weight 0
+({ absorb } <= Oabs,r,{ absorb } <= Oabs) with prob 1 and weight 0
+({ s2x3xN } <= flRb,f,{ s1x3xN } <= Flrb) with prob 1 and weight 0
+({ s2x3xN } <= flRb,l,{ s2x3xW } <= flrB) with prob 1 and weight 0
+({ s2x3xN } <= flRb,r,{ s2x3xE } <= Flrb) with prob 1 and weight 0
+({ s1x3xE } <= fLrb,f,{ s1x4xE } <= FLRb) with prob 1 and weight 0
+({ s1x3xE } <= fLrb,l,{ s1x3xN } <= Flrb) with prob 1 and weight 0
+({ s1x3xE } <= fLrb,r,{ s1x3xS } <= flrB) with prob 1 and weight 0
+({ s1x4xE } <= FLRb,f,{ absorb } <= Oabs) with prob 1 and weight 0
+({ s1x4xE } <= FLRb,l,{ s1x4xN } <= FlRB) with prob 1 and weight 0
+({ s1x4xE } <= FLRb,r,{ s1x4xS } <= FLrB) with prob 1 and weight 0
+({ s1x2xN s1x3xN } <= Flrb,f,{ absorb } <= Oabs) with prob 1 and weight 0
+({ s1x2xN s1x3xN } <= Flrb,l,{ s1x2xW s1x3xW } <= flRb) with prob 1 and weight 0
+({ s1x2xN s1x3xN } <= Flrb,r,{ s1x2xE s1x3xE } <= fLrb) with prob 1 and weight 0
+({ s1x2xS s1x3xS } <= flrB,f,{ s2x2xS } <= flRb) with prob 1 and weight 0
+({ s1x2xS s1x3xS } <= flrB,f,{ s2x3xS } <= fLrb) with prob 1 and weight 0
+({ s1x2xS s1x3xS } <= flrB,l,{ s1x2xE s1x3xE } <= fLrb) with prob 1 and weight 0
+({ s1x2xS s1x3xS } <= flrB,r,{ s1x2xW s1x3xW } <= flRb) with prob 1 and weight 0
+({ s2x2xN } <= fLrb,f,{ s1x2xN } <= Flrb) with prob 1 and weight 0
+({ s2x2xN } <= fLrb,l,{ s2x2xW } <= Flrb) with prob 1 and weight 0
+({ s2x2xN } <= fLrb,r,{ s2x2xE } <= flrB) with prob 1 and weight 0
+({ s1x2xW } <= flRb,f,{ s1x1xW } <= FLRb) with prob 1 and weight 0
+({ s1x2xW } <= flRb,l,{ s1x2xS } <= flrB) with prob 1 and weight 0
+({ s1x2xW } <= flRb,r,{ s1x2xN } <= Flrb) with prob 1 and weight 0
+({ s1x1xW } <= FLRb,f,{ absorb } <= Oabs) with prob 1 and weight 0
+({ s1x1xW } <= FLRb,l,{ s1x1xS } <= FlRB) with prob 1 and weight 0
+({ s1x1xW } <= FLRb,r,{ s1x1xN } <= FLrB) with prob 1 and weight 0
+({ s3x2xE } <= flrb,f,{ s3x3xE } <= flrb) with prob 1 and weight 0
+({ s3x2xE } <= flrb,l,{ s3x2xN } <= flrb) with prob 1 and weight 0
+({ s3x2xE } <= flrb,r,{ s3x2xS } <= flrb) with prob 1 and weight 0
+({ s3x2xW } <= flrb,f,{ s3x1xW } <= FLRb) with prob 1 and weight 0
+({ s3x2xW } <= flrb,l,{ s3x2xS } <= flrb) with prob 1 and weight 0
+({ s3x2xW } <= flrb,r,{ s3x2xN } <= flrb) with prob 1 and weight 0
+({ s3x3xE } <= flrb,f,{ s3x4xE } <= FLRb) with prob 1 and weight 0
+({ s3x3xE } <= flrb,l,{ s3x3xN } <= flrb) with prob 1 and weight 0
+({ s3x3xE } <= flrb,r,{ s3x3xS } <= flrb) with prob 1 and weight 0
+({ s3x3xW } <= flrb,f,{ s3x2xW } <= flrb) with prob 1 and weight 0
+({ s3x3xW } <= flrb,l,{ s3x3xS } <= flrb) with prob 1 and weight 0
+({ s3x3xW } <= flrb,r,{ s3x3xN } <= flrb) with prob 1 and weight 0
+({ goal } <= Ogoal,f,{ goal2 } <= Ogoal2) with prob 1 and weight 10000
+({ goal } <= Ogoal,l,{ goal2 } <= Ogoal2) with prob 1 and weight 10000
+({ goal } <= Ogoal,r,{ goal2 } <= Ogoal2) with prob 1 and weight 10000
+({ s3x4xE } <= FLRb,f,{ absorb } <= Oabs) with prob 1 and weight 0
+({ s3x4xE } <= FLRb,l,{ s3x4xN } <= FlRB) with prob 1 and weight 0
+({ s3x4xE } <= FLRb,r,{ s3x4xS } <= FLrB) with prob 1 and weight 0
+({ s3x2xN s3x3xN } <= flrb,f,{ s2x3xN } <= flRb) with prob 1 and weight 0
+({ s3x2xN s3x3xN } <= flrb,f,{ s2x2xN } <= fLrb) with prob 1 and weight 0
+({ s3x2xN s3x3xN } <= flrb,l,{ s3x2xW s3x3xW } <= flrb) with prob 1 and weight 0
+({ s3x2xN s3x3xN } <= flrb,r,{ s3x2xE s3x3xE } <= flrb) with prob 1 and weight 0
+({ s3x1xW } <= FLRb,f,{ absorb } <= Oabs) with prob 1 and weight 0
+({ s3x1xW } <= FLRb,l,{ s3x1xS } <= FlRB) with prob 1 and weight 0
+({ s3x1xW } <= FLRb,r,{ s3x1xN } <= FLrB) with prob 1 and weight 0
+({ s1x3xN } <= Flrb,f,{ absorb } <= Oabs) with prob 1 and weight 0
+({ s1x3xN } <= Flrb,l,{ s1x3xW } <= flRb) with prob 1 and weight 0
+({ s1x3xN } <= Flrb,r,{ s1x3xE } <= fLrb) with prob 1 and weight 0
+({ s1x3xS } <= flrB,f,{ s2x3xS } <= fLrb) with prob 1 and weight 0
+({ s1x3xS } <= flrB,l,{ s1x3xE } <= fLrb) with prob 1 and weight 0
+({ s1x3xS } <= flrB,r,{ s1x3xW } <= flRb) with prob 1 and weight 0
+({ s1x4xN } <= FlRB,f,{ absorb } <= Oabs) with prob 1 and weight 0
+({ s1x4xN } <= FlRB,l,{ s1x4xW } <= fLRB) with prob 1 and weight 0
+({ s1x4xN } <= FlRB,r,{ s1x4xE } <= FLRb) with prob 1 and weight 0
+({ s1x4xS } <= FLrB,f,{ absorb } <= Oabs) with prob 1 and weight 0
+({ s1x4xS } <= FLrB,l,{ s1x4xE } <= FLRb) with prob 1 and weight 0
+({ s1x4xS } <= FLrB,r,{ s1x4xW } <= fLRB) with prob 1 and weight 0
+({ s1x2xN } <= Flrb,f,{ absorb } <= Oabs) with prob 1 and weight 0
+({ s1x2xN } <= Flrb,l,{ s1x2xW } <= flRb) with prob 1 and weight 0
+({ s1x2xN } <= Flrb,r,{ s1x2xE } <= fLrb) with prob 1 and weight 0
+({ s1x2xS } <= flrB,f,{ s2x2xS } <= flRb) with prob 1 and weight 0
+({ s1x2xS } <= flrB,l,{ s1x2xE } <= fLrb) with prob 1 and weight 0
+({ s1x2xS } <= flrB,r,{ s1x2xW } <= flRb) with prob 1 and weight 0
+({ s1x1xS } <= FlRB,f,{ absorb } <= Oabs) with prob 1 and weight 0
+({ s1x1xS } <= FlRB,l,{ s1x1xE } <= fLRB) with prob 1 and weight 0
+({ s1x1xS } <= FlRB,r,{ s1x1xW } <= FLRb) with prob 1 and weight 0
+({ s1x1xN } <= FLrB,f,{ absorb } <= Oabs) with prob 1 and weight 0
+({ s1x1xN } <= FLrB,l,{ s1x1xW } <= FLRb) with prob 1 and weight 0
+({ s1x1xN } <= FLrB,r,{ s1x1xE } <= fLRB) with prob 1 and weight 0
+({ s3x2xN } <= flrb,f,{ s2x2xN } <= fLrb) with prob 1 and weight 0
+({ s3x2xN } <= flrb,l,{ s3x2xW } <= flrb) with prob 1 and weight 0
+({ s3x2xN } <= flrb,r,{ s3x2xE } <= flrb) with prob 1 and weight 0
+({ s3x3xN } <= flrb,f,{ s2x3xN } <= flRb) with prob 1 and weight 0
+({ s3x3xN } <= flrb,l,{ s3x3xW } <= flrb) with prob 1 and weight 0
+({ s3x3xN } <= flrb,r,{ s3x3xE } <= flrb) with prob 1 and weight 0
+({ goal2 } <= Ogoal2,f,{ goal2 } <= Ogoal2) with prob 1 and weight 0
+({ goal2 } <= Ogoal2,l,{ goal2 } <= Ogoal2) with prob 1 and weight 0
+({ goal2 } <= Ogoal2,r,{ goal2 } <= Ogoal2) with prob 1 and weight 0
+({ s3x4xN } <= FlRB,f,{ absorb } <= Oabs) with prob 1 and weight 0
+({ s3x4xN } <= FlRB,l,{ s3x4xW } <= fLRB) with prob 1 and weight 0
+({ s3x4xN } <= FlRB,r,{ s3x4xE } <= FLRb) with prob 1 and weight 0
+({ s3x4xS } <= FLrB,f,{ absorb } <= Oabs) with prob 1 and weight 0
+({ s3x4xS } <= FLrB,l,{ s3x4xE } <= FLRb) with prob 1 and weight 0
+({ s3x4xS } <= FLrB,r,{ s3x4xW } <= fLRB) with prob 1 and weight 0
+({ s3x1xS } <= FlRB,f,{ absorb } <= Oabs) with prob 1 and weight 0
+({ s3x1xS } <= FlRB,l,{ s3x1xE } <= fLRB) with prob 1 and weight 0
+({ s3x1xS } <= FlRB,r,{ s3x1xW } <= FLRb) with prob 1 and weight 0
+({ s3x1xN } <= FLrB,f,{ absorb } <= Oabs) with prob 1 and weight 0
+({ s3x1xN } <= FLrB,l,{ s3x1xW } <= FLRb) with prob 1 and weight 0
+({ s3x1xN } <= FLrB,r,{ s3x1xE } <= fLRB) with prob 1 and weight 0
+({ s1x3xW } <= flRb,f,{ s1x2xW } <= flRb) with prob 1 and weight 0
+({ s1x3xW } <= flRb,l,{ s1x3xS } <= flrB) with prob 1 and weight 0
+({ s1x3xW } <= flRb,r,{ s1x3xN } <= Flrb) with prob 1 and weight 0
+({ s1x4xW } <= fLRB,f,{ s1x3xW } <= flRb) with prob 1 and weight 0
+({ s1x4xW } <= fLRB,l,{ s1x4xS } <= FLrB) with prob 1 and weight 0
+({ s1x4xW } <= fLRB,r,{ s1x4xN } <= FlRB) with prob 1 and weight 0
+({ s1x2xE } <= fLrb,f,{ s1x3xE } <= fLrb) with prob 1 and weight 0
+({ s1x2xE } <= fLrb,l,{ s1x2xN } <= Flrb) with prob 1 and weight 0
+({ s1x2xE } <= fLrb,r,{ s1x2xS } <= flrB) with prob 1 and weight 0
+({ s1x1xE } <= fLRB,f,{ s1x2xE } <= fLrb) with prob 1 and weight 0
+({ s1x1xE } <= fLRB,l,{ s1x1xN } <= FLrB) with prob 1 and weight 0
+({ s1x1xE } <= fLRB,r,{ s1x1xS } <= FlRB) with prob 1 and weight 0
+({ s3x4xW } <= fLRB,f,{ s3x3xW } <= flrb) with prob 1 and weight 0
+({ s3x4xW } <= fLRB,l,{ s3x4xS } <= FLrB) with prob 1 and weight 0
+({ s3x4xW } <= fLRB,r,{ s3x4xN } <= FlRB) with prob 1 and weight 0
+({ s3x1xE } <= fLRB,f,{ s3x2xE } <= flrb) with prob 1 and weight 0
+({ s3x1xE } <= fLRB,l,{ s3x1xN } <= FLrB) with prob 1 and weight 0
+({ s3x1xE } <= fLRB,r,{ s3x1xS } <= FlRB) with prob 1 and weight 0
+Order vector:
+{ s1x2xS s1x3xS } <= flrB => { s1x2xS } <= flrB => 
+Order vector:
+{ s1x2xE s1x3xE } <= fLrb => { s1x2xE } <= fLrb => 
+Order vector:
+{ s1x2xW s1x3xW } <= flRb => { s1x2xW } <= flRb => 
+Order vector:
+{ s1x2xN s1x3xN } <= Flrb => { s1x2xN } <= Flrb => 
+Order vector:
+{ s3x2xS s3x3xS } <= flrb => { s3x2xS } <= flrb => 
+Order vector:
+{ s3x2xE s3x3xE } <= flrb => { s3x2xE } <= flrb => 
+Order vector:
+{ s3x2xW s3x3xW } <= flrb => { s3x2xW } <= flrb => 
+Order vector:
+{ s3x2xN s3x3xN } <= flrb => { s3x2xN } <= flrb => 
+Calling solver!
+Added 8 additional inequalities
+Equations : 
+(declare-fun lambda () Real)
+(declare-fun max (Real Real) Real)
+(declare-fun min (Real Real) Real)
+(declare-fun ds (Int) Real)
+(assert (= lambda (/ 19.0 20.0)))
+(assert (forall ((x Real) (y Real)) (= (max x y) (ite (< x y) y x))))
+(assert (forall ((x Real) (y Real)) (= (min x y) (ite (< x y) x y))))
+(assert (let ((a!1 (min (+ 0.0 (* lambda (ds 1))) (+ 0.0 (* lambda (ds 2)))))
+      (a!3 (min (+ 0.0 (* lambda (ds 4))) (+ 0.0 (* lambda (ds 5)))))
+      (a!5 (min (+ 0.0 (* lambda (ds 7))) (+ 0.0 (* lambda (ds 8))))))
+(let ((a!2 (min a!1 (+ 0.0 (* lambda (ds 3)))))
+      (a!4 (min a!3 (+ 0.0 (* lambda (ds 6)))))
+      (a!6 (min a!5 (+ 0.0 (* lambda (ds 9))))))
+  (= (ds 0) (max (max a!2 a!4) a!6)))))
+(assert (let ((a!1 (max (+ 0.0 (* lambda (ds 10))) (+ 0.0 (* lambda (ds 6))))))
+(let ((a!2 (max a!1 (+ 0.0 (* lambda (ds 8))))))
+  (= (ds 1) a!2))))
+(assert (let ((a!1 (max (+ 0.0 (* lambda (ds 11))) (+ 0.0 (* lambda (ds 4))))))
+(let ((a!2 (max a!1 (+ 0.0 (* lambda (ds 9))))))
+  (= (ds 2) a!2))))
+(assert (let ((a!1 (min (+ 0.0 (* lambda (ds 12))) (+ 0.0 (* lambda (ds 13))))))
+(let ((a!2 (max a!1 (+ 0.0 (* lambda (ds 14))))))
+(let ((a!3 (max a!2 (+ 0.0 (* lambda (ds 15))))))
+  (= (ds 3) a!3)))))
+(assert (let ((a!1 (max (+ 0.0 (* lambda (ds 16))) (+ 0.0 (* lambda (ds 17))))))
+(let ((a!2 (max a!1 (+ 0.0 (* lambda (ds 2))))))
+  (= (ds 4) a!2))))
+(assert (let ((a!1 (min (+ 0.0 (* lambda (ds 18))) (+ 0.0 (* lambda (ds 19))))))
+(let ((a!2 (max a!1 (+ 0.0 (* lambda (ds 20))))))
+(let ((a!3 (max a!2 (+ 0.0 (* lambda (ds 21))))))
+  (= (ds 5) a!3)))))
+(assert (let ((a!1 (max (+ 0.0 (* lambda (ds 4))) (+ 0.0 (* lambda (ds 22))))))
+(let ((a!2 (max a!1 (+ 0.0 (* lambda (ds 1))))))
+  (= (ds 6) a!2))))
+(assert (let ((a!1 (min (+ 0.0 (* lambda (ds 23))) (+ 0.0 (* lambda (ds 24))))))
+(let ((a!2 (max a!1 (+ 0.0 (* lambda (ds 21))))))
+(let ((a!3 (max a!2 (+ 0.0 (* lambda (ds 20))))))
+  (= (ds 7) a!3)))))
+(assert (let ((a!1 (max (+ 0.0 (* lambda (ds 16))) (+ 0.0 (* lambda (ds 1))))))
+(let ((a!2 (max a!1 (+ 0.0 (* lambda (ds 22))))))
+  (= (ds 8) a!2))))
+(assert (let ((a!1 (max (+ 0.0 (* lambda (ds 8))) (+ 0.0 (* lambda (ds 2))))))
+(let ((a!2 (max a!1 (+ 0.0 (* lambda (ds 17))))))
+  (= (ds 9) a!2))))
+(assert (let ((a!1 (max (+ 0.0 (* lambda (ds 12))) (+ 0.0 (* lambda (ds 25))))))
+(let ((a!2 (max a!1 (+ 0.0 (* lambda (ds 26))))))
+  (= (ds 10) a!2))))
+(assert (let ((a!1 (max (+ 0.0 (* lambda (ds 13))) (+ 0.0 (* lambda (ds 27))))))
+(let ((a!2 (max a!1 (+ 0.0 (* lambda (ds 28))))))
+  (= (ds 11) a!2))))
+(assert (let ((a!1 (max (+ 0.0 (* lambda (ds 29))) (+ 0.0 (* lambda (ds 29))))))
+(let ((a!2 (max a!1 (+ 0.0 (* lambda (ds 29))))))
+  (= (ds 12) a!2))))
+(assert (let ((a!1 (max (+ 0.0 (* lambda (ds 16))) (+ 0.0 (* lambda (ds 16))))))
+(let ((a!2 (max a!1 (+ 0.0 (* lambda (ds 16))))))
+  (= (ds 13) a!2))))
+(assert (let ((a!1 (min (+ 0.0 (* lambda (ds 27))) (+ 0.0 (* lambda (ds 30))))))
+(let ((a!2 (max a!1 (+ 0.0 (* lambda (ds 31))))))
+(let ((a!3 (max a!2 (+ 0.0 (* lambda (ds 3))))))
+  (= (ds 14) a!3)))))
+(assert (let ((a!1 (min (+ 0.0 (* lambda (ds 26))) (+ 0.0 (* lambda (ds 32))))))
+(let ((a!2 (max a!1 (+ 0.0 (* lambda (ds 3))))))
+(let ((a!3 (max a!2 (+ 0.0 (* lambda (ds 31))))))
+  (= (ds 15) a!3)))))
+(assert (let ((a!1 (max (+ 0.0 (* lambda (ds 16))) (+ 0.0 (* lambda (ds 16))))))
+(let ((a!2 (max a!1 (+ 0.0 (* lambda (ds 16))))))
+  (= (ds 16) a!2))))
+(assert (let ((a!1 (max (+ 0.0 (* lambda (ds 33))) (+ 0.0 (* lambda (ds 9))))))
+(let ((a!2 (max a!1 (+ 0.0 (* lambda (ds 4))))))
+  (= (ds 17) a!2))))
+(assert (let ((a!1 (max (+ 0.0 (* lambda (ds 19))) (+ 0.0 (* lambda (ds 33))))))
+(let ((a!2 (max a!1 (+ 0.0 (* lambda (ds 34))))))
+  (= (ds 18) a!2))))
+(assert (let ((a!1 (max (+ 0.0 (* lambda (ds 16))) (+ 0.0 (* lambda (ds 35))))))
+(let ((a!2 (max a!1 (+ 0.0 (* lambda (ds 36))))))
+  (= (ds 19) a!2))))
+(assert (let ((a!1 (max (+ 0.0 (* lambda (ds 16))) (+ 0.0 (* lambda (ds 7))))))
+(let ((a!2 (max a!1 (+ 0.0 (* lambda (ds 5))))))
+  (= (ds 20) a!2))))
+(assert (let ((a!1 (min (+ 0.0 (* lambda (ds 1))) (+ 0.0 (* lambda (ds 2))))))
+(let ((a!2 (max a!1 (+ 0.0 (* lambda (ds 5))))))
+(let ((a!3 (max a!2 (+ 0.0 (* lambda (ds 7))))))
+  (= (ds 21) a!3)))))
+(assert (let ((a!1 (max (+ 0.0 (* lambda (ds 37))) (+ 0.0 (* lambda (ds 8))))))
+(let ((a!2 (max a!1 (+ 0.0 (* lambda (ds 6))))))
+  (= (ds 22) a!2))))
+(assert (let ((a!1 (max (+ 0.0 (* lambda (ds 24))) (+ 0.0 (* lambda (ds 38))))))
+(let ((a!2 (max a!1 (+ 0.0 (* lambda (ds 37))))))
+  (= (ds 23) a!2))))
+(assert (let ((a!1 (max (+ 0.0 (* lambda (ds 16))) (+ 0.0 (* lambda (ds 39))))))
+(let ((a!2 (max a!1 (+ 0.0 (* lambda (ds 40))))))
+  (= (ds 24) a!2))))
+(assert (let ((a!1 (max (+ 0.0 (* lambda (ds 27))) (+ 0.0 (* lambda (ds 41))))))
+(let ((a!2 (max a!1 (+ 0.0 (* lambda (ds 10))))))
+  (= (ds 25) a!2))))
+(assert (let ((a!1 (max (+ 0.0 (* lambda (ds 32))) (+ 0.0 (* lambda (ds 10))))))
+(let ((a!2 (max a!1 (+ 0.0 (* lambda (ds 41))))))
+  (= (ds 26) a!2))))
+(assert (let ((a!1 (max (+ 0.0 (* lambda (ds 30))) (+ 0.0 (* lambda (ds 42))))))
+(let ((a!2 (max a!1 (+ 0.0 (* lambda (ds 11))))))
+  (= (ds 27) a!2))))
+(assert (let ((a!1 (max (+ 0.0 (* lambda (ds 26))) (+ 0.0 (* lambda (ds 11))))))
+(let ((a!2 (max a!1 (+ 0.0 (* lambda (ds 42))))))
+  (= (ds 28) a!2))))
+(assert (let ((a!1 (max (+ 10000.0 (* lambda (ds 43))) (+ 10000.0 (* lambda (ds 43))))))
+(let ((a!2 (max a!1 (+ 10000.0 (* lambda (ds 43))))))
+  (= (ds 29) a!2))))
+(assert (let ((a!1 (max (+ 0.0 (* lambda (ds 16))) (+ 0.0 (* lambda (ds 44))))))
+(let ((a!2 (max a!1 (+ 0.0 (* lambda (ds 45))))))
+  (= (ds 30) a!2))))
+(assert (let ((a!1 (min (+ 0.0 (* lambda (ds 17))) (+ 0.0 (* lambda (ds 22))))))
+(let ((a!2 (max a!1 (+ 0.0 (* lambda (ds 15))))))
+(let ((a!3 (max a!2 (+ 0.0 (* lambda (ds 14))))))
+  (= (ds 31) a!3)))))
+(assert (let ((a!1 (max (+ 0.0 (* lambda (ds 16))) (+ 0.0 (* lambda (ds 46))))))
+(let ((a!2 (max a!1 (+ 0.0 (* lambda (ds 47))))))
+  (= (ds 32) a!2))))
+(assert (let ((a!1 (max (+ 0.0 (* lambda (ds 16))) (+ 0.0 (* lambda (ds 48))))))
+(let ((a!2 (max a!1 (+ 0.0 (* lambda (ds 18))))))
+  (= (ds 33) a!2))))
+(assert (let ((a!1 (max (+ 0.0 (* lambda (ds 2))) (+ 0.0 (* lambda (ds 18))))))
+(let ((a!2 (max a!1 (+ 0.0 (* lambda (ds 48))))))
+  (= (ds 34) a!2))))
+(assert (let ((a!1 (max (+ 0.0 (* lambda (ds 16))) (+ 0.0 (* lambda (ds 49))))))
+(let ((a!2 (max a!1 (+ 0.0 (* lambda (ds 19))))))
+  (= (ds 35) a!2))))
+(assert (let ((a!1 (max (+ 0.0 (* lambda (ds 16))) (+ 0.0 (* lambda (ds 19))))))
+(let ((a!2 (max a!1 (+ 0.0 (* lambda (ds 49))))))
+  (= (ds 36) a!2))))
+(assert (let ((a!1 (max (+ 0.0 (* lambda (ds 16))) (+ 0.0 (* lambda (ds 23))))))
+(let ((a!2 (max a!1 (+ 0.0 (* lambda (ds 50))))))
+  (= (ds 37) a!2))))
+(assert (let ((a!1 (max (+ 0.0 (* lambda (ds 1))) (+ 0.0 (* lambda (ds 50))))))
+(let ((a!2 (max a!1 (+ 0.0 (* lambda (ds 23))))))
+  (= (ds 38) a!2))))
+(assert (let ((a!1 (max (+ 0.0 (* lambda (ds 16))) (+ 0.0 (* lambda (ds 51))))))
+(let ((a!2 (max a!1 (+ 0.0 (* lambda (ds 24))))))
+  (= (ds 39) a!2))))
+(assert (let ((a!1 (max (+ 0.0 (* lambda (ds 16))) (+ 0.0 (* lambda (ds 24))))))
+(let ((a!2 (max a!1 (+ 0.0 (* lambda (ds 51))))))
+  (= (ds 40) a!2))))
+(assert (let ((a!1 (max (+ 0.0 (* lambda (ds 22))) (+ 0.0 (* lambda (ds 26))))))
+(let ((a!2 (max a!1 (+ 0.0 (* lambda (ds 25))))))
+  (= (ds 41) a!2))))
+(assert (let ((a!1 (max (+ 0.0 (* lambda (ds 17))) (+ 0.0 (* lambda (ds 28))))))
+(let ((a!2 (max a!1 (+ 0.0 (* lambda (ds 27))))))
+  (= (ds 42) a!2))))
+(assert (let ((a!1 (max (+ 0.0 (* lambda (ds 43))) (+ 0.0 (* lambda (ds 43))))))
+(let ((a!2 (max a!1 (+ 0.0 (* lambda (ds 43))))))
+  (= (ds 43) a!2))))
+(assert (let ((a!1 (max (+ 0.0 (* lambda (ds 16))) (+ 0.0 (* lambda (ds 52))))))
+(let ((a!2 (max a!1 (+ 0.0 (* lambda (ds 30))))))
+  (= (ds 44) a!2))))
+(assert (let ((a!1 (max (+ 0.0 (* lambda (ds 16))) (+ 0.0 (* lambda (ds 30))))))
+(let ((a!2 (max a!1 (+ 0.0 (* lambda (ds 52))))))
+  (= (ds 45) a!2))))
+(assert (let ((a!1 (max (+ 0.0 (* lambda (ds 16))) (+ 0.0 (* lambda (ds 53))))))
+(let ((a!2 (max a!1 (+ 0.0 (* lambda (ds 32))))))
+  (= (ds 46) a!2))))
+(assert (let ((a!1 (max (+ 0.0 (* lambda (ds 16))) (+ 0.0 (* lambda (ds 32))))))
+(let ((a!2 (max a!1 (+ 0.0 (* lambda (ds 53))))))
+  (= (ds 47) a!2))))
+(assert (let ((a!1 (max (+ 0.0 (* lambda (ds 23))) (+ 0.0 (* lambda (ds 34))))))
+(let ((a!2 (max a!1 (+ 0.0 (* lambda (ds 33))))))
+  (= (ds 48) a!2))))
+(assert (let ((a!1 (max (+ 0.0 (* lambda (ds 48))) (+ 0.0 (* lambda (ds 36))))))
+(let ((a!2 (max a!1 (+ 0.0 (* lambda (ds 35))))))
+  (= (ds 49) a!2))))
+(assert (let ((a!1 (max (+ 0.0 (* lambda (ds 18))) (+ 0.0 (* lambda (ds 37))))))
+(let ((a!2 (max a!1 (+ 0.0 (* lambda (ds 38))))))
+  (= (ds 50) a!2))))
+(assert (let ((a!1 (max (+ 0.0 (* lambda (ds 50))) (+ 0.0 (* lambda (ds 40))))))
+(let ((a!2 (max a!1 (+ 0.0 (* lambda (ds 39))))))
+  (= (ds 51) a!2))))
+(assert (let ((a!1 (max (+ 0.0 (* lambda (ds 28))) (+ 0.0 (* lambda (ds 45))))))
+(let ((a!2 (max a!1 (+ 0.0 (* lambda (ds 44))))))
+  (= (ds 52) a!2))))
+(assert (let ((a!1 (max (+ 0.0 (* lambda (ds 25))) (+ 0.0 (* lambda (ds 47))))))
+(let ((a!2 (max a!1 (+ 0.0 (* lambda (ds 46))))))
+  (= (ds 53) a!2))))
+(assert (>= (ds 38) (ds 21)))
+(assert (>= (ds 50) (ds 5)))
+(assert (>= (ds 23) (ds 7)))
+(assert (>= (ds 37) (ds 20)))
+(assert (>= (ds 10) (ds 3)))
+(assert (>= (ds 25) (ds 14)))
+(assert (>= (ds 26) (ds 15)))
+(assert (>= (ds 41) (ds 31)))
+
+DS({ s1x2xS s1x3xS s2x2xS s2x3xS } <= init) = 6302.49
+DS({ s2x2xS } <= flRb) = 8573.75
+DS({ s2x3xS } <= fLrb) = 7350.92
+DS({ s3x2xS s3x3xS } <= flrb) = 6634.2
+DS({ s2x3xE } <= Flrb) = 6983.37
+DS({ s1x2xE s1x3xE } <= fLrb) = 6634.2
+DS({ s2x2xE } <= flrB) = 8145.06
+DS({ s1x2xW s1x3xW } <= flRb) = 6634.2
+DS({ s2x2xW } <= Flrb) = 8145.06
+DS({ s2x3xW } <= flrB) = 7737.81
+DS({ s3x2xS } <= flrb) = 9025
+DS({ s3x3xS } <= flrb) = 7737.81
+DS({ s4x2xS } <= FlRb) = 9500
+DS({ s4x3xS } <= FLrb) = 0
+DS({ s3x2xE s3x3xE } <= flrb) = 6634.2
+DS({ s3x2xW s3x3xW } <= flrb) = 6983.37
+DS({ absorb } <= Oabs) = 0
+DS({ s2x3xN } <= flRb) = 7350.92
+DS({ s1x3xE } <= fLrb) = 6634.2
+DS({ s1x4xE } <= FLRb) = 6302.49
+DS({ s1x2xN s1x3xN } <= Flrb) = 6302.49
+DS({ s1x2xS s1x3xS } <= flrB) = 6983.37
+DS({ s2x2xN } <= fLrb) = 7737.81
+DS({ s1x2xW } <= flRb) = 7737.81
+DS({ s1x1xW } <= FLRb) = 6634.2
+DS({ s3x2xE } <= flrb) = 8573.75
+DS({ s3x2xW } <= flrb) = 8573.75
+DS({ s3x3xE } <= flrb) = 7350.92
+DS({ s3x3xW } <= flrb) = 8145.06
+DS({ goal } <= Ogoal) = 10000
+DS({ s3x4xE } <= FLRb) = 6983.37
+DS({ s3x2xN s3x3xN } <= flrb) = 6983.37
+DS({ s3x1xW } <= FLRb) = 7350.92
+DS({ s1x3xN } <= Flrb) = 6983.37
+DS({ s1x3xS } <= flrB) = 6983.37
+DS({ s1x4xN } <= FlRB) = 6634.2
+DS({ s1x4xS } <= FLrB) = 6634.2
+DS({ s1x2xN } <= Flrb) = 7350.92
+DS({ s1x2xS } <= flrB) = 8145.06
+DS({ s1x1xS } <= FlRB) = 6983.37
+DS({ s1x1xN } <= FLrB) = 6983.37
+DS({ s3x2xN } <= flrb) = 8145.06
+DS({ s3x3xN } <= flrb) = 7737.81
+DS({ goal2 } <= Ogoal2) = 0
+DS({ s3x4xN } <= FlRB) = 7350.92
+DS({ s3x4xS } <= FLrB) = 7350.92
+DS({ s3x1xS } <= FlRB) = 7737.81
+DS({ s3x1xN } <= FLrB) = 7737.81
+DS({ s1x3xW } <= flRb) = 7350.92
+DS({ s1x4xW } <= fLRB) = 6983.37
+DS({ s1x2xE } <= fLrb) = 7737.81
+DS({ s1x1xE } <= fLRB) = 7350.92
+DS({ s3x4xW } <= fLRB) = 7737.81
+DS({ s3x1xE } <= fLRB) = 8145.06
+1.67 sec (Real time) / 1.61 sec (User CPU time)
