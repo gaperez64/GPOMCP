@@ -37384,4 +37384,5 @@ Equations :
 (assert (>= (ds 1400) (ds 1679)))
 (assert (>= (ds 1595) (ds 2565)))
 (assert (>= (ds 1680) (ds 2130)))
-(assert (>= (ds 1536) (
+(assert (>= (ds 1536) (Command terminated by signal 15
+243618.51 sec (Real time) / 163448.87 sec (User CPU time)

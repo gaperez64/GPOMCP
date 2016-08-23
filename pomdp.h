@@ -47,6 +47,8 @@ class POMDP {
         void setActions(std::vector<std::string>);
         int getActionCount();
         void setObservations(std::vector<std::string>);
+        int sampleInitialState();
+        AIToolbox::POMDP::Belief getInitialBelief();
 
         void addTransition(int, int, int, float);
         void addObservationProb(int, int, float);

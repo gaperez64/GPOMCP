@@ -580,7 +580,93 @@ void POMDP::setInitialDist(std::map<int, float> dist) {
 }
 
 // method to implement in order to interface with AI-Toolbox
-AIToolbox::POMDP::Model<AIToolbox::MDP::Model> makeModel() {
-    // for a sample implementation look at:
-    // https://github.com/Svalorzen/AI-Toolbox/blob/master/test/POMDP/Utils/TigerProblem.hpp
+AIToolbox::POMDP::Model<AIToolbox::MDP::Model> POMDP::makeModel() {
+    size_t S, A, O;
+    S = this->getStateCount();
+    A = this->getActionCount();
+    O = this->observations.size();
+    AIToolbox::POMDP::Model<AIToolbox::MDP::Model> model(O, S, A);
+    
+    double d = this->getDiscFactor(); // is this good conversion?
+    model.setDiscount(d);
+    
+    AIToolbox::Table3D transitions(boost::extents[S][A][S]);
+    AIToolbox::Table3D rewards(boost::extents[S][A][S]);
+    AIToolbox::Table3D local_observations(boost::extents[S][A][O]);
+    
+    for (int s = 0; s < S; ++s) {
+    	for (int a = 0; a < A; ++a) {
+    		for (int s1 = 0; s1 < S; ++s1) {
+                if (this->prob_delta.find(std::make_tuple(s, a, s1)) ==
+                        this->prob_delta.end())
+                    transitions[s][a][s1] = 0.0;
+                else
+    			    transitions[s][a][s1] =
+                        this->prob_delta[std::make_tuple(s, a, s1)];
+			}
+		} 
+	} 
+	
+	for (int s = 0; s < S; ++s) {
+		for (int a = 0; a < A; ++a) {
+			for (int o = 0; o < O; ++o) {
+                if (this->prob_obs.find(std::make_tuple(s, o)) ==
+                        this->prob_obs.end())
+                    local_observations[s][a][o] = 0.0;
+                else
+				    local_observations[s][a][o] =
+                        this->prob_obs[std::make_tuple(s, o)];
+			} 
+		}
+	}
+	
+	for (int s = 0; s < S; ++s) {
+		for (int a = 0; a < A; ++a) {
+			for (int s1 = 0; s1 < S; ++s1) {
+                if (this->weight.find(std::make_tuple(s, a, s1)) ==
+                        this->weight.end())
+                    rewards[s][a][s1] = 0.0;
+                else
+    			    rewards[s][a][s1] =
+                        this->weight[std::make_tuple(s, a, s1)];
+			}
+		}
+	}
+	
+	model.setTransitionFunction(transitions);
+    model.setRewardFunction(rewards);
+    model.setObservationFunction(local_observations);
+    
+    return model;
+}
+
+int POMDP::sampleInitialState() {
+    double shift = 0.0;
+    std::srand(std::time(0)); // use current time as seed for random generator
+    int random_variable = std::rand();
+    std::cout << "Initial random value: " << random_variable << std::endl;
+    double r = random_variable / (double)(RAND_MAX); 
+    std::cout << "Random value: " << r << std::endl;
+    for (std::map<int, float>::iterator i = this->initial_dist.begin();
+            i != this->initial_dist.end(); ++i) {
+        if ((shift + i->second) >= r) {
+            std::cout << "So returning state "
+                      << this->states[i->first] << std::endl;
+            return i->first;
+        }
+        shift += i->second;
+    }
+    assert(false);
+    return -1;
+}
+
+AIToolbox::POMDP::Belief POMDP::getInitialBelief() {
+    AIToolbox::POMDP::Belief initial(this->states.size());
+    for (int i = 0; i < this->states.size(); i++) {
+        if (this->initial_dist.find(i) == this->initial_dist.end())
+            initial(i, 0) = 0.0;
+        else
+            initial(i, 0) = this->initial_dist[i];
+    }
+    return initial;
 }
