@@ -23,12 +23,15 @@ class POMDP {
         // for when we make a subset construction
         std::map<std::tuple<std::vector<int>, int>, int> states_id;
         std::vector<std::tuple<std::vector<int>, int> > inv_states_id;
+        // mapping from states to antagonistic values
+        std::vector<float> a_value;
 
         std::map<std::string, int> state_id_cache;
         std::map<std::string, int> action_id_cache;
         std::map<std::string, int> observation_id_cache;
 
         POMDP();
+        std::vector<int> post(int, int);
         std::vector<int> post(std::vector<int>, int);
 
     public:
@@ -43,12 +46,18 @@ class POMDP {
               std::map<int, float>,
               float);
         void setStates(std::vector<std::string>);
+        std::string getStateName(int);
+        std::string getActionName(int);
+        std::string getObsName(int);
         int getStateCount();
         void setActions(std::vector<std::string>);
         int getActionCount();
         void setObservations(std::vector<std::string>);
         int sampleInitialState();
         AIToolbox::POMDP::Belief getInitialBelief();
+        std::vector<int> getStatesInBelief(AIToolbox::POMDP::Belief&, int);
+        float getAValueOfBelief(std::vector<int>, int);
+        std::vector<bool> getSafeActions(std::vector<int>, int, int, float, float);
 
         void addTransition(int, int, int, float);
         void addObservationProb(int, int, float);

@@ -1,5 +1,6 @@
 #include <assert.h>
 #include <iostream>
+#include <cstdlib>
 #include <cmath>
 #include <AIToolbox/POMDP/Algorithms/POMCP.hpp>
 #include <AIToolbox/POMDP/Types.hpp>
@@ -7,11 +8,19 @@
 #include <AIToolbox/POMDP/Utils.hpp>
 
 #include "pomdp.h"
+#include "BWCPOMCP.hpp"
+
 
 int main (int argc, char *argv[]) {
-    if (argc < 2)
+    if (argc < 4) {
+        std::cerr << "Expected three input parameters: the input POMDP file name, "
+                  << "the worst-case lower bound "
+                  << "and the horizon to plan for" << std::endl;
         exit(1);
-    // recover the POMDP from file
+    }
+    // recover the POMDP from file and parse horizon
+    const float threshold = std::atoi(argv[2]);
+    const long max_timestep = std::atoi(argv[3]);
     POMDP M(argv[1]);
     // check some of its properties to assert it is a valid MDP
     assert(M.isValidMdp());
@@ -25,11 +34,10 @@ int main (int argc, char *argv[]) {
     N.solveGameBeliefConstruction();
     std::cout << "Done solving the game" << std::endl;
     // make the model in which we will simulate playing
-    const long max_timestep = 1000;
     std::cout << "Start building AI-Toolbox model" << std::endl;
     auto model = M.makeModel();
     // create the model solver
-    AIToolbox::POMDP::POMCP<decltype(model)> solver(
+    AIToolbox::POMDP::BWCPOMCP<decltype(model)> solver(
             model,
             1000,         // size of initial particle belief
             10000,        // number of episodes to run before completion
@@ -42,22 +50,32 @@ int main (int argc, char *argv[]) {
     float disc = M.getDiscFactor();
     current_state = M.sampleInitialState();
     current_obs = -1;
+    solver.safe_actions =
+        N.getSafeActions(M.getStatesInBelief(current_belief, current_obs),
+                         current_obs, 0, 0, threshold);
     action = solver.sampleAction(current_belief,
-                                 1000); // horizon to plan for
+                                 max_timestep); // horizon to plan for
     for (unsigned timestep = 0; timestep < max_timestep; ++timestep) {
         std::tie(new_state, new_obs, reward) =
             model.sampleSOR(current_state, action);
-        std::cout << "played action " << action
-                  << " from state " << current_state
+        std::cout << "played action " << M.getActionName(action)
+                  << " from state " << M.getStateName(current_state)
                   << " and received state, obs, reward = "
-                  << new_state << ", " << new_obs << ", "
+                  << M.getStateName(new_state)
+                  << ", " << M.getObsName(new_obs) << ", "
                   << reward << std::endl;
-        new_belief = AIToolbox::POMDP::updateBelief(model, current_belief,
-                                                    action, new_obs);
+        new_belief = AIToolbox::POMDP::updateBeliefUnnormalized(model,
+                                                                current_belief,
+                                                                action, new_obs);
+        total_reward += std::pow(disc, timestep) * reward;
         current_state = new_state;
         current_obs = new_obs;
-        total_reward += std::pow(disc, timestep) * reward;
-        action = solver.sampleAction(action, current_obs, max_timestep - timestep);
+        current_belief = new_belief;
+        solver.safe_actions =
+            N.getSafeActions(M.getStatesInBelief(current_belief, new_obs),
+                             current_obs, timestep + 1, total_reward, threshold);
+        action = solver.sampleAction(action, current_obs,
+                                     max_timestep - (timestep + 1));
     }
     std::cout << "Obtained an accum reward of: " << total_reward << std::endl;
     exit(EXIT_SUCCESS);

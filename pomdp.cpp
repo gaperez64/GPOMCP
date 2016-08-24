@@ -1,3 +1,4 @@
+#include <cmath>
 #include <tuple>
 #include <map>
 #include <vector>
@@ -33,6 +34,21 @@ POMDP::POMDP(const POMDP &other) :
 
 void POMDP::setStates(std::vector<std::string> S) {
     this->states = S;
+}
+
+std::string POMDP::getStateName(int i) {
+    assert(i < this->states.size());
+    return this->states[i];
+}
+
+std::string POMDP::getActionName(int i) {
+    assert(i < this->actions.size());
+    return this->actions[i];
+}
+
+std::string POMDP::getObsName(int i) {
+    assert(i < this->observations.size());
+    return this->observations[i];
 }
 
 int POMDP::getStateCount() {
@@ -291,6 +307,18 @@ void POMDP::makeObsDet() {
     std::swap(this->initial_dist, new_initial_dist);
 }
 
+std::vector<int> POMDP::post(int source, int action) {
+    std::vector<int> result;
+    for (std::map<std::tuple<int, int, int>, float>::iterator i =
+            this->prob_delta.begin(); i != this->prob_delta.end(); ++i) {
+        int s, a, t;
+        std::tie(s, a, t) = i->first;
+        if (i->second > 0 && action == a && s == source)
+            result.push_back(t);
+    }
+    return result;
+}
+
 std::vector<int> POMDP::post(std::vector<int> sources, int action) {
     std::vector<int> result;
     for (std::map<std::tuple<int, int, int>, float>::iterator i =
@@ -370,8 +398,12 @@ std::vector<float> POMDP::solveGameBeliefConstruction() {
     std::cout << "Calling solver!" << std::endl;
     // we now call the solver
     std::vector<float> result = g.solveGame(this->discount_factor);
-    for (int i = 0; i < result.size(); i++)
+    assert(result.size() == this->states.size());
+    this->a_value.resize(result.size());
+    for (int i = 0; i < result.size(); i++) {
+        this->a_value[i] = result[i];
         std::cout << "DS(" << this->states[i] << ") = " << result[i] << std::endl;
+    }
     return result;
 }
 
@@ -405,6 +437,8 @@ void POMDP::makeGameBeliefConstruction() {
     std::vector<std::string> new_states;
     std::vector<std::string> new_observations;
     // we keep track of the fact a new state = (list of states, obs)
+    // TECH NOTE: because of how we will fill new_states_id, the vectors
+    // in the keys of the map will be sorted
     std::map<std::tuple<std::vector<int>, int>, int> new_states_id;
     std::vector<std::tuple<std::vector<int>, int> > inv_new_states_id;
     std::map<int, float> new_initial_dist;
@@ -669,4 +703,74 @@ AIToolbox::POMDP::Belief POMDP::getInitialBelief() {
             initial(i, 0) = this->initial_dist[i];
     }
     return initial;
+}
+
+std::vector<int> POMDP::getStatesInBelief(AIToolbox::POMDP::Belief &b, int obs) {
+    // this vector will be, by construction, ordered
+    std::vector<int> states_in_belief;
+    std::cout << "Found states: ";
+    for (int i = 0; i < this->states.size(); i++)
+        if (b(i, 0) > 0.0) {
+            states_in_belief.push_back(i);
+            std::cout << i << ":" << this->states[i] << " ";
+        }
+    std::cout << std::endl;
+    assert(states_in_belief.size() > 0); // otherwise we fucked up
+    if (obs > -1) {
+        std::cout << "Observation = " << this->observations[obs] << std::endl;
+    }
+    return states_in_belief;
+}
+
+float POMDP::getAValueOfBelief(std::vector<int> states_in_belief, int obs) {
+    std::map<std::tuple<std::vector<int>, int>, int>::iterator i =
+        this->states_id.find(std::make_tuple(states_in_belief, obs));
+    if (i != this->states_id.end())
+        return this->a_value[i->second];
+    // If this is reached then either you have not computed the a_value vector
+    // or you have provided a belief vector which is not a state in the current
+    // belief construction (together with the obs)
+    assert(false);
+    return 0;
+}
+
+std::vector<bool> POMDP::getSafeActions(std::vector<int> states_in_belief,
+                                        int obs, int step, float running_sum,
+                                        float threshold) {
+    std::vector<bool> safe(this->actions.size(), true);
+    std::map<std::tuple<std::vector<int>, int>, int>::iterator i =
+        this->states_id.find(std::make_tuple(states_in_belief, obs));
+    if (i != this->states_id.end()) {
+        assert((this->a_value[i->second] *
+                std::pow(this->discount_factor, step)) +
+               running_sum >= threshold);
+
+        for (int a = 0; a < this->actions.size(); a++) {
+            std::vector<int> successors = this->post(i->second, a);
+            for (std::vector<int>::iterator j = successors.begin();
+                    j != successors.end(); ++j) {
+                if (threshold > 
+                    running_sum + (std::pow(this->discount_factor, step) *
+                        (this->weight[std::make_tuple(i->second, a, *j)] +
+                         this->a_value[*j] * this->discount_factor)))
+                    safe[a] = false;
+            }
+        }
+        return safe;
+    }
+    for (i = this->states_id.begin(); i != this->states_id.end(); ++i) {
+        std::vector<int> vec;
+        int o;
+        std::tie(vec, o) = i->first;
+        std::cout << "key: ( ";
+        for (auto j = vec.begin(); j != vec.end(); ++j)
+            std::cout << *j << " ";
+        std::cout << "), " << o;
+        std::cout << std::endl;
+    }
+    // If this is reached then either you have not computed the a_value vector
+    // or you have provided a belief vector which is not a state in the current
+    // belief construction (together with the obs)
+    assert(false);
+    return std::vector<bool>();
 }
