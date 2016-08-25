@@ -1,3 +1,5 @@
+#include <chrono>
+#include <random>
 #include <cmath>
 #include <tuple>
 #include <map>
@@ -675,23 +677,20 @@ AIToolbox::POMDP::Model<AIToolbox::MDP::Model> POMDP::makeModel() {
 }
 
 int POMDP::sampleInitialState() {
-    double shift = 0.0;
-    std::srand(std::time(0)); // use current time as seed for random generator
-    int random_variable = std::rand();
-    std::cout << "Initial random value: " << random_variable << std::endl;
-    double r = random_variable / (double)(RAND_MAX); 
-    std::cout << "Random value: " << r << std::endl;
+    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    std::default_random_engine generator(seed);
+    std::vector<float> probs;
+    std::vector<int> prob_state;
     for (std::map<int, float>::iterator i = this->initial_dist.begin();
             i != this->initial_dist.end(); ++i) {
-        if ((shift + i->second) >= r) {
-            std::cout << "So returning state "
-                      << this->states[i->first] << std::endl;
-            return i->first;
-        }
-        shift += i->second;
+        probs.push_back(i->second);
+        prob_state.push_back(i->first);
     }
-    assert(false);
-    return -1;
+    std::discrete_distribution<int> dist(probs.begin(), probs.end());
+    int result = prob_state[dist(generator)];
+    std::cout << "Randomly chosen initial state: " << this->states[result]
+              << std::endl;
+    return result;
 }
 
 AIToolbox::POMDP::Belief POMDP::getInitialBelief() {
@@ -752,8 +751,11 @@ std::vector<bool> POMDP::getSafeActions(std::vector<int> states_in_belief,
                 if (threshold > 
                     running_sum + (std::pow(this->discount_factor, step) *
                         (this->weight[std::make_tuple(i->second, a, *j)] +
-                         this->a_value[*j] * this->discount_factor)))
+                         this->a_value[*j] * this->discount_factor))) {
+                    std::cout << "Playing action: (" << a << ") " << this->actions[a]
+                              << " is unsafe now" << std::endl;
                     safe[a] = false;
+                }
             }
         }
         return safe;

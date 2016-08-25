@@ -16,15 +16,18 @@ int main (int argc, char *argv[]) {
         std::cerr << "Expected three input parameters: the input POMDP file name, "
                   << "the worst-case lower bound "
                   << "and the horizon to plan for" << std::endl;
+        std::cerr << "Call format:" << std::endl;
+        std::cerr << argv[0] << " filename bound horizon" << std::endl;
         exit(1);
     }
     // recover the POMDP from file and parse horizon
-    const float threshold = std::atoi(argv[2]);
+    const float threshold = std::atof(argv[2]);
     const long max_timestep = std::atoi(argv[3]);
     POMDP M(argv[1]);
     // check some of its properties to assert it is a valid MDP
     assert(M.isValidMdp());
-    M.print(std::cout);
+    assert(M.hasObsWeights());
+    // M.print(std::cout);
     // obtain the initial belief
     AIToolbox::POMDP::Belief new_belief, current_belief;
     current_belief = M.getInitialBelief();
