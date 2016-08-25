@@ -711,7 +711,7 @@ std::vector<int> POMDP::getStatesInBelief(AIToolbox::POMDP::Belief &b, int obs) 
     for (int i = 0; i < this->states.size(); i++)
         if (b(i, 0) > 0.0) {
             states_in_belief.push_back(i);
-            std::cout << i << ":" << this->states[i] << " ";
+            std::cout << "(" << i << ")" << this->states[i] << " ";
         }
     std::cout << std::endl;
     assert(states_in_belief.size() > 0); // otherwise we fucked up
@@ -752,7 +752,7 @@ std::vector<bool> POMDP::getSafeActions(std::vector<int> states_in_belief,
                     running_sum + (std::pow(this->discount_factor, step) *
                         (this->weight[std::make_tuple(i->second, a, *j)] +
                          this->a_value[*j] * this->discount_factor))) {
-                    std::cout << "Playing action: (" << a << ") " << this->actions[a]
+                    std::cout << "Playing action: (" << a << ")" << this->actions[a]
                               << " is unsafe now" << std::endl;
                     safe[a] = false;
                 }
