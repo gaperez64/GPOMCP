@@ -6,14 +6,14 @@ class Transition {
         int source;
         int action;
         int dest;
-        float weight;
+        double weight;
 
     public: 
-        Transition(int s, int a, int d, float w);
+        Transition(int s, int a, int d, double w);
         int getSource();
         int getAction();
         int getDest();
-        float getWeight();
+        double getWeight();
 };
 
 class Game {
@@ -22,16 +22,16 @@ class Game {
         // each vector here tells us that all states j > i will have
         // a higher value than state i
         std::vector<std::vector<int> > partial_orders;
-        float biggest_weight;
+        double biggest_weight;
 
     public:
         void addTransition(Transition t);
-        void addTransition(int s, int a, int d, float w = 0);
+        void addTransition(int s, int a, int d, double w = 0);
         void addOrderVector(std::vector<int> order);
         std::set<int> getStates();
         std::set<int> availableActions(int state);
         std::list<Transition> post(int state, int action);
-        std::vector<float> solveGameSMT(float);
-        std::vector<float> solveGameValIter(float);
-        std::vector<float> solveGame(float);
+        std::vector<double> solveGameSMT(double);
+        std::vector<double> solveGameValIter(double);
+        std::vector<double> solveGame(double);
 };

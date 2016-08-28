@@ -59,7 +59,7 @@ reset            return yy::CassParser::make_RESET(loc);
 }
 ([0-9]+"."[0-9]*|"."[0-9]+|[0-9]+)([eE][-+]?[0-9]+)? {
     errno = 0;
-    float n = strtof(yytext, NULL);
+    double n = strtod(yytext, NULL);
     return yy::CassParser::make_FLOAT(n, loc);
 }
 [a-zA-Z]([a-zA-Z0-9]|[\_\-])* {

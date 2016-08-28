@@ -21,11 +21,11 @@ POMDP::POMDP(const std::string &filename) : POMDP() {
 POMDP::POMDP(std::vector<std::string> S,
              std::vector<std::string> A,
              std::vector<std::string> O,
-             std::map<std::tuple<int, int, int>, float> P,
-             std::map<std::tuple<int, int>, float> PO,
-             std::map<std::tuple<int, int, int>, float> W,
-             std::map<int, float> I,
-             float D) :
+             std::map<std::tuple<int, int, int>, double> P,
+             std::map<std::tuple<int, int>, double> PO,
+             std::map<std::tuple<int, int, int>, double> W,
+             std::map<int, double> I,
+             double D) :
     states(S), actions(A), observations(O), prob_delta(P), prob_obs(PO),
     weight(W), initial_dist(I), discount_factor(D) { }
 
@@ -70,42 +70,48 @@ void POMDP::setObservations(std::vector<std::string> O) {
 }
 
 void POMDP::addTransition(int source, int action, int target,
-                          float prob) {
+                          double prob) {
     assert(source < this->states.size());
     assert(target < this->states.size());
     this->prob_delta[std::make_tuple(source, action, target)] = prob;
 }
 
-void POMDP::addObservationProb(int state, int obs, float prob) {
+void POMDP::addObservationProb(int state, int obs, double prob) {
     assert(state < this->states.size());
     assert(obs < this->observations.size());
     this->prob_obs[std::make_tuple(state, obs)] = prob;
 }
 
 void POMDP::weightTransition(int source, int action, int target,
-                             float weight) {
+                             double weight) {
+    assert(source >=0 && source < this->states.size());
+    assert(action >=0 && action < this->actions.size());
+    assert(target >=0 && target < this->states.size());
+
     if (this->prob_delta.find(std::make_tuple(source, action, target)) ==
-            this->prob_delta.end())
+            this->prob_delta.end()) {
+        // assert(false);
         return;
+    }
     this->weight[std::make_tuple(source, action, target)] = weight;
 }
 
-void POMDP::setDiscFactor(float d) {
+void POMDP::setDiscFactor(double d) {
     this->discount_factor = d;
 }
 
-float POMDP::getDiscFactor() {
+double POMDP::getDiscFactor() {
     return this->discount_factor;
 }
 
 bool POMDP::isValidMdp() {
     // check #1: transition probs should add to 1 for every state x action
-    std::map<std::tuple<int, int>, float> state_action_prob;
+    std::map<std::tuple<int, int>, double> state_action_prob;
     for (int s = 0; s < this->states.size(); s++)
         for (int a = 0; a < this->actions.size(); a++)
             state_action_prob[std::make_tuple(s, a)] = 0;
 
-    for (std::map<std::tuple<int, int, int>, float>::iterator P =
+    for (std::map<std::tuple<int, int, int>, double>::iterator P =
             this->prob_delta.begin(); P != this->prob_delta.end();
             ++P) {
         int s, a, t;
@@ -123,7 +129,7 @@ bool POMDP::isValidMdp() {
                 return false;
             }
     // check #2: every transition should have a weight
-    for (std::map<std::tuple<int, int, int>, float>::iterator i =
+    for (std::map<std::tuple<int, int, int>, double>::iterator i =
             this->prob_delta.begin(); i != this->prob_delta.end(); ++i) {
         if (this->weight.find(i->first) == this->weight.end()) {
             int s, a, t;
@@ -138,11 +144,11 @@ bool POMDP::isValidMdp() {
         }
     }
     // check #3: observation probs should add to 1 for every state
-    std::map<std::tuple<int>, float> state_obs_prob;
+    std::map<std::tuple<int>, double> state_obs_prob;
     for (int s = 0; s < this->states.size(); s++)
         state_obs_prob[std::make_tuple(s)] = 0;
 
-    for (std::map<std::tuple<int, int>, float>::iterator PO =
+    for (std::map<std::tuple<int, int>, double>::iterator PO =
             this->prob_obs.begin(); PO != this->prob_obs.end();
             ++PO) {
         int s, o;
@@ -164,7 +170,7 @@ bool POMDP::isValidMdp() {
 bool POMDP::hasObsWeights() {
     std::vector<std::set<int> > same_obs_states;
     same_obs_states.resize(this->observations.size());
-    for (std::map<std::tuple<int, int>, float>::iterator PO =
+    for (std::map<std::tuple<int, int>, double>::iterator PO =
             this->prob_obs.begin(); PO != this->prob_obs.end();
             ++PO) {
         int s, o;
@@ -177,8 +183,8 @@ bool POMDP::hasObsWeights() {
     // transition, we assert that the weight is the same
     for (int cur_obs1 = 0; cur_obs1 < this->observations.size(); cur_obs1++) {
         for (int cur_obs2 = 0; cur_obs2 < this->observations.size(); cur_obs2++) {
-            std::map<std::tuple<int, int, int>, float> obs_weight;
-            for (std::map<std::tuple<int, int, int>, float>::iterator W =
+            std::map<std::tuple<int, int, int>, double> obs_weight;
+            for (std::map<std::tuple<int, int, int>, double>::iterator W =
                     this->weight.begin(); W != this->weight.end(); ++W) {
                 int s, a, t;
                 std::tie(s, a, t) = W->first;
@@ -206,14 +212,14 @@ bool POMDP::hasObsWeights() {
 
 bool POMDP::hasInitialObs() {
     std::vector<int> initial_obs;
-    for (std::map<int, float>::iterator I = this->initial_dist.begin();
+    for (std::map<int, double>::iterator I = this->initial_dist.begin();
             I != this->initial_dist.end(); ++I)
         initial_obs.push_back(I->first);
     std::sort(initial_obs.begin(), initial_obs.end());
 
     std::vector<std::vector<int> > same_obs_states;
     same_obs_states.resize(this->observations.size());
-    for (std::map<std::tuple<int, int>, float>::iterator PO =
+    for (std::map<std::tuple<int, int>, double>::iterator PO =
             this->prob_obs.begin(); PO != this->prob_obs.end();
             ++PO) {
         int s, o;
@@ -231,7 +237,7 @@ bool POMDP::hasInitialObs() {
 }
 
 bool POMDP::hasDetObs() {
-    for (std::map<std::tuple<int, int>, float>::iterator PO =
+    for (std::map<std::tuple<int, int>, double>::iterator PO =
             this->prob_obs.begin(); PO != this->prob_obs.end();
             ++PO)
         if (PO->second != 1.0)
@@ -241,12 +247,12 @@ bool POMDP::hasDetObs() {
 
 void POMDP::makeObsDet() {
     std::vector<std::string> new_states;
-    std::map<std::tuple<int, int>, float> new_prob_obs;
+    std::map<std::tuple<int, int>, double> new_prob_obs;
     std::vector<std::vector<int> > newstates_per_state;
     std::vector<std::vector<int> > obs_per_state;
     obs_per_state.resize(this->states.size());
     int i = 0;
-    for (std::map<std::tuple<int, int>, float>::iterator PO =
+    for (std::map<std::tuple<int, int>, double>::iterator PO =
             this->prob_obs.begin(); PO != this->prob_obs.end();
             ++PO) {
         int s, o;
@@ -263,9 +269,9 @@ void POMDP::makeObsDet() {
     // old state set
     // we will do so by iterating over the original transitions and exploding
     // that times the size of observations per state
-    std::map<std::tuple<int, int, int>, float> new_prob_delta;
-    std::map<std::tuple<int, int, int>, float> new_weight;
-    for (std::map<std::tuple<int, int, int>, float>::iterator P =
+    std::map<std::tuple<int, int, int>, double> new_prob_delta;
+    std::map<std::tuple<int, int, int>, double> new_weight;
+    for (std::map<std::tuple<int, int, int>, double>::iterator P =
             this->prob_delta.begin(); P != this->prob_delta.end(); ++P) {
         int s, a, t;
         std::tie(s, a, t) = P->first;
@@ -275,7 +281,7 @@ void POMDP::makeObsDet() {
             std::vector<int>::iterator NS2 = newstates_per_state[t].begin();
             std::vector<int>::iterator OS2 = obs_per_state[t].begin();
             while (NS2 != newstates_per_state[t].end()) {
-                float w = this->weight[std::make_tuple(s, a, t)];
+                double w = this->weight[std::make_tuple(s, a, t)];
                 new_prob_delta[std::make_tuple(*NS1, a, *NS2)] =
                     P->second * this->prob_obs[std::make_tuple(t, *OS2)]; 
                 new_weight[std::make_tuple(*NS1, a, *NS2)] = w;
@@ -287,8 +293,8 @@ void POMDP::makeObsDet() {
         }
     }
     // generate the new initial distribution
-    std::map<int, float> new_initial_dist;
-    for (std::map<int, float>::iterator I = this->initial_dist.begin();
+    std::map<int, double> new_initial_dist;
+    for (std::map<int, double>::iterator I = this->initial_dist.begin();
             I != this->initial_dist.end(); ++I) {
         std::vector<int>::iterator NS = newstates_per_state[I->first].begin();
         std::vector<int>::iterator OS = obs_per_state[I->first].begin();
@@ -311,7 +317,7 @@ void POMDP::makeObsDet() {
 
 std::vector<int> POMDP::post(int source, int action) {
     std::vector<int> result;
-    for (std::map<std::tuple<int, int, int>, float>::iterator i =
+    for (std::map<std::tuple<int, int, int>, double>::iterator i =
             this->prob_delta.begin(); i != this->prob_delta.end(); ++i) {
         int s, a, t;
         std::tie(s, a, t) = i->first;
@@ -323,7 +329,7 @@ std::vector<int> POMDP::post(int source, int action) {
 
 std::vector<int> POMDP::post(std::vector<int> sources, int action) {
     std::vector<int> result;
-    for (std::map<std::tuple<int, int, int>, float>::iterator i =
+    for (std::map<std::tuple<int, int, int>, double>::iterator i =
             this->prob_delta.begin(); i != this->prob_delta.end(); ++i) {
         int s, a, t;
         std::tie(s, a, t) = i->first;
@@ -334,12 +340,12 @@ std::vector<int> POMDP::post(std::vector<int> sources, int action) {
     return result;
 }
 
-std::vector<float> POMDP::solveGameBeliefConstruction() {
+std::vector<double> POMDP::solveGameBeliefConstruction() {
     this->makeGameBeliefConstruction();
     this->print(std::cout);
     Game g;
     // add all transitions to game
-    for (std::map<std::tuple<int, int, int>, float>::iterator i =
+    for (std::map<std::tuple<int, int, int>, double>::iterator i =
             this->prob_delta.begin(); i != this->prob_delta.end(); ++i) {
         int s, a, t;
         std::tie(s, a, t) = i->first;
@@ -399,7 +405,7 @@ std::vector<float> POMDP::solveGameBeliefConstruction() {
     }
     std::cout << "Calling solver!" << std::endl;
     // we now call the solver
-    std::vector<float> result = g.solveGame(this->discount_factor);
+    std::vector<double> result = g.solveGame(this->discount_factor);
     assert(result.size() == this->states.size());
     this->a_value.resize(result.size());
     for (int i = 0; i < result.size(); i++) {
@@ -414,7 +420,7 @@ void POMDP::makeGameBeliefConstruction() {
     std::vector<int> initial_states;
     std::string initial_states_name;
     initial_states_name += "{";
-    for (std::map<int, float>::iterator I = this->initial_dist.begin();
+    for (std::map<int, double>::iterator I = this->initial_dist.begin();
             I != this->initial_dist.end(); ++I) {
         initial_states.push_back(I->first);
         initial_states_name += " " + this->states[I->first];
@@ -423,7 +429,7 @@ void POMDP::makeGameBeliefConstruction() {
     initial_states_name += " } <= init";
     // create a map from observations to their states
     std::map<int, std::vector<int> > states_per_obs;
-    for (std::map<std::tuple<int, int>, float>::iterator i =
+    for (std::map<std::tuple<int, int>, double>::iterator i =
             this->prob_obs.begin(); i != this->prob_obs.end(); ++i) {
         int s, obs;
         std::tie(s, obs) = i->first;
@@ -443,8 +449,8 @@ void POMDP::makeGameBeliefConstruction() {
     // in the keys of the map will be sorted
     std::map<std::tuple<std::vector<int>, int>, int> new_states_id;
     std::vector<std::tuple<std::vector<int>, int> > inv_new_states_id;
-    std::map<int, float> new_initial_dist;
-    std::map<std::tuple<int, int>, float> new_prob_obs;
+    std::map<int, double> new_initial_dist;
+    std::map<std::tuple<int, int>, double> new_prob_obs;
     // first, we add the initial state
     new_states.push_back(initial_states_name);
     new_observations.push_back(initial_states_name);
@@ -456,8 +462,8 @@ void POMDP::makeGameBeliefConstruction() {
     state_count++;
     assert(inv_new_states_id.size() == state_count);
     // we now add subsets by doing a DFS on the belief game
-    std::map<std::tuple<int, int, int>, float> new_prob_delta;
-    std::map<std::tuple<int, int, int>, float> new_weight;
+    std::map<std::tuple<int, int, int>, double> new_prob_delta;
+    std::map<std::tuple<int, int, int>, double> new_weight;
     std::set<int> to_process;
     to_process.insert(0); // adding the initial state
     while (!to_process.empty()) {
@@ -511,7 +517,7 @@ void POMDP::makeGameBeliefConstruction() {
                                                action,
                                                new_target)] = 1.0;
                 for (std::map<std::tuple<int,
-                        int, int>, float>::iterator iw =
+                        int, int>, double>::iterator iw =
                         this->weight.begin();
                         iw != this->weight.end(); ++iw) {
                     int s, a, t;
@@ -555,7 +561,7 @@ void POMDP::print(std::ostream &o) {
             i != this->states.end(); ++i)
         o << *i << std::endl;
     o << "Initial distribution: " << std::endl;
-    for (std::map<int, float>::iterator i = this->initial_dist.begin();
+    for (std::map<int, double>::iterator i = this->initial_dist.begin();
             i != this->initial_dist.end(); ++i)
         o << this->states[i->first] << " with prob " << i->second << std::endl;
     o << this->actions.size() << " Actions: " << std::endl;
@@ -567,7 +573,7 @@ void POMDP::print(std::ostream &o) {
             i != this->observations.end(); ++i)
         o << *i << std::endl;
     o << "State-observation mapping: " << std::endl;
-    for (std::map<std::tuple<int, int>, float>::iterator i =
+    for (std::map<std::tuple<int, int>, double>::iterator i =
             this->prob_obs.begin(); i != this->prob_obs.end(); ++i) {
         int s, obs;
         std::tie(s, obs) = i->first;
@@ -575,7 +581,7 @@ void POMDP::print(std::ostream &o) {
           << this->observations[obs] << " with prob " << i->second << std::endl;
     }
     o << this->prob_delta.size() << " Transitions: " << std::endl;
-    for (std::map<std::tuple<int, int, int>, float>::iterator i =
+    for (std::map<std::tuple<int, int, int>, double>::iterator i =
             this->prob_delta.begin(); i != this->prob_delta.end(); ++i) {
         int s, a, t;
         std::tie(s, a, t) = i->first;
@@ -611,7 +617,7 @@ int POMDP::getObservationId(const std::string &name) {
     return getId(this->observations, this->observation_id_cache, name);
 }
 
-void POMDP::setInitialDist(std::map<int, float> dist) {
+void POMDP::setInitialDist(std::map<int, double> dist) {
     this->initial_dist = dist;
 }
 
@@ -634,14 +640,16 @@ AIToolbox::POMDP::Model<AIToolbox::MDP::Model> POMDP::makeModel() {
     	for (int a = 0; a < A; ++a) {
     		for (int s1 = 0; s1 < S; ++s1) {
                 if (this->prob_delta.find(std::make_tuple(s, a, s1)) ==
-                        this->prob_delta.end())
+                        this->prob_delta.end()) {
                     transitions[s][a][s1] = 0.0;
-                else
+                } else {
     			    transitions[s][a][s1] =
                         this->prob_delta[std::make_tuple(s, a, s1)];
+                }
 			}
 		} 
 	} 
+	model.setTransitionFunction(transitions);
 	
 	for (int s = 0; s < S; ++s) {
 		for (int a = 0; a < A; ++a) {
@@ -655,6 +663,7 @@ AIToolbox::POMDP::Model<AIToolbox::MDP::Model> POMDP::makeModel() {
 			} 
 		}
 	}
+    model.setObservationFunction(local_observations);
 	
 	for (int s = 0; s < S; ++s) {
 		for (int a = 0; a < A; ++a) {
@@ -668,10 +677,7 @@ AIToolbox::POMDP::Model<AIToolbox::MDP::Model> POMDP::makeModel() {
 			}
 		}
 	}
-	
-	model.setTransitionFunction(transitions);
     model.setRewardFunction(rewards);
-    model.setObservationFunction(local_observations);
     
     return model;
 }
@@ -679,9 +685,9 @@ AIToolbox::POMDP::Model<AIToolbox::MDP::Model> POMDP::makeModel() {
 int POMDP::sampleInitialState() {
     unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
     std::default_random_engine generator(seed);
-    std::vector<float> probs;
+    std::vector<double> probs;
     std::vector<int> prob_state;
-    for (std::map<int, float>::iterator i = this->initial_dist.begin();
+    for (std::map<int, double>::iterator i = this->initial_dist.begin();
             i != this->initial_dist.end(); ++i) {
         probs.push_back(i->second);
         prob_state.push_back(i->first);
@@ -721,7 +727,7 @@ std::vector<int> POMDP::getStatesInBelief(AIToolbox::POMDP::Belief &b, int obs) 
     return states_in_belief;
 }
 
-float POMDP::getAValueOfBelief(std::vector<int> states_in_belief, int obs) {
+double POMDP::getAValueOfBelief(std::vector<int> states_in_belief, int obs) {
     std::map<std::tuple<std::vector<int>, int>, int>::iterator i =
         this->states_id.find(std::make_tuple(states_in_belief, obs));
     if (i != this->states_id.end())
@@ -734,8 +740,8 @@ float POMDP::getAValueOfBelief(std::vector<int> states_in_belief, int obs) {
 }
 
 std::vector<bool> POMDP::getSafeActions(std::vector<int> states_in_belief,
-                                        int obs, int step, float running_sum,
-                                        float threshold) {
+                                        int obs, int step, double running_sum,
+                                        double threshold) {
     std::vector<bool> safe(this->actions.size(), true);
     std::map<std::tuple<std::vector<int>, int>, int>::iterator i =
         this->states_id.find(std::make_tuple(states_in_belief, obs));

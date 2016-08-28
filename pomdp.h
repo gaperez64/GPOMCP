@@ -14,17 +14,17 @@ class POMDP {
         std::vector<std::string> states;
         std::vector<std::string> actions;
         std::vector<std::string> observations;
-        std::map<std::tuple<int, int, int>, float> prob_delta;
-        std::map<std::tuple<int, int>, float> prob_obs;
-        std::map<std::tuple<int, int, int>, float> weight;
-        std::map<int, float> initial_dist;
-        float discount_factor;
+        std::map<std::tuple<int, int, int>, double> prob_delta;
+        std::map<std::tuple<int, int>, double> prob_obs;
+        std::map<std::tuple<int, int, int>, double> weight;
+        std::map<int, double> initial_dist;
+        double discount_factor;
         // mapping from states to sets of states
         // for when we make a subset construction
         std::map<std::tuple<std::vector<int>, int>, int> states_id;
         std::vector<std::tuple<std::vector<int>, int> > inv_states_id;
         // mapping from states to antagonistic values
-        std::vector<float> a_value;
+        std::vector<double> a_value;
 
         std::map<std::string, int> state_id_cache;
         std::map<std::string, int> action_id_cache;
@@ -40,11 +40,11 @@ class POMDP {
         POMDP(std::vector<std::string>,
               std::vector<std::string>,
               std::vector<std::string>,
-              std::map<std::tuple<int, int, int>, float>,
-              std::map<std::tuple<int, int>, float>,
-              std::map<std::tuple<int, int, int>, float>,
-              std::map<int, float>,
-              float);
+              std::map<std::tuple<int, int, int>, double>,
+              std::map<std::tuple<int, int>, double>,
+              std::map<std::tuple<int, int, int>, double>,
+              std::map<int, double>,
+              double);
         void setStates(std::vector<std::string>);
         std::string getStateName(int);
         std::string getActionName(int);
@@ -56,25 +56,25 @@ class POMDP {
         int sampleInitialState();
         AIToolbox::POMDP::Belief getInitialBelief();
         std::vector<int> getStatesInBelief(AIToolbox::POMDP::Belief&, int);
-        float getAValueOfBelief(std::vector<int>, int);
-        std::vector<bool> getSafeActions(std::vector<int>, int, int, float, float);
+        double getAValueOfBelief(std::vector<int>, int);
+        std::vector<bool> getSafeActions(std::vector<int>, int, int, double, double);
 
-        void addTransition(int, int, int, float);
-        void addObservationProb(int, int, float);
-        void weightTransition(int, int, int, float);
+        void addTransition(int, int, int, double);
+        void addObservationProb(int, int, double);
+        void weightTransition(int, int, int, double);
         bool isValidMdp();
         bool hasObsWeights();
         bool hasInitialObs();
         void makeGameBeliefConstruction();
-        std::vector<float> solveGameBeliefConstruction();
+        std::vector<double> solveGameBeliefConstruction();
         bool hasDetObs();
         void makeObsDet();
-        float getDiscFactor();
+        double getDiscFactor();
         int getStateId(const std::string&);
         int getActionId(const std::string&);
         int getObservationId(const std::string&);
-        void setInitialDist(std::map<int, float>);
-        void setDiscFactor(float);
+        void setInitialDist(std::map<int, double>);
+        void setDiscFactor(double);
         void print(std::ostream&);
 
         // method to implement in order to interface with AI-Toolbox

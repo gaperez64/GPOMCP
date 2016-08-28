@@ -15,7 +15,7 @@ YY_DECL;
 class CassDriver {
     protected:
         POMDP* pomdp;
-        float discount_factor;
+        double discount_factor;
         int weight_sign;
 
     public:
@@ -38,17 +38,18 @@ class CassDriver {
 
         // Building an MDP
         void addTransition(ElemRef source, ElemRef action, ElemRef target,
-                           float prob);
+                           double prob);
         void addWeight(ElemRef source, ElemRef action, ElemRef target,
-                       ElemRef obs, float weight);
+                       ElemRef obs, double weight);
         void addObsTransition(ElemRef action, ElemRef target, ElemRef obs,
-                              float prob);
-        void setDiscount(float discount);
+                              double prob);
+        void setDiscount(double discount);
         void setWeightSign(int sign);
         void setStates(std::vector<std::string> states);
         void setActions(std::vector<std::string> actions);
         void setObservations(std::vector<std::string> observations);
         void setInitialDist(std::vector<ElemRef> states);
+        void setInitialDist(std::vector<double> probs);
 };
 
 #endif // CASS_DRIVER_H

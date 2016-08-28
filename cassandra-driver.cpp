@@ -24,18 +24,36 @@ void CassDriver::error(const std::string &m) {
 
 
 void CassDriver::addTransition(ElemRef source, ElemRef action, ElemRef target,
-                               float prob) {
+                               double prob) {
     assert(source.type == ELEMREFTYPE_NAME);
-    assert(action.type == ELEMREFTYPE_NAME);
     assert(target.type == ELEMREFTYPE_NAME);
-    this->pomdp->addTransition(this->pomdp->getStateId(source.name),
-                               this->pomdp->getActionId(action.name),
-                               this->pomdp->getStateId(target.name),
-                               prob);
+    assert(action.type != ELEMREFTYPE_ID);
+
+    std::vector<int>::iterator a_it;
+    std::vector<int>::iterator a_end;
+    if (action.type == ELEMREFTYPE_NAME) {
+        std::vector<int> dummy_act_vector;
+        dummy_act_vector.push_back(this->pomdp->getActionId(action.name));
+        a_it = dummy_act_vector.begin();
+        a_end = dummy_act_vector.end();
+    } else if (action.type == ELEMREFTYPE_ALL) {
+        std::vector<int> dummy_act_vector;
+        for (int i = 0; i < this->pomdp->getActionCount(); i++)
+            dummy_act_vector.push_back(i);
+        a_it = dummy_act_vector.begin();
+        a_end = dummy_act_vector.end();
+    }
+
+    for (; a_it != a_end; ++a_it) {
+        this->pomdp->addTransition(this->pomdp->getStateId(source.name),
+                                   *a_it,
+                                   this->pomdp->getStateId(target.name),
+                                   prob);
+    }
 }
 
 void addWeightHelper2(POMDP* p, int source,
-                      int action, ElemRef target, float weight) {
+                      int action, ElemRef target, double weight) {
     if (target.type == ELEMREFTYPE_ALL)
         for (int i = 0; i < p->getStateCount(); i++)
             p->weightTransition(source, action, i, weight);
@@ -46,7 +64,7 @@ void addWeightHelper2(POMDP* p, int source,
 }
 
 void addWeightHelper1(POMDP* p, int source,
-                      ElemRef action, ElemRef target, float weight) {
+                      ElemRef action, ElemRef target, double weight) {
     if (action.type == ELEMREFTYPE_ALL)
         for (int i = 0; i < p->getActionCount(); i++)
             addWeightHelper2(p, source, i, target, weight);
@@ -56,7 +74,7 @@ void addWeightHelper1(POMDP* p, int source,
 }
 
 void CassDriver::addWeight(ElemRef source, ElemRef action, ElemRef target,
-                           ElemRef obs, float weight) {
+                           ElemRef obs, double weight) {
     assert(obs.type == ELEMREFTYPE_ALL);
     assert(source.type != ELEMREFTYPE_ID);
     assert(action.type != ELEMREFTYPE_ID);
@@ -72,7 +90,7 @@ void CassDriver::addWeight(ElemRef source, ElemRef action, ElemRef target,
 }
 
 void CassDriver::addObsTransition(ElemRef action, ElemRef target, ElemRef obs,
-                                  float prob) {
+                                  double prob) {
     assert(action.type == ELEMREFTYPE_ALL);
     assert(target.type == ELEMREFTYPE_NAME);
     assert(obs.type == ELEMREFTYPE_NAME);
@@ -81,7 +99,7 @@ void CassDriver::addObsTransition(ElemRef action, ElemRef target, ElemRef obs,
                                     prob);
 }
 
-void CassDriver::setDiscount(float discount) {
+void CassDriver::setDiscount(double discount) {
     this->pomdp->setDiscFactor(discount);
 }
 
@@ -102,12 +120,21 @@ void CassDriver::setObservations(std::vector<std::string> observations) {
 }
 
 void CassDriver::setInitialDist(std::vector<ElemRef> states) {
-    std::map<int, float> initial_dist;
-    float denominator = states.size();
+    std::map<int, double> initial_dist;
+    double denominator = states.size();
     for (std::vector<ElemRef>::iterator i = states.begin();
             i != states.end(); ++i) {
         assert(i->type == ELEMREFTYPE_NAME);
         initial_dist[this->pomdp->getStateId(i->name)] = 1.0/denominator;
     }
+    this->pomdp->setInitialDist(initial_dist);
+}
+
+void CassDriver::setInitialDist(std::vector<double> probs) {
+    assert(probs.size() == this->pomdp->getStateCount());
+    std::map<int, double> initial_dist;
+    for (int i = 0; i < probs.size(); i++)
+        if (probs[i] > 0.0)
+            initial_dist[i] = probs[i];
     this->pomdp->setInitialDist(initial_dist);
 }

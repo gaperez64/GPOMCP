@@ -11,7 +11,7 @@
 
 using namespace z3;
 
-Transition::Transition(int s, int a, int d, float w) {
+Transition::Transition(int s, int a, int d, double w) {
     dest = d;
     action = a;
     source = s;
@@ -24,7 +24,7 @@ int Transition::getAction() { return action; }
 
 int Transition::getDest() { return dest; }
 
-float Transition::getWeight() { return weight; }
+double Transition::getWeight() { return weight; }
 
 void Game::addTransition(Transition t) {
     int s = t.getSource();
@@ -36,7 +36,7 @@ void Game::addTransition(Transition t) {
         this->biggest_weight = std::abs(t.getWeight());
 }
 
-void Game::addTransition(int s, int a, int d, float w) {
+void Game::addTransition(int s, int a, int d, double w) {
     addTransition(Transition(s, a, d, w));
 }
 
@@ -84,8 +84,8 @@ expr disj(std::list<expr> e){
     return res;
 }
 
-std::vector<float> Game::solveGameSMT(float discount_factor) {
-    char float_str [100];
+std::vector<double> Game::solveGameSMT(double discount_factor) {
+    char double_str [100];
 
     context c;
 
@@ -101,8 +101,8 @@ std::vector<float> Game::solveGameSMT(float discount_factor) {
 
     std::set<int> states = this->getStates();
     solver s(c);
-    sprintf(float_str, "%f", discount_factor);
-    s.add(lambda == c.real_val(float_str));
+    sprintf(double_str, "%f", discount_factor);
+    s.add(lambda == c.real_val(double_str));
     s.add(forall(x, y, max(x, y) == (ite(x < y, y, x))));
     s.add(forall(x, y, min(x, y) == (ite(x < y, x, y))));
     
@@ -117,8 +117,8 @@ std::vector<float> Game::solveGameSMT(float discount_factor) {
 
             for (std::list<Transition>::iterator sit = successors.begin();
                     sit != successors.end(); ++sit) {
-                sprintf(float_str, "%f", sit->getWeight());
-                state_action_expressions.push_back(c.real_val(float_str) +
+                sprintf(double_str, "%f", sit->getWeight());
+                state_action_expressions.push_back(c.real_val(double_str) +
                                                    (lambda * ds(sit->getDest())));
             }
 
@@ -152,7 +152,7 @@ std::vector<float> Game::solveGameSMT(float discount_factor) {
     //std::cout << "Model: " << std::endl << m << std::endl;
 
     set_param("pp.decimal", true);
-    std::vector<float> result(states.size());
+    std::vector<double> result(states.size());
     for (std::set<int>::iterator it = states.begin(); it != states.end(); ++it) {
         std::stringstream ss;
         ss << m.eval(ds(*it));
@@ -173,9 +173,9 @@ long gcd(long a, long b) {
         return gcd(b, a % b);
 }
 
-std::tuple<long, long> toFraction(float input) {
+std::tuple<long, long> toFraction(double input) {
     assert(input < 1);
-    float frac = input;
+    double frac = input;
 
     const long precision = 1000000000; // This is the accuracy.
 
@@ -187,15 +187,15 @@ std::tuple<long, long> toFraction(float input) {
 
 }
 
-std::vector<float> Game::solveGameValIter(float discount_factor) {
+std::vector<double> Game::solveGameValIter(double discount_factor) {
     std::set<int> states = this->getStates();
     long numerator, denominator;
     std::tie(numerator, denominator) = toFraction(discount_factor);
-    float temp = 1.0;
+    double temp = 1.0;
     for (int i = 0; i < states.size(); i++)
         temp *= (std::pow(denominator, i) - std::pow(numerator, i));
-    float D = temp * std::pow(denominator, states.size());
-    float I = 2 + (std::log(this->biggest_weight) / std::log(2))
+    double D = temp * std::pow(denominator, states.size());
+    double I = 2 + (std::log(this->biggest_weight) / std::log(2))
                 + (std::log(denominator) / std::log(2))
                 * ((states.size() * (states.size() + 3)) / 2)
                 * -1
@@ -205,18 +205,18 @@ std::vector<float> Game::solveGameValIter(float discount_factor) {
               << ITER
               << " iterations" << std::endl;
         
-    std::vector<float> value(states.size(), 0.0);
+    std::vector<double> value(states.size(), 0.0);
 
     bool converged = false;
     for (long i = 0; i < ITER; i++) {
         converged = true;
         for (std::set<int>::iterator it = states.begin(); it != states.end(); ++it) {
             std::set<int> actions = this->availableActions(*it);
-            std::vector<float> s_values;
+            std::vector<double> s_values;
             for (std::set<int>::iterator ait = actions.begin();
                     ait != actions.end(); ++ait) {
                 std::list<Transition> successors = this->post(*it, *ait);
-                std::vector<float> sa_values;
+                std::vector<double> sa_values;
                 for (std::list<Transition>::iterator sit = successors.begin();
                         sit != successors.end(); ++sit)
                     sa_values.push_back(sit->getWeight()
@@ -224,7 +224,7 @@ std::vector<float> Game::solveGameValIter(float discount_factor) {
                 s_values.push_back(*std::min_element(sa_values.begin(),
                                                      sa_values.end()));
             }
-            float new_value = *std::max_element(s_values.begin(),
+            double new_value = *std::max_element(s_values.begin(),
                                                 s_values.end());
             if (new_value != value[*it]) {
                 converged = false;
@@ -247,9 +247,9 @@ std::vector<float> Game::solveGameValIter(float discount_factor) {
     return value;
 }
 
-std::vector<float> Game::solveGame(float discount_factor) {
-    std::vector<float> sol1 = solveGameValIter(discount_factor);
-    //std::vector<float> sol2 = solveGameSMT(discount_factor);
+std::vector<double> Game::solveGame(double discount_factor) {
+    std::vector<double> sol1 = solveGameValIter(discount_factor);
+    //std::vector<double> sol2 = solveGameSMT(discount_factor);
     //for (int i = 0; i < sol1.size(); i++)
     //    if (sol1[i] != sol2[i])
     //        std::cout << sol1[i] << " != " << sol2[i] << std::endl;

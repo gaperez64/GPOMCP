@@ -25,9 +25,9 @@ int main (int argc, char *argv[]) {
     const long max_timestep = std::atoi(argv[3]);
     POMDP M(argv[1]);
     // check some of its properties to assert it is a valid MDP
+    M.print(std::cout);
     assert(M.isValidMdp());
     assert(M.hasObsWeights());
-    // M.print(std::cout);
     // obtain the initial belief
     AIToolbox::POMDP::Belief new_belief, current_belief;
     current_belief = M.getInitialBelief();

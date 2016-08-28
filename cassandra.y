@@ -60,13 +60,14 @@ ASTERISK         "*"
 PLUS             "+"
 MINUS            "-"
 ;
-%token <float> FLOAT "float"
+%token <double> FLOAT "float"
 %token <int> INT "int"
 %token <std::string> STRING "string"
 %type <int> optional_sign value_tail
-%type <float> prob number
+%type <double> prob number
 %type <std::vector<std::string>> ident_list state_tail action_tail
 %type <std::vector<std::string>> obs_param_tail
+%type <std::vector<double>> prob_matrix u_matrix
 %type <std::vector<ElemRef>> start_state_list
 %type <ElemRef> state paction obs
 
@@ -85,6 +86,14 @@ MINUS            "-"
         yyoutput << $$.back().name;
     }
 } <std::vector<ElemRef>>;
+%printer {
+    if (!$$.empty()) {
+        for (std::vector<double>::const_iterator i = $$.begin();
+                i != $$.end() - 1; ++i)
+            yyoutput << *i << ",";
+        yyoutput << $$.back();
+    }
+} <std::vector<double>>;
 %printer { yyoutput << $$.name; } <ElemRef>;
 %printer { yyoutput << $$; } <*>;
 
@@ -137,7 +146,7 @@ obs_param_tail: INT { $$.resize($1); }
 | ident_list { std::swap($$, $1); }
 ;
 
-start_state:  START COLON u_matrix { assert(false); }
+start_state:  START COLON u_matrix { driver.setInitialDist($3); }
 | START COLON STRING { assert(false); }
 | START INCLUDE COLON start_state_list { driver.setInitialDist($4); }
 | START EXCLUDE COLON start_state_list { assert(false); }
@@ -192,13 +201,13 @@ ui_matrix: UNIFORM
 | prob_matrix
 ;
 
-u_matrix: UNIFORM 
-| RESET
-| prob_matrix
+u_matrix: UNIFORM { assert(false); }
+| RESET { assert(false); }
+| prob_matrix { std::swap($$, $1); }
 ;
 
-prob_matrix: prob_matrix prob
-| prob
+prob_matrix: prob_matrix prob { std::swap($$, $1); $$.push_back($2); }
+| prob { $$.push_back($1); }
 ;
 
 num_matrix: num_matrix number
