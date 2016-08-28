@@ -4,7 +4,6 @@
 #include <cmath>
 #include <AIToolbox/POMDP/Algorithms/POMCP.hpp>
 #include <AIToolbox/POMDP/Types.hpp>
-#include <AIToolbox/POMDP/Policies/Policy.hpp>
 #include <AIToolbox/POMDP/Utils.hpp>
 
 #include "pomdp.h"
@@ -45,7 +44,6 @@ int main (int argc, char *argv[]) {
             1000,         // size of initial particle belief
             10000,        // number of episodes to run before completion
             100000000.0); // the exploration constant
-    AIToolbox::POMDP::Policy policy(model.getS(), model.getA(), model.getO());
     // simulate the game
     size_t current_state, new_state, action, current_obs, new_obs;
     float reward;
