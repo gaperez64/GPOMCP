@@ -11,14 +11,14 @@
 #include "dsgame.h"
 #include "cassandra-driver.h"
 
-POMDP::POMDP() : discount_factor(0.5) { }
+BWC::POMDP::POMDP() : discount_factor(0.5) { }
 
-POMDP::POMDP(const std::string &filename) : POMDP() {
+BWC::POMDP::POMDP(const std::string &filename) : POMDP() {
     CassDriver driver(this);
     driver.parse(filename);
 }
 
-POMDP::POMDP(std::vector<std::string> S,
+BWC::POMDP::POMDP(std::vector<std::string> S,
              std::vector<std::string> A,
              std::vector<std::string> O,
              std::map<std::tuple<int, int, int>, double> P,
@@ -29,60 +29,60 @@ POMDP::POMDP(std::vector<std::string> S,
     states(S), actions(A), observations(O), prob_delta(P), prob_obs(PO),
     weight(W), initial_dist(I), discount_factor(D) { }
 
-POMDP::POMDP(const POMDP &other) :
+BWC::POMDP::POMDP(const POMDP &other) :
     POMDP(other.states, other.actions, other.observations, other.prob_delta,
           other.prob_obs, other.weight, other.initial_dist,
           other.discount_factor) { }
 
-void POMDP::setStates(std::vector<std::string> S) {
+void BWC::POMDP::setStates(std::vector<std::string> S) {
     this->states = S;
 }
 
-std::string POMDP::getStateName(int i) {
+std::string BWC::POMDP::getStateName(int i) {
     assert(i < this->states.size());
     return this->states[i];
 }
 
-std::string POMDP::getActionName(int i) {
+std::string BWC::POMDP::getActionName(int i) {
     assert(i < this->actions.size());
     return this->actions[i];
 }
 
-std::string POMDP::getObsName(int i) {
+std::string BWC::POMDP::getObsName(int i) {
     assert(i < this->observations.size());
     return this->observations[i];
 }
 
-int POMDP::getStateCount() {
+int BWC::POMDP::getStateCount() {
     return this->states.size();
 }
 
-void POMDP::setActions(std::vector<std::string> A) {
+void BWC::POMDP::setActions(std::vector<std::string> A) {
     this->actions = A;
 }
 
-int POMDP::getActionCount() {
+int BWC::POMDP::getActionCount() {
     return this->actions.size();
 }
 
-void POMDP::setObservations(std::vector<std::string> O) {
+void BWC::POMDP::setObservations(std::vector<std::string> O) {
     this->observations = O;
 }
 
-void POMDP::addTransition(int source, int action, int target,
+void BWC::POMDP::addTransition(int source, int action, int target,
                           double prob) {
     assert(source < this->states.size());
     assert(target < this->states.size());
     this->prob_delta[std::make_tuple(source, action, target)] = prob;
 }
 
-void POMDP::addObservationProb(int state, int obs, double prob) {
+void BWC::POMDP::addObservationProb(int state, int obs, double prob) {
     assert(state < this->states.size());
     assert(obs < this->observations.size());
     this->prob_obs[std::make_tuple(state, obs)] = prob;
 }
 
-void POMDP::weightTransition(int source, int action, int target,
+void BWC::POMDP::weightTransition(int source, int action, int target,
                              double weight) {
     assert(source >=0 && source < this->states.size());
     assert(action >=0 && action < this->actions.size());
@@ -96,15 +96,15 @@ void POMDP::weightTransition(int source, int action, int target,
     this->weight[std::make_tuple(source, action, target)] = weight;
 }
 
-void POMDP::setDiscFactor(double d) {
+void BWC::POMDP::setDiscFactor(double d) {
     this->discount_factor = d;
 }
 
-double POMDP::getDiscFactor() {
+double BWC::POMDP::getDiscFactor() {
     return this->discount_factor;
 }
 
-bool POMDP::isValidMdp() {
+bool BWC::POMDP::isValidMdp() {
     // check #1: transition probs should add to 1 for every state x action
     std::map<std::tuple<int, int>, double> state_action_prob;
     for (int s = 0; s < this->states.size(); s++)
@@ -167,7 +167,7 @@ bool POMDP::isValidMdp() {
     return true;
 }
 
-bool POMDP::hasObsWeights() {
+bool BWC::POMDP::hasObsWeights() {
     std::vector<std::set<int> > same_obs_states;
     same_obs_states.resize(this->observations.size());
     for (std::map<std::tuple<int, int>, double>::iterator PO =
@@ -210,7 +210,7 @@ bool POMDP::hasObsWeights() {
     return true;
 }
 
-bool POMDP::hasInitialObs() {
+bool BWC::POMDP::hasInitialObs() {
     std::vector<int> initial_obs;
     for (std::map<int, double>::iterator I = this->initial_dist.begin();
             I != this->initial_dist.end(); ++I)
@@ -236,7 +236,7 @@ bool POMDP::hasInitialObs() {
     return false;
 }
 
-bool POMDP::hasDetObs() {
+bool BWC::POMDP::hasDetObs() {
     for (std::map<std::tuple<int, int>, double>::iterator PO =
             this->prob_obs.begin(); PO != this->prob_obs.end();
             ++PO)
@@ -245,7 +245,7 @@ bool POMDP::hasDetObs() {
     return true;
 }
 
-void POMDP::makeObsDet() {
+void BWC::POMDP::makeObsDet() {
     std::vector<std::string> new_states;
     std::map<std::tuple<int, int>, double> new_prob_obs;
     std::vector<std::vector<int> > newstates_per_state;
@@ -315,7 +315,7 @@ void POMDP::makeObsDet() {
     std::swap(this->initial_dist, new_initial_dist);
 }
 
-std::vector<int> POMDP::post(int source, int action) {
+std::vector<int> BWC::POMDP::post(int source, int action) {
     std::vector<int> result;
     for (std::map<std::tuple<int, int, int>, double>::iterator i =
             this->prob_delta.begin(); i != this->prob_delta.end(); ++i) {
@@ -327,7 +327,7 @@ std::vector<int> POMDP::post(int source, int action) {
     return result;
 }
 
-std::vector<int> POMDP::post(std::vector<int> sources, int action) {
+std::vector<int> BWC::POMDP::post(std::vector<int> sources, int action) {
     std::vector<int> result;
     for (std::map<std::tuple<int, int, int>, double>::iterator i =
             this->prob_delta.begin(); i != this->prob_delta.end(); ++i) {
@@ -340,7 +340,7 @@ std::vector<int> POMDP::post(std::vector<int> sources, int action) {
     return result;
 }
 
-std::vector<double> POMDP::solveGameBeliefConstruction() {
+std::vector<double> BWC::POMDP::solveGameBeliefConstruction() {
     this->makeGameBeliefConstruction();
     this->print(std::cout);
     Game g;
@@ -415,7 +415,29 @@ std::vector<double> POMDP::solveGameBeliefConstruction() {
     return result;
 }
 
-void POMDP::makeGameBeliefConstruction() {
+void BWC::POMDP::postInObs(std::vector<int> current_states, int action, int obs) {
+    // we first collect all states with the given observation
+    std::vector<int> states_in_obs;
+    for (std::map<std::tuple<int, int>, double>::iterator i =
+            this->prob_obs.begin(); i != this->prob_obs.end(); ++i) {
+        int s, o;
+        std::tie(s, o) = i->first;
+        if (o == obs && i->second > 0.0)
+            states_in_obs.push_back(s);
+    }
+    std::vector<int> target_states = this->post(current_states, action);
+    std::sort(target_states.begin(), target_states.end());
+    std::sort(states_in_obs.begin(), states_in_obs.end());
+    std::vector<int> intersection;
+    std::set_intersection(target_states.begin(),
+                          target_states.end(),
+                          spo->second.begin(), spo->second.end(),
+                          std::back_inserter(intersection));
+    return intersection;
+}
+                           
+
+void BWC::POMDP::makeGameBeliefConstruction() {
     assert(this->hasObsWeights());
     std::vector<int> initial_states;
     std::string initial_states_name;
@@ -554,7 +576,7 @@ void POMDP::makeGameBeliefConstruction() {
     std::swap(this->inv_states_id, inv_new_states_id);
 }
 
-void POMDP::print(std::ostream &o) {
+void BWC::POMDP::print(std::ostream &o) {
     o << "Discount factor: " << this->discount_factor << std::endl;
     o << this->states.size() << " States: " << std::endl;
     for (std::vector<std::string>::iterator i = this->states.begin();
@@ -605,24 +627,24 @@ int getId(const std::vector<std::string> &list,
     return -1;
 }
 
-int POMDP::getStateId(const std::string &name) {
+int BWC::POMDP::getStateId(const std::string &name) {
     return getId(this->states, this->state_id_cache, name);
 }
 
-int POMDP::getActionId(const std::string &name) {
+int BWC::POMDP::getActionId(const std::string &name) {
     return getId(this->actions, this->action_id_cache, name);
 }
 
-int POMDP::getObservationId(const std::string &name) {
+int BWC::POMDP::getObservationId(const std::string &name) {
     return getId(this->observations, this->observation_id_cache, name);
 }
 
-void POMDP::setInitialDist(std::map<int, double> dist) {
+void BWC::POMDP::setInitialDist(std::map<int, double> dist) {
     this->initial_dist = dist;
 }
 
 // method to implement in order to interface with AI-Toolbox
-AIToolbox::POMDP::Model<AIToolbox::MDP::Model> POMDP::makeModel() {
+AIToolbox::POMDP::Model<AIToolbox::MDP::Model> BWC::POMDP::makeModel() {
     size_t S, A, O;
     S = this->getStateCount();
     A = this->getActionCount();
@@ -682,7 +704,7 @@ AIToolbox::POMDP::Model<AIToolbox::MDP::Model> POMDP::makeModel() {
     return model;
 }
 
-int POMDP::sampleInitialState() {
+int BWC::POMDP::sampleInitialState() {
     unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
     std::default_random_engine generator(seed);
     std::vector<double> probs;
@@ -699,7 +721,7 @@ int POMDP::sampleInitialState() {
     return result;
 }
 
-AIToolbox::POMDP::Belief POMDP::getInitialBelief() {
+AIToolbox::POMDP::Belief BWC::POMDP::getInitialBelief() {
     AIToolbox::POMDP::Belief initial(this->states.size());
     for (int i = 0; i < this->states.size(); i++) {
         if (this->initial_dist.find(i) == this->initial_dist.end())
@@ -710,7 +732,7 @@ AIToolbox::POMDP::Belief POMDP::getInitialBelief() {
     return initial;
 }
 
-std::vector<int> POMDP::getStatesInBelief(AIToolbox::POMDP::Belief &b, int obs) {
+std::vector<int> BWC::POMDP::getStatesInBelief(AIToolbox::POMDP::Belief &b, int obs) {
     // this vector will be, by construction, ordered
     std::vector<int> states_in_belief;
     std::cout << "Found states: ";
@@ -727,7 +749,7 @@ std::vector<int> POMDP::getStatesInBelief(AIToolbox::POMDP::Belief &b, int obs) 
     return states_in_belief;
 }
 
-double POMDP::getAValueOfBelief(std::vector<int> states_in_belief, int obs) {
+double BWC::POMDP::getAValueOfBelief(std::vector<int> states_in_belief, int obs) {
     std::map<std::tuple<std::vector<int>, int>, int>::iterator i =
         this->states_id.find(std::make_tuple(states_in_belief, obs));
     if (i != this->states_id.end())
@@ -739,25 +761,21 @@ double POMDP::getAValueOfBelief(std::vector<int> states_in_belief, int obs) {
     return 0;
 }
 
-std::vector<bool> POMDP::getSafeActions(std::vector<int> states_in_belief,
-                                        int obs, int step, double running_sum,
-                                        double threshold) {
+std::vector<bool> BWC::POMDP::getSafeActions(std::vector<int> states_in_belief,
+                                             int obs, double remain) {
     std::vector<bool> safe(this->actions.size(), true);
     std::map<std::tuple<std::vector<int>, int>, int>::iterator i =
         this->states_id.find(std::make_tuple(states_in_belief, obs));
     if (i != this->states_id.end()) {
-        assert((this->a_value[i->second] *
-                std::pow(this->discount_factor, step)) +
-               running_sum >= threshold);
+        assert(this->a_value[i->second] >= remain);
 
         for (int a = 0; a < this->actions.size(); a++) {
             std::vector<int> successors = this->post(i->second, a);
             for (std::vector<int>::iterator j = successors.begin();
                     j != successors.end(); ++j) {
-                if (threshold > 
-                    running_sum + (std::pow(this->discount_factor, step) *
-                        (this->weight[std::make_tuple(i->second, a, *j)] +
-                         this->a_value[*j] * this->discount_factor))) {
+                if (remain > 
+                    (this->weight[std::make_tuple(i->second, a, *j)] +
+                     this->a_value[*j] * this->discount_factor)) {
                     std::cout << "Playing action: (" << a << ")" << this->actions[a]
                               << " is unsafe now" << std::endl;
                     safe[a] = false;

@@ -1,12 +1,14 @@
 #ifndef AI_TOOLBOX_POMDP_BWCPOMCP_HEADER_FILE
 #define AI_TOOLBOX_POMDP_BWCPOMCP_HEADER_FILE
 
+#include <unordered_map>
+#include <iostream>
+
 #include <AIToolbox/POMDP/Types.hpp>
 #include <AIToolbox/ProbabilityUtils.hpp>
 #include <AIToolbox/Impl/Seeder.hpp>
 
-#include <unordered_map>
-#include <iostream>
+#include "pomdp.h"
 
 namespace AIToolbox {
     namespace POMDP {
@@ -67,9 +69,6 @@ namespace AIToolbox {
         template <typename M>
         class BWCPOMCP<M> {
             public:
-                // values set for instrumentation
-                std::vector<bool> safe_actions;
-                // end of new values
                 using SampleBelief = std::vector<size_t>;
 
                 struct BeliefNode;
@@ -85,9 +84,12 @@ namespace AIToolbox {
                 struct BeliefNode {
                     BeliefNode() : N(0) {}
                     BeliefNode(size_t s) : belief(1, s), N(0) {}
+                    BeliefNode(size_t s, double r) : belief(1, s), N(0), rem(r) {}
                     ActionNodes children;
+                    std::vector<int> support;
                     SampleBelief belief;
                     unsigned N;
+                    double rem = 0.0;
                 };
 
                 /**
@@ -96,9 +98,12 @@ namespace AIToolbox {
                  * @param m The POMDP model that BWCPOMCP will operate upon.
                  * @param beliefSize The size of the initial particle belief.
                  * @param iterations The number of episodes to run before completion.
-                 * @param exp The exploration constant. This parameter is VERY important to determine the final BWCPOMCP performance.
+                 * @param exp The exploration constant. This parameter is VERY
+                 * important to determine the final BWCPOMCP performance.
+                 * @param t The threshold for the worst-case value
                  */
-                BWCPOMCP(const M& m, size_t beliefSize, unsigned iterations, double exp);
+                BWCPOMCP(const M& m, size_t beliefSize, unsigned iterations, double exp,
+                         double t);
 
                 /**
                  * @brief This function resets the internal graph and samples for the provided belief and horizon.
@@ -178,7 +183,8 @@ namespace AIToolbox {
                 const M& getModel() const;
 
                 /**
-                 * @brief This function returns a reference to the internal graph structure holding the results of rollouts.
+                 * @brief This function returns a reference to the internal
+                 * graph structure holding the results of rollouts.
                  *
                  * @return The internal graph.
                  */
@@ -210,6 +216,8 @@ namespace AIToolbox {
                 size_t S, A, beliefSize_;
                 unsigned iterations_, maxDepth_;
                 double exploration_;
+                double threshold_;
+                BWC::POMDP* pomdp_;
 
                 SampleBelief sampleBelief_;
                 BeliefNode graph_;
@@ -284,15 +292,8 @@ namespace AIToolbox {
 
                 /**
                  * @brief This function finds the best action based on value.
-                 *
-                 * @tparam Iterator An iterator to an ActionNode.
-                 * @param begin The beginning of a list of ActionNodes.
-                 * @param end The end of the list.
-                 *
-                 * @return The iterator to the ActionNode with the best value.
                  */
-                template <typename Iterator>
-                Iterator findBestA(Iterator begin, Iterator end);
+                size_t findBestA(const BeliefNode &b);
 
                 /**
                  * @brief This function finds the best action based on UCT.
@@ -300,16 +301,8 @@ namespace AIToolbox {
                  * UCT gives a bonus to actions that have been tried very few
                  * times, in order to void thinking that a bad action is bad
                  * just because it got unlucky the few times that it tried it.
-                 *
-                 * @tparam Iterator An iterator to an ActionNode.
-                 * @param begin The beginning of a list of ActionNodes.
-                 * @param end The end of the list.
-                 * @param count The sum of all action counts.
-                 *
-                 * @return The iterator to the ActionNode to be selected based on UCT.
                  */
-                template <typename Iterator>
-                Iterator findBestBonusA(Iterator begin, Iterator end, unsigned count);
+                size_t findBestBonusA(const BeliefNode &b);
 
                 /**
                  * @brief This function samples a given belief in order to produce a particle approximation of it.
@@ -322,14 +315,18 @@ namespace AIToolbox {
         };
 
         template <typename M>
-        BWCPOMCP<M>::BWCPOMCP(const M& m, size_t beliefSize, unsigned iter, double exp) : model_(m),
-                                                                                    S(model_.getS()),
-                                                                                    A(model_.getA()),
-                                                                                    beliefSize_(beliefSize),
-                                                                                    iterations_(iter),
-                                                                                    exploration_(exp),
-                                                                                    graph_(),
-                                                                                    rand_(Impl::Seeder::getSeed()) {}
+        BWCPOMCP<M>::BWCPOMCP(const M& m, size_t beliefSize,
+                              unsigned iter, double exp, double t,
+                              BWC::POMDP* p) : model_(m),
+                                               S(model_.getS()),
+                                               A(model_.getA()),
+                                               beliefSize_(beliefSize),
+                                               iterations_(iter),
+                                               exploration_(exp),
+                                               graph_(),
+                                               rand_(Impl::Seeder::getSeed(),
+                                               threshold_(t),
+                                               pomdp_(p)) {}
 
         template <typename M>
         size_t BWCPOMCP<M>::sampleAction(const Belief& b, unsigned horizon) {
@@ -337,6 +334,8 @@ namespace AIToolbox {
             graph_ = BeliefNode(A);
             graph_.children.resize(A);
             graph_.belief = makeSampledBelief(b);
+            graph_.rem = threshold_;
+            graph_.support = pomdp_->getStatesInBelief(b, -1);
 
             return runSimulation(horizon);
         }
@@ -347,8 +346,11 @@ namespace AIToolbox {
 
             auto it = obs.find(o);
             if ( it == obs.end() ) {
-                std::cerr << "Observation " << o << " never experienced in simulation, restarting with uniform belief..\n";
-                auto b = Belief(S); b.fill(1.0/S);
+                std::cerr << "Observation " << o
+                          << " never experienced in simulation,"
+                          << " restarting with uniform belief..\n";
+                auto b = Belief(S);
+                b.fill(1.0/S);
                 return sampleAction(b, horizon);
             }
 
@@ -383,19 +385,18 @@ namespace AIToolbox {
             for (unsigned i = 0; i < iterations_; ++i )
                 simulate(graph_, graph_.belief.at(generator(rand_)), 0);
 
-            auto begin = std::begin(graph_.children);
-            return std::distance(begin, findBestA(begin, std::end(graph_.children)));
+            return findBestA(graph_);
         }
 
         template <typename M>
         double BWCPOMCP<M>::simulate(BeliefNode & b, size_t s, unsigned depth) {
             b.N++;
 
-            auto begin = std::begin(b.children);
-            size_t a = std::distance(begin, findBestBonusA(begin, std::end(b.children), b.N));
+            size_t a = findBestBonusA(b);
 
             size_t s1, o; double rew;
             std::tie(s1, o, rew) = model_.sampleSOR(s, a);
+            double rem = (b.rem + rew) / model_.getDiscount();
 
             auto & aNode = b.children[a];
 
@@ -407,7 +408,9 @@ namespace AIToolbox {
                 if ( ot == std::end(aNode.children) ) {
                     aNode.children.emplace(std::piecewise_construct,
                                            std::forward_as_tuple(o),
-                                           std::forward_as_tuple(s1));
+                                           std::forward_as_tuple(s1, rem));
+                    ot = aNode.children.find(o);
+                    ot->second.support = pomdp_->postInObs(b.support, a, o);
                     // This stops automatically if we go out of depth
                     futureRew = rollout(s1, depth + 1);
                 }
@@ -423,6 +426,9 @@ namespace AIToolbox {
                         ot->second.children.resize(A);
                         futureRew = simulate( ot->second, s1, depth + 1 );
                     }
+                    // here, one would make ot->second update its rem to take
+                    // the min between what it has and the local variable rem,
+                    // however, for observable weights this is not necessary
                 }
 
                 rew += model_.getDiscount() * futureRew;
@@ -450,50 +456,24 @@ namespace AIToolbox {
         }
 
         template <typename M>
-        template <typename Iterator>
-        Iterator BWCPOMCP<M>::findBestA(Iterator begin, Iterator end) {
+        size_t BWCPOMCP<M>::findBestA(const BeliefNode &b) {
             std::cout << "instrumented findBestA called" << std::endl;
-            auto it = begin;
-            int action = 0;
-            double result;
-            int result_location = 0;
-            // find the first viable option
-            for (; it != end; ++it) {
-                if (safe_actions[action]) {
-                    result = it->V;
-                    result_location = action;
-                    std::cout << "Found first safe action id: "
-                              << action << std::endl;
-                    //action++;
-                    break;
-                } else {
-                    std::cout << "unsafe action id: " << action << std::endl;
-                }
-                action++;
-            }
-            for (; it != end; ++it) {
-                if (safe_actions[action]) {
-                    if (result < it->V) {
-                        std::cout << "Replacing by safe action id: "
-                                  << action << std::endl;
-                        result = it->V;
-                        result_location = action;
-                    }
-                } else {
-                    std::cout << "unsafe action id: " << action << std::endl;
-                }
-                action++;
-            }
-            std::cout << "Best safe action id: " << result_location << std::endl;
-            assert(begin != end);
-            auto ret = begin + result_location;
-            assert(ret != end);
-            return ret;
+            std::vector<bool> safe = pomdp_->getSafeActions(b.support, b.rem); 
+            std::vector<int> indices(A);
+
+            std::sort(indices.begin(),
+                      indices.end(),
+                      [&b, &safe](int lhs, int rhs) {
+                          return !safe[lhs] ||
+                              (b.children[lhs].V < b.children[rhs].V);
+                      });
+
+            return indices.back();
         }
 
         template <typename M>
-        template <typename Iterator>
-        Iterator BWCPOMCP<M>::findBestBonusA(Iterator begin, Iterator end, unsigned count) {
+        size_t BWCPOMCP<M>::findBestBonusA(const BeliefNode &b) {
+            unsigned count = b.N;
             // Count here can be as low as 1.
             // Since log(1) = 0, and 0/0 = error, we add 1.0.
             double logCount = std::log(count + 1.0);
@@ -503,18 +483,18 @@ namespace AIToolbox {
                     return an.V + exploration_ * std::sqrt( logCount / an.N );
             };
 
-            auto bestIterator = begin++;
-            double bestValue = evaluationFunction(*bestIterator);
+            std::vector<bool> safe = pomdp_->getSafeActions(b.support, b.rem); 
+            std::vector<int> indices(A);
 
-            for ( ; begin < end; ++begin ) {
-                double actionValue = evaluationFunction(*begin);
-                if ( actionValue > bestValue ) {
-                    bestValue = actionValue;
-                    bestIterator = begin;
-                }
-            }
+            std::sort(indices.begin(),
+                      indices.end(),
+                      [&b](int lhs, int rhs) {
+                          return !safe[lhs] ||
+                              (evaluationFunction(b.children[lhs]) <
+                               evaluationFunction(b.children[rhs]));
+                      });
 
-            return bestIterator;
+            return indices.back();
         }
 
         template <typename M>

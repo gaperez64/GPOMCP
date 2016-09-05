@@ -9,6 +9,8 @@
 #include "AIToolbox/MDP/Model.hpp"
 #include "AIToolbox/POMDP/Model.hpp"
 
+namespace BWC {
+
 class POMDP {
     protected:
         std::vector<std::string> states;
@@ -45,6 +47,7 @@ class POMDP {
               std::map<std::tuple<int, int, int>, double>,
               std::map<int, double>,
               double);
+        void postInObs(std::vector<int>, int, int);
         void setStates(std::vector<std::string>);
         std::string getStateName(int);
         std::string getActionName(int);
@@ -80,5 +83,7 @@ class POMDP {
         // method to implement in order to interface with AI-Toolbox
         AIToolbox::POMDP::Model<AIToolbox::MDP::Model> makeModel();
 };
+
+}
 
 #endif // POMDP_H

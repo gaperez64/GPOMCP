@@ -6,8 +6,8 @@
 #include <AIToolbox/POMDP/Types.hpp>
 #include <AIToolbox/POMDP/Utils.hpp>
 
+#include "BWCPOMCP2.hpp"
 #include "pomdp.h"
-#include "BWCPOMCP.hpp"
 
 
 int main (int argc, char *argv[]) {
@@ -22,7 +22,7 @@ int main (int argc, char *argv[]) {
     // recover the POMDP from file and parse horizon
     const float threshold = std::atof(argv[2]);
     const long max_timestep = std::atoi(argv[3]);
-    POMDP M(argv[1]);
+    BWC::POMDP M(argv[1]);
     // check some of its properties to assert it is a valid MDP
     M.print(std::cout);
     assert(M.isValidMdp());
@@ -32,7 +32,7 @@ int main (int argc, char *argv[]) {
     current_belief = M.getInitialBelief();
     // obtain the worst-case value of the belief game
     std::cout << "Solving the game" << std::endl;
-    POMDP N(M);
+    BWC::POMDP N(M);
     N.solveGameBeliefConstruction();
     std::cout << "Done solving the game" << std::endl;
     // make the model in which we will simulate playing
@@ -43,7 +43,9 @@ int main (int argc, char *argv[]) {
             model,
             1000,         // size of initial particle belief
             10000,        // number of episodes to run before completion
-            100000000.0); // the exploration constant
+            100000000.0,  // the exploration constant
+            threshold,    // the worst-case threshold
+            &M);          // reference to original BWC POMDP
     // simulate the game
     size_t current_state, new_state, action, current_obs, new_obs;
     float reward;
@@ -51,9 +53,6 @@ int main (int argc, char *argv[]) {
     float disc = M.getDiscFactor();
     current_state = M.sampleInitialState();
     current_obs = -1;
-    solver.safe_actions =
-        N.getSafeActions(M.getStatesInBelief(current_belief, current_obs),
-                         current_obs, 0, 0, threshold);
     action = solver.sampleAction(current_belief,
                                  max_timestep); // horizon to plan for
     for (unsigned timestep = 0; timestep < max_timestep; ++timestep) {
@@ -72,9 +71,6 @@ int main (int argc, char *argv[]) {
         current_state = new_state;
         current_obs = new_obs;
         current_belief = new_belief;
-        solver.safe_actions =
-            N.getSafeActions(M.getStatesInBelief(current_belief, new_obs),
-                             current_obs, timestep + 1, total_reward, threshold);
         action = solver.sampleAction(action, current_obs,
                                      max_timestep - (timestep + 1));
     }
