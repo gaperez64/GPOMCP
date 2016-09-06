@@ -387,8 +387,10 @@ namespace AIToolbox {
             maxDepth_ = horizon;
             std::uniform_int_distribution<size_t> generator(0, graph_.belief.size()-1);
 
-            for (unsigned i = 0; i < iterations_; ++i )
+            for (unsigned i = 0; i < iterations_; ++i ) {
                 simulate(graph_, graph_.belief.at(generator(rand_)), 0);
+                // std::cout << "FULL SIMULATION COMPLETED!" << std::endl;
+            }
 
             return findBestA(graph_);
         }
@@ -401,7 +403,10 @@ namespace AIToolbox {
 
             size_t s1, o; double rew;
             std::tie(s1, o, rew) = model_.sampleSOR(s, a);
+            // std::cout << "SIM: played " << a << " and ontained observation " << o
+            //           << " with reward " << rew << std::endl;
             double rem = (b.rem - rew) / model_.getDiscount();
+            // std::cout << "SIM: new remainder = " << rem << std::endl;
 
             auto & aNode = b.children[a];
 
@@ -501,15 +506,15 @@ namespace AIToolbox {
             std::sort(indices.begin(),
                       indices.end(),
                       [&b, &safe, &evaluationFunction](int lhs, int rhs) {
-                          return !safe[lhs] ||
+                          return !safe[lhs] || (safe[rhs] &&
                               (evaluationFunction(b.children[lhs]) <
-                               evaluationFunction(b.children[rhs]));
+                               evaluationFunction(b.children[rhs])));
                       });
-            /* std::cout << "The best (with bonus) actions, in increasing order: ";
-             * for (auto it = indices.begin(); it != indices.end(); ++it)
-             *     std::cout << *it << " ";
-             * std::cout << std::endl;
-             */
+            // std::cout << "The best (with bonus) actions, in increasing order: ";
+            // for (auto it = indices.begin(); it != indices.end(); ++it)
+            //     std::cout << *it << " ";
+            // std::cout << std::endl;
+            
                    
 
             return indices.back();

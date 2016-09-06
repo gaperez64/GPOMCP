@@ -772,7 +772,9 @@ std::vector<bool> BWC::POMDP::getSafeActions(std::vector<int> states_in_belief,
     std::map<std::tuple<std::vector<int>, int>, int>::iterator i =
         this->states_id.find(std::make_tuple(states_in_belief, obs));
     if (i != this->states_id.end()) {
-        // std::cout << "Computing safe actions with remain = " << remain << std::endl;
+        // std::cout << "Computing safe actions with (aVal,remain) = ("
+        //           << this->a_value[i->second] << "," << remain
+        //           << ")" << std::endl;
         assert(this->a_value[i->second] >= remain);
 
         for (int a = 0; a < this->actions.size(); a++) {
