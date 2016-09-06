@@ -92,6 +92,7 @@ namespace AIToolbox {
                     unsigned N;
                     double rem = 0.0;
                     int obs = -1;
+                    std::vector<bool> _safe_cache;
                 };
 
                 /**
@@ -296,7 +297,7 @@ namespace AIToolbox {
                 /**
                  * @brief This function finds the best action based on value.
                  */
-                size_t findBestA(const BeliefNode &b);
+                size_t findBestA(BeliefNode &b);
 
                 /**
                  * @brief This function finds the best action based on UCT.
@@ -305,7 +306,7 @@ namespace AIToolbox {
                  * times, in order to void thinking that a bad action is bad
                  * just because it got unlucky the few times that it tried it.
                  */
-                size_t findBestBonusA(const BeliefNode &b);
+                size_t findBestBonusA(BeliefNode &b);
 
                 /**
                  * @brief This function samples a given belief in order to produce a particle approximation of it.
@@ -466,9 +467,15 @@ namespace AIToolbox {
         }
 
         template <typename M>
-        size_t BWCPOMCP<M>::findBestA(const BeliefNode &b) {
+        size_t BWCPOMCP<M>::findBestA(BeliefNode &b) {
             // std::cout << "instrumented findBestA called" << std::endl;
-            std::vector<bool> safe = belief_game_->getSafeActions(b.support, b.obs, b.rem); 
+            std::vector<bool> safe;
+            if (b._safe_cache.size() > 0)
+                safe = b._safe_cache;
+            else {
+                safe = belief_game_->getSafeActions(b.support, b.obs, b.rem); 
+                b._safe_cache = safe;
+            }
             std::vector<int> indices(A);
             std::iota(indices.begin(), indices.end(), 0);
 
@@ -488,7 +495,7 @@ namespace AIToolbox {
         }
 
         template <typename M>
-        size_t BWCPOMCP<M>::findBestBonusA(const BeliefNode &b) {
+        size_t BWCPOMCP<M>::findBestBonusA(BeliefNode &b) {
             unsigned count = b.N;
             // Count here can be as low as 1.
             // Since log(1) = 0, and 0/0 = error, we add 1.0.
@@ -499,7 +506,13 @@ namespace AIToolbox {
                     return an.V + exploration_ * std::sqrt( logCount / an.N );
             };
 
-            std::vector<bool> safe = belief_game_->getSafeActions(b.support, b.obs, b.rem); 
+            std::vector<bool> safe;
+            if (b._safe_cache.size() > 0)
+                safe = b._safe_cache;
+            else {
+                safe = belief_game_->getSafeActions(b.support, b.obs, b.rem); 
+                b._safe_cache = safe;
+            }
             std::vector<int> indices(A);
             std::iota(indices.begin(), indices.end(), 0);
 

@@ -417,6 +417,11 @@ std::vector<double> BWC::POMDP::solveGameBeliefConstruction() {
 
 std::vector<int> BWC::POMDP::postInObs(std::vector<int> current_states, int action, int obs) {
     assert(current_states.size() > 0);
+    // first, check the cache
+    auto hit = this->_post_in_obs_cache.find(std::make_tuple(current_states, action, obs));
+    if (hit != this->_post_in_obs_cache.end())
+        return hit->second;
+
     // std::cout << "Post in obs for (a,o) = (" << action << "," << obs << ")" << std::endl;
     // we first collect all states with the given observation
     std::vector<int> states_in_obs;
@@ -437,6 +442,10 @@ std::vector<int> BWC::POMDP::postInObs(std::vector<int> current_states, int acti
                           states_in_obs.end(),
                           std::back_inserter(intersection));
     assert(intersection.size() > 0);
+    
+    // save into cache, and return
+    this->_post_in_obs_cache[std::make_tuple(current_states, action, obs)] = intersection;
+
     return intersection;
 }
                            

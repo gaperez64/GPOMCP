@@ -2,6 +2,9 @@
 #include <iostream>
 #include <cstdlib>
 #include <cmath>
+#include <time.h>
+#include <algorithm>
+
 #include <AIToolbox/POMDP/Algorithms/POMCP.hpp>
 #include <AIToolbox/POMDP/Types.hpp>
 #include <AIToolbox/POMDP/Utils.hpp>
@@ -19,6 +22,10 @@ int main (int argc, char *argv[]) {
         std::cerr << argv[0] << " filename bound horizon" << std::endl;
         exit(1);
     }
+    // total time computing next action
+    double temp_time;
+    double max_time = 0;
+    double total_time = 0;
     // recover the POMDP from file and parse horizon
     const float threshold = std::atof(argv[2]);
     const long max_timestep = std::atoi(argv[3]);
@@ -54,8 +61,13 @@ int main (int argc, char *argv[]) {
     float disc = M.getDiscFactor();
     current_state = M.sampleInitialState();
     current_obs = -1;
+    time_t now;
+    time(&now);
     action = solver.sampleAction(current_belief,
                                  max_timestep); // horizon to plan for
+    temp_time = difftime(time(NULL), now);
+    max_time = std::max(temp_time, max_time);
+    total_time += temp_time;
     for (unsigned timestep = 0; timestep < max_timestep; ++timestep) {
         std::tie(new_state, new_obs, reward) =
             model.sampleSOR(current_state, action);
@@ -72,9 +84,16 @@ int main (int argc, char *argv[]) {
         current_state = new_state;
         current_obs = new_obs;
         current_belief = new_belief;
+        time(&now);
         action = solver.sampleAction(action, current_obs,
                                      max_timestep - (timestep + 1));
+        temp_time = difftime(time(NULL), now);
+        max_time = std::max(temp_time, max_time);
+        total_time += temp_time;
     }
     std::cout << "Obtained an accum reward of: " << total_reward << std::endl;
+    std::cout << "Max time waited for an action: " << max_time << "s" << std::endl;
+    std::cout << "Average time waited for actions: " << total_time / max_timestep << "s"
+              << std::endl;
     exit(EXIT_SUCCESS);
 }

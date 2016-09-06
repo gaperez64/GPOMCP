@@ -36,6 +36,10 @@ class POMDP {
         std::vector<int> post(int, int);
         std::vector<int> post(std::vector<int>, int);
 
+        // cache
+        std::map<std::tuple<std::vector<int>, int, int>,
+                 std::vector<int> > _post_in_obs_cache;
+
     public:
         POMDP(const std::string&);
         POMDP(const POMDP &other);
