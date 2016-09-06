@@ -47,7 +47,7 @@ class POMDP {
               std::map<std::tuple<int, int, int>, double>,
               std::map<int, double>,
               double);
-        void postInObs(std::vector<int>, int, int);
+        std::vector<int> postInObs(std::vector<int>, int, int);
         void setStates(std::vector<std::string>);
         std::string getStateName(int);
         std::string getActionName(int);
@@ -58,9 +58,9 @@ class POMDP {
         void setObservations(std::vector<std::string>);
         int sampleInitialState();
         AIToolbox::POMDP::Belief getInitialBelief();
-        std::vector<int> getStatesInBelief(AIToolbox::POMDP::Belief&, int);
+        std::vector<int> getStatesInBelief(const AIToolbox::POMDP::Belief&, int);
         double getAValueOfBelief(std::vector<int>, int);
-        std::vector<bool> getSafeActions(std::vector<int>, int, int, double, double);
+        std::vector<bool> getSafeActions(std::vector<int>, int, double);
 
         void addTransition(int, int, int, double);
         void addObservationProb(int, int, double);

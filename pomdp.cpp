@@ -415,7 +415,9 @@ std::vector<double> BWC::POMDP::solveGameBeliefConstruction() {
     return result;
 }
 
-void BWC::POMDP::postInObs(std::vector<int> current_states, int action, int obs) {
+std::vector<int> BWC::POMDP::postInObs(std::vector<int> current_states, int action, int obs) {
+    assert(current_states.size() > 0);
+    // std::cout << "Post in obs for (a,o) = (" << action << "," << obs << ")" << std::endl;
     // we first collect all states with the given observation
     std::vector<int> states_in_obs;
     for (std::map<std::tuple<int, int>, double>::iterator i =
@@ -431,8 +433,10 @@ void BWC::POMDP::postInObs(std::vector<int> current_states, int action, int obs)
     std::vector<int> intersection;
     std::set_intersection(target_states.begin(),
                           target_states.end(),
-                          spo->second.begin(), spo->second.end(),
+                          states_in_obs.begin(),
+                          states_in_obs.end(),
                           std::back_inserter(intersection));
+    assert(intersection.size() > 0);
     return intersection;
 }
                            
@@ -732,7 +736,7 @@ AIToolbox::POMDP::Belief BWC::POMDP::getInitialBelief() {
     return initial;
 }
 
-std::vector<int> BWC::POMDP::getStatesInBelief(AIToolbox::POMDP::Belief &b, int obs) {
+std::vector<int> BWC::POMDP::getStatesInBelief(const AIToolbox::POMDP::Belief &b, int obs) {
     // this vector will be, by construction, ordered
     std::vector<int> states_in_belief;
     std::cout << "Found states: ";
@@ -763,10 +767,12 @@ double BWC::POMDP::getAValueOfBelief(std::vector<int> states_in_belief, int obs)
 
 std::vector<bool> BWC::POMDP::getSafeActions(std::vector<int> states_in_belief,
                                              int obs, double remain) {
+    assert(states_in_belief.size() > 0);
     std::vector<bool> safe(this->actions.size(), true);
     std::map<std::tuple<std::vector<int>, int>, int>::iterator i =
         this->states_id.find(std::make_tuple(states_in_belief, obs));
     if (i != this->states_id.end()) {
+        // std::cout << "Computing safe actions with remain = " << remain << std::endl;
         assert(this->a_value[i->second] >= remain);
 
         for (int a = 0; a < this->actions.size(); a++) {
@@ -776,14 +782,19 @@ std::vector<bool> BWC::POMDP::getSafeActions(std::vector<int> states_in_belief,
                 if (remain > 
                     (this->weight[std::make_tuple(i->second, a, *j)] +
                      this->a_value[*j] * this->discount_factor)) {
-                    std::cout << "Playing action: (" << a << ")" << this->actions[a]
-                              << " is unsafe now" << std::endl;
+                    // std::cout << "Playing action: (" << a << ")" << this->actions[a]
+                    //           << " is unsafe now" << std::endl;
                     safe[a] = false;
                 }
             }
         }
         return safe;
     }
+    std::cout << "Failed to find the key: ( ";
+    for (auto j = states_in_belief.begin(); j != states_in_belief.end(); ++j)
+        std::cout << *j << " ";
+    std::cout << "), " << obs << std::endl;
+    std::cout << "Possibilities:" << std::endl;
     for (i = this->states_id.begin(); i != this->states_id.end(); ++i) {
         std::vector<int> vec;
         int o;

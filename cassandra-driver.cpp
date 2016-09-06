@@ -1,7 +1,7 @@
 #include "cassandra-driver.h"
 #include "cassandra-parser.h"
 
-CassDriver::CassDriver(POMDP* p) :
+CassDriver::CassDriver(BWC::POMDP* p) :
     trace_scanning(false), trace_parsing(false), pomdp(p) { }
 
 int CassDriver::parse(const std::string &f) {
@@ -52,7 +52,7 @@ void CassDriver::addTransition(ElemRef source, ElemRef action, ElemRef target,
     }
 }
 
-void addWeightHelper2(POMDP* p, int source,
+void addWeightHelper2(BWC::POMDP* p, int source,
                       int action, ElemRef target, double weight) {
     if (target.type == ELEMREFTYPE_ALL)
         for (int i = 0; i < p->getStateCount(); i++)
@@ -63,7 +63,7 @@ void addWeightHelper2(POMDP* p, int source,
                             weight);
 }
 
-void addWeightHelper1(POMDP* p, int source,
+void addWeightHelper1(BWC::POMDP* p, int source,
                       ElemRef action, ElemRef target, double weight) {
     if (action.type == ELEMREFTYPE_ALL)
         for (int i = 0; i < p->getActionCount(); i++)

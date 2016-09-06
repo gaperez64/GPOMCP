@@ -1,8 +1,8 @@
 #!/bin/bash
-TIGEREX="../Examples/Hallway/hallway5.POMDP"
-LOG="log_hallway5.txt"
-HORIZON=5000
-for i in `seq 0 98`;
+TIGEREX="../Examples/Hallway/hallway1-traps.POMDP"
+LOG="log_hallway1_traps.txt"
+HORIZON=2500
+for i in `seq 0 50 5400`;
 do
   THRESH=${i}
   echo "threshold = "${THRESH} >> ${LOG}

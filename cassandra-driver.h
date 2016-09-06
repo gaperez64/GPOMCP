@@ -14,12 +14,12 @@ YY_DECL;
 
 class CassDriver {
     protected:
-        POMDP* pomdp;
+        BWC::POMDP* pomdp;
         double discount_factor;
         int weight_sign;
 
     public:
-        CassDriver(POMDP*);
+        CassDriver(BWC::POMDP*);
         int result;
 
         // Scan handling

@@ -84,12 +84,14 @@ namespace AIToolbox {
                 struct BeliefNode {
                     BeliefNode() : N(0) {}
                     BeliefNode(size_t s) : belief(1, s), N(0) {}
-                    BeliefNode(size_t s, double r) : belief(1, s), N(0), rem(r) {}
+                    BeliefNode(size_t s, double r, int o) : belief(1, s), N(0),
+                                                            rem(r), obs(o) {}
                     ActionNodes children;
                     std::vector<int> support;
                     SampleBelief belief;
                     unsigned N;
                     double rem = 0.0;
+                    int obs = -1;
                 };
 
                 /**
@@ -103,7 +105,7 @@ namespace AIToolbox {
                  * @param t The threshold for the worst-case value
                  */
                 BWCPOMCP(const M& m, size_t beliefSize, unsigned iterations, double exp,
-                         double t);
+                         double t, BWC::POMDP* p, BWC::POMDP* b);
 
                 /**
                  * @brief This function resets the internal graph and samples for the provided belief and horizon.
@@ -218,6 +220,7 @@ namespace AIToolbox {
                 double exploration_;
                 double threshold_;
                 BWC::POMDP* pomdp_;
+                BWC::POMDP* belief_game_;
 
                 SampleBelief sampleBelief_;
                 BeliefNode graph_;
@@ -317,16 +320,18 @@ namespace AIToolbox {
         template <typename M>
         BWCPOMCP<M>::BWCPOMCP(const M& m, size_t beliefSize,
                               unsigned iter, double exp, double t,
-                              BWC::POMDP* p) : model_(m),
+                              BWC::POMDP* p,
+                              BWC::POMDP* b) : model_(m),
                                                S(model_.getS()),
                                                A(model_.getA()),
                                                beliefSize_(beliefSize),
                                                iterations_(iter),
                                                exploration_(exp),
                                                graph_(),
-                                               rand_(Impl::Seeder::getSeed(),
+                                               rand_(Impl::Seeder::getSeed()),
                                                threshold_(t),
-                                               pomdp_(p)) {}
+                                               pomdp_(p),
+                                               belief_game_(b) {}
 
         template <typename M>
         size_t BWCPOMCP<M>::sampleAction(const Belief& b, unsigned horizon) {
@@ -396,7 +401,7 @@ namespace AIToolbox {
 
             size_t s1, o; double rew;
             std::tie(s1, o, rew) = model_.sampleSOR(s, a);
-            double rem = (b.rem + rew) / model_.getDiscount();
+            double rem = (b.rem - rew) / model_.getDiscount();
 
             auto & aNode = b.children[a];
 
@@ -408,7 +413,7 @@ namespace AIToolbox {
                 if ( ot == std::end(aNode.children) ) {
                     aNode.children.emplace(std::piecewise_construct,
                                            std::forward_as_tuple(o),
-                                           std::forward_as_tuple(s1, rem));
+                                           std::forward_as_tuple(s1, rem, o));
                     ot = aNode.children.find(o);
                     ot->second.support = pomdp_->postInObs(b.support, a, o);
                     // This stops automatically if we go out of depth
@@ -457,9 +462,10 @@ namespace AIToolbox {
 
         template <typename M>
         size_t BWCPOMCP<M>::findBestA(const BeliefNode &b) {
-            std::cout << "instrumented findBestA called" << std::endl;
-            std::vector<bool> safe = pomdp_->getSafeActions(b.support, b.rem); 
+            // std::cout << "instrumented findBestA called" << std::endl;
+            std::vector<bool> safe = belief_game_->getSafeActions(b.support, b.obs, b.rem); 
             std::vector<int> indices(A);
+            std::iota(indices.begin(), indices.end(), 0);
 
             std::sort(indices.begin(),
                       indices.end(),
@@ -467,6 +473,11 @@ namespace AIToolbox {
                           return !safe[lhs] ||
                               (b.children[lhs].V < b.children[rhs].V);
                       });
+            /* std::cout << "The best actions, in increasing order: ";
+             * for (auto it = indices.begin(); it != indices.end(); ++it)
+             *     std::cout << *it << " ";
+             * std::cout << std::endl;
+             */
 
             return indices.back();
         }
@@ -483,16 +494,23 @@ namespace AIToolbox {
                     return an.V + exploration_ * std::sqrt( logCount / an.N );
             };
 
-            std::vector<bool> safe = pomdp_->getSafeActions(b.support, b.rem); 
+            std::vector<bool> safe = belief_game_->getSafeActions(b.support, b.obs, b.rem); 
             std::vector<int> indices(A);
+            std::iota(indices.begin(), indices.end(), 0);
 
             std::sort(indices.begin(),
                       indices.end(),
-                      [&b](int lhs, int rhs) {
+                      [&b, &safe, &evaluationFunction](int lhs, int rhs) {
                           return !safe[lhs] ||
                               (evaluationFunction(b.children[lhs]) <
                                evaluationFunction(b.children[rhs]));
                       });
+            /* std::cout << "The best (with bonus) actions, in increasing order: ";
+             * for (auto it = indices.begin(); it != indices.end(); ++it)
+             *     std::cout << *it << " ";
+             * std::cout << std::endl;
+             */
+                   
 
             return indices.back();
         }

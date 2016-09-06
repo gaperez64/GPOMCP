@@ -6,7 +6,7 @@
 #include <AIToolbox/POMDP/Types.hpp>
 #include <AIToolbox/POMDP/Utils.hpp>
 
-#include "BWCPOMCP2.hpp"
+#include "BWCPOMCP.hpp"
 #include "pomdp.h"
 
 
@@ -45,7 +45,8 @@ int main (int argc, char *argv[]) {
             10000,        // number of episodes to run before completion
             100000000.0,  // the exploration constant
             threshold,    // the worst-case threshold
-            &M);          // reference to original BWC POMDP
+            &M,           // reference to original BWC POMDP
+            &N);          // reference to belief-based game
     // simulate the game
     size_t current_state, new_state, action, current_obs, new_obs;
     float reward;
