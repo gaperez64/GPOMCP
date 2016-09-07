@@ -419,8 +419,9 @@ std::vector<int> BWC::POMDP::postInObs(std::vector<int> current_states, int acti
     assert(current_states.size() > 0);
     // first, check the cache
     auto hit = this->_post_in_obs_cache.find(std::make_tuple(current_states, action, obs));
-    if (hit != this->_post_in_obs_cache.end())
+    if (hit != this->_post_in_obs_cache.end()) {
         return hit->second;
+    }
 
     // std::cout << "Post in obs for (a,o) = (" << action << "," << obs << ")" << std::endl;
     // we first collect all states with the given observation
@@ -772,6 +773,26 @@ double BWC::POMDP::getAValueOfBelief(std::vector<int> states_in_belief, int obs)
     // belief construction (together with the obs)
     assert(false);
     return 0;
+}
+
+int BWC::POMDP::sampleSafeActions(std::vector<int> states_in_belief,
+                                  int obs, double remain) {
+    std::vector<bool> safe = this->getSafeActions(states_in_belief,
+                                                  obs, remain);
+    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    std::default_random_engine generator(seed);
+    std::vector<double> probs;
+    std::vector<int> prob_action;
+    for (int i = 0; i < safe.size(); i ++)
+        if (safe[i])
+            prob_action.push_back(i);
+    for (int i = 0; i < prob_action.size(); i++)
+        probs.push_back(1.0 / prob_action.size());
+    std::discrete_distribution<int> dist(probs.begin(), probs.end());
+    int result = prob_action[dist(generator)];
+    // std::cout << "Randomly chosen safe action: " << this->actions[result]
+    //           << std::endl;
+    return result;
 }
 
 std::vector<bool> BWC::POMDP::getSafeActions(std::vector<int> states_in_belief,

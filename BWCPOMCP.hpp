@@ -291,7 +291,7 @@ namespace AIToolbox {
                  *
                  * @return An estimate return computed from simulating until max depth.
                  */
-                double rollout(size_t s, unsigned horizon);
+                double rollout(const BeliefNode &b, size_t s, unsigned horizon);
 
 
                 /**
@@ -423,7 +423,7 @@ namespace AIToolbox {
                     ot = aNode.children.find(o);
                     ot->second.support = pomdp_->postInObs(b.support, a, o);
                     // This stops automatically if we go out of depth
-                    futureRew = rollout(s1, depth + 1);
+                    futureRew = rollout(ot->second, s1, depth + 1);
                 }
                 else {
                     ot->second.belief.push_back(s1);
@@ -453,12 +453,30 @@ namespace AIToolbox {
         }
 
         template <typename M>
-        double BWCPOMCP<M>::rollout(size_t s, unsigned depth) {
+        double BWCPOMCP<M>::rollout(const BeliefNode &b, size_t s, unsigned depth) {
             double rew = 0.0, totalRew = 0.0, gamma = 1.0;
-
+#if true
+            // rolling out unsafely
             std::uniform_int_distribution<size_t> generator(0, A-1);
             for ( ; depth < maxDepth_; ++depth ) {
                 std::tie( s, rew ) = model_.sampleSR( s, generator(rand_) );
+
+                totalRew += gamma * rew;
+                gamma *= model_.getDiscount();
+            }
+            return totalRew;
+#endif
+            // rolling out safely
+            double rem = b.rem;
+            size_t o = b.obs;
+            std::vector<int> support = b.support;
+
+            for ( ; depth < maxDepth_; ++depth ) {
+                size_t a = belief_game_->sampleSafeActions(support, o, rem);
+                std::tie( s, o, rew ) = model_.sampleSOR( s, a );
+                
+                rem = (rem - rew) / model_.getDiscount();
+                support = pomdp_->postInObs(support, a, o);
 
                 totalRew += gamma * rew;
                 gamma *= model_.getDiscount();

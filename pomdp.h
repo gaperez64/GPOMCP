@@ -65,6 +65,7 @@ class POMDP {
         std::vector<int> getStatesInBelief(const AIToolbox::POMDP::Belief&, int);
         double getAValueOfBelief(std::vector<int>, int);
         std::vector<bool> getSafeActions(std::vector<int>, int, double);
+        int sampleSafeActions(std::vector<int>, int, double);
 
         void addTransition(int, int, int, double);
         void addObservationProb(int, int, double);
