@@ -455,7 +455,7 @@ namespace AIToolbox {
         template <typename M>
         double BWCPOMCP<M>::rollout(const BeliefNode &b, size_t s, unsigned depth) {
             double rew = 0.0, totalRew = 0.0, gamma = 1.0;
-#if true
+#if false
             // rolling out unsafely
             std::uniform_int_distribution<size_t> generator(0, A-1);
             for ( ; depth < maxDepth_; ++depth ) {

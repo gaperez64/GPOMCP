@@ -799,47 +799,61 @@ std::vector<bool> BWC::POMDP::getSafeActions(std::vector<int> states_in_belief,
                                              int obs, double remain) {
     assert(states_in_belief.size() > 0);
     std::vector<bool> safe(this->actions.size(), true);
-    std::map<std::tuple<std::vector<int>, int>, int>::iterator i =
-        this->states_id.find(std::make_tuple(states_in_belief, obs));
-    if (i != this->states_id.end()) {
+
+    // we now recover the worst (minimal) outcome of each action
+    std::vector<double> min_vals;
+    auto hit = this->_min_fval_cache.find(std::make_tuple(states_in_belief, obs));
+    if (hit != this->_min_fval_cache.end()) {
+        min_vals = hit->second;
+    } else {
+        std::map<std::tuple<std::vector<int>, int>, int>::iterator i =
+            this->states_id.find(std::make_tuple(states_in_belief, obs));
+        if (i == this->states_id.end()) {
+            std::cout << "Failed to find the key: ( ";
+            for (auto j = states_in_belief.begin(); j != states_in_belief.end(); ++j)
+                std::cout << *j << " ";
+            std::cout << "), " << obs << std::endl;
+            std::cout << "Possibilities:" << std::endl;
+            for (i = this->states_id.begin(); i != this->states_id.end(); ++i) {
+                std::vector<int> vec;
+                int o;
+                std::tie(vec, o) = i->first;
+                std::cout << "key: ( ";
+                for (auto j = vec.begin(); j != vec.end(); ++j)
+                    std::cout << *j << " ";
+                std::cout << "), " << o;
+                std::cout << std::endl;
+            }
+            // If this is reached then either you have not computed the a_value vector
+            // or you have provided a belief vector which is not a state in the current
+            // belief construction (together with the obs)
+            assert(false);
+            return std::vector<bool>();
+        }
+
         // std::cout << "Computing safe actions with (aVal,remain) = ("
         //           << this->a_value[i->second] << "," << remain
         //           << ")" << std::endl;
         assert(this->a_value[i->second] >= remain);
 
+        min_vals.assign(this->actions.size(), this->a_value[i->second]);
         for (int a = 0; a < this->actions.size(); a++) {
             std::vector<int> successors = this->post(i->second, a);
             for (std::vector<int>::iterator j = successors.begin();
-                    j != successors.end(); ++j) {
-                if (remain > 
+                    j != successors.end(); ++j)
+                min_vals[a] = std::min(min_vals[a], 
                     (this->weight[std::make_tuple(i->second, a, *j)] +
-                     this->a_value[*j] * this->discount_factor)) {
-                    // std::cout << "Playing action: (" << a << ")" << this->actions[a]
-                    //           << " is unsafe now" << std::endl;
-                    safe[a] = false;
-                }
-            }
+                     this->a_value[*j] * this->discount_factor));
         }
-        return safe;
+        // cache this information
+        this->_min_fval_cache[std::make_tuple(states_in_belief, obs)] = min_vals;
     }
-    std::cout << "Failed to find the key: ( ";
-    for (auto j = states_in_belief.begin(); j != states_in_belief.end(); ++j)
-        std::cout << *j << " ";
-    std::cout << "), " << obs << std::endl;
-    std::cout << "Possibilities:" << std::endl;
-    for (i = this->states_id.begin(); i != this->states_id.end(); ++i) {
-        std::vector<int> vec;
-        int o;
-        std::tie(vec, o) = i->first;
-        std::cout << "key: ( ";
-        for (auto j = vec.begin(); j != vec.end(); ++j)
-            std::cout << *j << " ";
-        std::cout << "), " << o;
-        std::cout << std::endl;
+
+    for (int a = 0; a < this->actions.size(); a++) {
+        safe[a] = (min_vals[a] >= remain);
+        // if (!safe[a])
+        //     std::cout << "Action (" << a << ") " << this->actions[a]
+        //               << " is not safe to play now" << std::endl;
     }
-    // If this is reached then either you have not computed the a_value vector
-    // or you have provided a belief vector which is not a state in the current
-    // belief construction (together with the obs)
-    assert(false);
-    return std::vector<bool>();
+    return safe;
 }

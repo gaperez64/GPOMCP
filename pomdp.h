@@ -39,7 +39,8 @@ class POMDP {
         // cache
         std::map<std::tuple<std::vector<int>, int, int>,
                  std::vector<int> > _post_in_obs_cache;
-
+        std::map<std::tuple<std::vector<int>, int>,
+                 std::vector<double> > _min_fval_cache;
     public:
         POMDP(const std::string&);
         POMDP(const POMDP &other);
