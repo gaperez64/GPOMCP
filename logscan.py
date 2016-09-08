@@ -1,4 +1,5 @@
 import sys
+import math
 
 threshold_string = "threshold = "
 reward_string = "Obtained an accum reward of: "
@@ -18,18 +19,35 @@ r = "N/A"
 s = dict()
 c = dict()
 
+data = []
 for line in in_file.readlines():
     if line.find(threshold_string) >= 0:
         t = line[len(threshold_string):].strip()
     if line.find(reward_string) >= 0:
         r = line[len(reward_string):].strip()
-        out_file.write(t + " " + r + "\n")
+        # out_file.write(t + " " + r + "\n")
+        data.append((t, r))
         if t not in s:
             c[t] = 1
             s[t] = float(r)
         else:
             c[t] += 1
             s[t] += float(r)
+
+total_squared_difs = dict()
+for (t, r) in data:
+    if t not in total_squared_difs:
+        total_squared_difs[t] = (float(r) - float(s[t]) / c[t]) ** 2
+    else:
+        total_squared_difs[t] += (float(r) - float(s[t]) / c[t]) ** 2
+
+std_dev = dict()
+for t in c:
+    std_dev[t] = math.sqrt(float(total_squared_difs[t]) / c[t])
+
+for (t, r) in data:
+    out_file.write(t + " " + r + " " + str(std_dev[t]) + "\n")
+
 for t in s:
     avg_out_file.write(t + " " + str(float(s[t]) / c[t]) + "\n")
 
