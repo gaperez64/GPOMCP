@@ -1,7 +1,7 @@
 #!/bin/bash
 TIGEREX="../Examples/Hallway/hallway1-traps.POMDP"
 LOG="log_hallway1_traps.txt"
-HORIZON=200
+HORIZON=300
 for i in `seq 0 50 5400`;
 do
   THRESH=${i}

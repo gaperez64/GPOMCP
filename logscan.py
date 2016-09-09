@@ -49,7 +49,8 @@ for (t, r) in data:
     out_file.write(t + " " + r + " " + str(std_dev[t]) + "\n")
 
 for t in s:
-    avg_out_file.write(t + " " + str(float(s[t]) / c[t]) + "\n")
+    avg_out_file.write(t + " " + str(float(s[t]) / c[t]) + " " +
+                       str(std_dev[t]) + "\n")
 
 in_file.close()
 out_file.close()
