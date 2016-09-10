@@ -17,6 +17,7 @@ class CassDriver {
         BWC::POMDP* pomdp;
         double discount_factor;
         int weight_sign;
+        bool has_det_obs;
 
     public:
         CassDriver(BWC::POMDP*);

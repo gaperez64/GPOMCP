@@ -246,17 +246,21 @@ bool BWC::POMDP::hasDetObs() {
 }
 
 void BWC::POMDP::makeObsDet() {
+    std::cout << "Making the POMDP obs function deterministic" << std::endl;
     std::vector<std::string> new_states;
     std::map<std::tuple<int, int>, double> new_prob_obs;
-    std::vector<std::vector<int> > newstates_per_state;
-    std::vector<std::vector<int> > obs_per_state;
-    obs_per_state.resize(this->states.size());
+    std::vector<std::vector<int> > newstates_per_state(this->states.size());
+    std::vector<std::vector<int> > obs_per_state(this->states.size());
     int i = 0;
-    for (std::map<std::tuple<int, int>, double>::iterator PO =
-            this->prob_obs.begin(); PO != this->prob_obs.end();
-            ++PO) {
+    for (auto PO = this->prob_obs.begin(); PO != this->prob_obs.end(); ++PO) {
         int s, o;
         std::tie(s, o) = PO->first;
+        std::cout << "Adding new state x obs "
+                  << std::endl
+                  << this->states[s]
+                  << ", obs: "
+                  << this->observations[o]
+                  << std::endl;
         new_states.push_back(this->states[s] + ", obs: " +
                              this->observations[o]);
         newstates_per_state[s].push_back(i);
@@ -264,6 +268,7 @@ void BWC::POMDP::makeObsDet() {
         new_prob_obs[std::make_tuple(i, o)] = 1.0;
         i++;
     }
+    std::cout << "First sets ready" << std::endl;
     // we now have a new set of states, we just need to update prob_delta,
     // prob_obs, weight, and initial_dist to be on the new set instead of the
     // old state set
@@ -292,6 +297,7 @@ void BWC::POMDP::makeObsDet() {
             ++OS1;
         }
     }
+    std::cout << "Up to here!" << std::endl;
     // generate the new initial distribution
     std::map<int, double> new_initial_dist;
     for (std::map<int, double>::iterator I = this->initial_dist.begin();
@@ -305,6 +311,7 @@ void BWC::POMDP::makeObsDet() {
             ++OS;
         }
     }
+    std::cout << "Before swaps" << std::endl;
     // update all the internal variables
     std::swap(this->states, new_states);
     // actions stay the same

@@ -2,7 +2,8 @@
 #include "cassandra-parser.h"
 
 CassDriver::CassDriver(BWC::POMDP* p) :
-    trace_scanning(false), trace_parsing(false), pomdp(p) { }
+    trace_scanning(false), trace_parsing(false), pomdp(p),
+    has_det_obs(true) { }
 
 int CassDriver::parse(const std::string &f) {
     this->file = f;
@@ -11,6 +12,11 @@ int CassDriver::parse(const std::string &f) {
     parser.set_debug_level(this->trace_parsing);
     int res = parser.parse();
     endScan();
+    // if the observations are not deterministic, we should make them
+    if (!this->has_det_obs) {
+        assert(this->pomdp->isValidMdp());
+        this->pomdp->makeObsDet();
+    }
     return res;
 }
 
@@ -97,6 +103,7 @@ void CassDriver::addObsTransition(ElemRef action, ElemRef target, ElemRef obs,
     this->pomdp->addObservationProb(this->pomdp->getStateId(target.name),
                                     this->pomdp->getObservationId(obs.name),
                                     prob);
+    this->has_det_obs = this->has_det_obs && (prob > 0.0) && (prob < 1.0);
 }
 
 void CassDriver::setDiscount(double discount) {
