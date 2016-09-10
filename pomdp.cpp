@@ -11,6 +11,8 @@
 #include "dsgame.h"
 #include "cassandra-driver.h"
 
+const double epsilon = 0.000001L;
+
 BWC::POMDP::POMDP() : discount_factor(0.5) { }
 
 BWC::POMDP::POMDP(const std::string &filename) : POMDP() {
@@ -121,10 +123,11 @@ bool BWC::POMDP::isValidMdp() {
 
     for (int s = 0; s < this->states.size(); s++)
         for (int a = 0; a < this->actions.size(); a++)
-            if (state_action_prob[std::make_tuple(s, a)] > 1) {
+            if (std::abs(state_action_prob[std::make_tuple(s, a)] - 1.0L) > epsilon) {
                 std::cerr << "The probabilities for the state-action pair "
                           << this->states[s] << ","
-                          << this->actions[a] << " sum to more than 1"
+                          << this->actions[a] << " sum to "
+                          << state_action_prob[std::make_tuple(s, a)]
                           << std::endl;
                 return false;
             }
@@ -144,9 +147,9 @@ bool BWC::POMDP::isValidMdp() {
         }
     }
     // check #3: observation probs should add to 1 for every state
-    std::map<std::tuple<int>, double> state_obs_prob;
+    std::map<int, double> state_obs_prob;
     for (int s = 0; s < this->states.size(); s++)
-        state_obs_prob[std::make_tuple(s)] = 0;
+        state_obs_prob[s] = 0;
 
     for (std::map<std::tuple<int, int>, double>::iterator PO =
             this->prob_obs.begin(); PO != this->prob_obs.end();
@@ -157,9 +160,10 @@ bool BWC::POMDP::isValidMdp() {
     }
 
     for (int s = 0; s < this->states.size(); s++)
-        if (state_obs_prob[s] > 1) {
+        if (std::abs(state_obs_prob[s] - 1.0L) > epsilon) {
             std::cerr << "The observation probabilities for state "
-                      << this->states[s] << " sum to more than 1"
+                      << this->states[s] << " sum to "
+                      << state_obs_prob[s]
                       << std::endl;
             return false;
         }
