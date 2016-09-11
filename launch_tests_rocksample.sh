@@ -6,5 +6,5 @@ for i in `seq 0 7 109`;
 do
   THRESH=${i}
   echo "threshold = "${THRESH} >> ${LOG}
-  ./test-sim ${TIGEREX} ${THRESH} ${HORIZON} 10 >> ${LOG}
+  ./test-sim ${TIGEREX} ${THRESH} ${HORIZON} 50 >> ${LOG}
 done
