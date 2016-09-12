@@ -301,7 +301,6 @@ void BWC::POMDP::makeObsDet() {
             ++OS1;
         }
     }
-    std::cout << "Up to here!" << std::endl;
     // generate the new initial distribution
     std::map<int, double> new_initial_dist;
     for (std::map<int, double>::iterator I = this->initial_dist.begin();
@@ -315,7 +314,6 @@ void BWC::POMDP::makeObsDet() {
             ++OS;
         }
     }
-    std::cout << "Before swaps" << std::endl;
     // update all the internal variables
     std::swap(this->states, new_states);
     // actions stay the same
@@ -603,41 +601,41 @@ void BWC::POMDP::makeGameBeliefConstruction() {
 
 void BWC::POMDP::print(std::ostream &o) {
     o << "Discount factor: " << this->discount_factor << std::endl;
-    o << this->states.size() << " States: " << std::endl;
-    for (std::vector<std::string>::iterator i = this->states.begin();
-            i != this->states.end(); ++i)
-        o << *i << std::endl;
+    o << this->states.size() << " States " << std::endl;
+    // for (std::vector<std::string>::iterator i = this->states.begin();
+    //         i != this->states.end(); ++i)
+    //     o << *i << std::endl;
     o << "Initial distribution: " << std::endl;
     for (std::map<int, double>::iterator i = this->initial_dist.begin();
             i != this->initial_dist.end(); ++i)
         o << this->states[i->first] << " with prob " << i->second << std::endl;
-    o << this->actions.size() << " Actions: " << std::endl;
-    for (std::vector<std::string>::iterator i = this->actions.begin();
-            i != this->actions.end(); ++i)
-        o << *i << std::endl;
-    o << this->observations.size() << " Observations: " << std::endl;
-    for (std::vector<std::string>::iterator i = this->observations.begin();
-            i != this->observations.end(); ++i)
-        o << *i << std::endl;
-    o << "State-observation mapping: " << std::endl;
-    for (std::map<std::tuple<int, int>, double>::iterator i =
-            this->prob_obs.begin(); i != this->prob_obs.end(); ++i) {
-        int s, obs;
-        std::tie(s, obs) = i->first;
-        o << this->states[s] << " observed as "
-          << this->observations[obs] << " with prob " << i->second << std::endl;
-    }
-    o << this->prob_delta.size() << " Transitions: " << std::endl;
-    for (std::map<std::tuple<int, int, int>, double>::iterator i =
-            this->prob_delta.begin(); i != this->prob_delta.end(); ++i) {
-        int s, a, t;
-        std::tie(s, a, t) = i->first;
-        o << "(" << this->states[s] << ","
-          << this->actions[a] << ","
-          << this->states[t] << ") with prob "
-          << i->second << " and weight "
-          << this->weight[i->first] << std::endl;
-    }
+    o << this->actions.size() << " Actions " << std::endl;
+    // for (std::vector<std::string>::iterator i = this->actions.begin();
+    //         i != this->actions.end(); ++i)
+    //     o << *i << std::endl;
+    o << this->observations.size() << " Observations " << std::endl;
+    // for (std::vector<std::string>::iterator i = this->observations.begin();
+    //         i != this->observations.end(); ++i)
+    //     o << *i << std::endl;
+    // o << "State-observation mapping " << std::endl;
+    // for (std::map<std::tuple<int, int>, double>::iterator i =
+    //         this->prob_obs.begin(); i != this->prob_obs.end(); ++i) {
+    //     int s, obs;
+    //     std::tie(s, obs) = i->first;
+    //     o << this->states[s] << " observed as "
+    //       << this->observations[obs] << " with prob " << i->second << std::endl;
+    // }
+    // o << this->prob_delta.size() << " Transitions: " << std::endl;
+    // for (std::map<std::tuple<int, int, int>, double>::iterator i =
+    //         this->prob_delta.begin(); i != this->prob_delta.end(); ++i) {
+    //     int s, a, t;
+    //     std::tie(s, a, t) = i->first;
+    //     o << "(" << this->states[s] << ","
+    //       << this->actions[a] << ","
+    //       << this->states[t] << ") with prob "
+    //       << i->second << " and weight "
+    //       << this->weight[i->first] << std::endl;
+    // }
 }
 
 int getId(const std::vector<std::string> &list,

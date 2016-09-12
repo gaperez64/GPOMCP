@@ -1,6 +1,8 @@
 #include "cassandra-driver.h"
 #include "cassandra-parser.h"
 
+const double epsilon = 0.000001L;
+
 CassDriver::CassDriver(BWC::POMDP* p) :
     trace_scanning(false), trace_parsing(false), pomdp(p),
     has_det_obs(true) { }
@@ -103,7 +105,9 @@ void CassDriver::addObsTransition(ElemRef action, ElemRef target, ElemRef obs,
     this->pomdp->addObservationProb(this->pomdp->getStateId(target.name),
                                     this->pomdp->getObservationId(obs.name),
                                     prob);
-    this->has_det_obs = this->has_det_obs && (prob > 0.0) && (prob < 1.0);
+    this->has_det_obs = this->has_det_obs &&
+        !(std::abs(prob - 1.0L) < epsilon) &&
+        !(std::abs(prob) < epsilon);
 }
 
 void CassDriver::setDiscount(double discount) {
