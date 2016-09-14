@@ -1,6 +1,7 @@
 set term png
 set output 'rocksample.png'
 set xlabel 'worst-case threshold'
+set xrange [-0.6:7]
 set ylabel 'total accumulated reward'
 set key left bottom
 set style line 1 lc rgb '#0060ad' pt 7 ps 1.5  # blue circles, point size = ps
