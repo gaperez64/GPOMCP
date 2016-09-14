@@ -106,8 +106,8 @@ void CassDriver::addObsTransition(ElemRef action, ElemRef target, ElemRef obs,
                                     this->pomdp->getObservationId(obs.name),
                                     prob);
     this->has_det_obs = this->has_det_obs &&
-        !(std::abs(prob - 1.0L) < epsilon) &&
-        !(std::abs(prob) < epsilon);
+        ((std::abs(prob - 1.0L) < epsilon) ||
+         (std::abs(prob) < epsilon));
 }
 
 void CassDriver::setDiscount(double discount) {

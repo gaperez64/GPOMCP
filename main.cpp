@@ -38,10 +38,14 @@ int main (int argc, char *argv[]) {
     AIToolbox::POMDP::Belief new_belief, current_belief;
     current_belief = M.getInitialBelief();
     // obtain the worst-case value of the belief game
+    time_t now;
     std::cout << "Solving the game" << std::endl;
     BWC::POMDP N(M);
+    time(&now);
     N.solveGameBeliefConstruction();
-    std::cout << "Done solving the game" << std::endl;
+    temp_time = difftime(time(NULL), now);
+    std::cout << "Done solving the game in "
+              << temp_time << "s" << std::endl;
     // make the model in which we will simulate playing
     std::cout << "Start building AI-Toolbox model" << std::endl;
     auto model = M.makeModel();
@@ -61,7 +65,6 @@ int main (int argc, char *argv[]) {
     float disc = M.getDiscFactor();
     current_state = M.sampleInitialState();
     current_obs = -1;
-    time_t now;
     time(&now);
     action = solver.sampleAction(current_belief,
                                  max_timestep); // horizon to plan for

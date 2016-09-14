@@ -189,18 +189,28 @@ std::tuple<long, long> toFraction(double input) {
 
 std::vector<double> Game::solveGameValIter(double discount_factor) {
     std::set<int> states = this->getStates();
-    long numerator, denominator;
+    std::cout << "No. states = " << states.size() << std::endl;
+    unsigned long long numerator, denominator;
     std::tie(numerator, denominator) = toFraction(discount_factor);
-    double temp = 1.0;
-    for (int i = 0; i < states.size(); i++)
+    std::cout << "Rationalization of disc factor = "
+              << numerator
+              << "/"
+              << denominator
+              << std::endl;
+    unsigned long long temp = 1;
+    for (int i = 1; i <= states.size(); i++) {
         temp *= (std::pow(denominator, i) - std::pow(numerator, i));
-    double D = temp * std::pow(denominator, states.size());
-    double I = 2 + (std::log(this->biggest_weight) / std::log(2))
-                + (std::log(denominator) / std::log(2))
-                * ((states.size() * (states.size() + 3)) / 2)
-                * -1
-                * (std::log(2) / std::log(discount_factor));
-    long ITER = std::ceil(I);
+        // std::cout << "temp = " << temp << std::endl;
+    }
+    unsigned long long D = temp * std::pow(denominator, states.size());
+    // std::cout << "denominator of solution = " << D << std::endl;
+    unsigned long long I = 2 + (std::log(this->biggest_weight) / std::log(2))
+               + (std::log(denominator) / std::log(2))
+               * ((states.size() * (states.size() + 3)) / 2)
+               * -1
+               * (std::log(2) / std::log(discount_factor));
+    // std::cout << "I before ceiling = " << I << std::endl;
+    unsigned long long ITER = std::ceil(I);
     std::cout << "Value iteration requires "
               << ITER
               << " iterations" << std::endl;
@@ -208,7 +218,7 @@ std::vector<double> Game::solveGameValIter(double discount_factor) {
     std::vector<double> value(states.size(), 0.0);
 
     bool converged = false;
-    for (long i = 0; i < ITER; i++) {
+    for (unsigned long long i = 0; i < ITER; i++) {
         converged = true;
         for (std::set<int>::iterator it = states.begin(); it != states.end(); ++it) {
             std::set<int> actions = this->availableActions(*it);
