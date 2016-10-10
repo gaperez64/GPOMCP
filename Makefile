@@ -22,6 +22,8 @@ test-sim: cassandra-lexer.cpp cassandra-parser.cpp cassandra-driver.h \
 		-L/Users/gaperez/AI-Toolbox/build \
 		-lz3 -lAIToolboxMdp -lAIToolboxPOMDP -o test-sim
 
+all: clean dspomdp-bwc test-sim
+
 cassandra-lexer.cpp: cassandra-parser.h cassandra.l
 	flex --outfile=cassandra-lexer.cpp cassandra.l
 
