@@ -1,0 +1,826 @@
+discount: 0.98
+values: reward
+states: NgoalMNoneT NlosingMNoneT N0x0M00T N0x0M01T N0x0M02T N0x0M10T N0x0M20T N1x0M00T N1x0M01T N1x0M02T N1x0M10T N1x0M20T N0x1M00T N0x1M01T N0x1M02T N0x1M10T N0x1M20T N1x1M00T N1x1M01T N1x1M02T N1x1M10T N1x1M20T senN0x0M00T senN0x0M01T senN0x0M02T senN0x0M10T senN0x0M20T senN1x0M00T senN1x0M01T senN1x0M02T senN1x0M10T senN1x0M20T senN0x1M00T senN0x1M01T senN0x1M02T senN0x1M10T senN0x1M20T senN1x1M00T senN1x1M01T senN1x1M02T senN1x1M10T senN1x1M20T minN1x0M00TR-25 minN1x0M02TR25 minN1x0M00TR0 minN1x0M10TR-25 minN1x0M20TR-25 minN0x1M00TR-25 minN0x1M01TR-25 minN0x1M02TR-25 minN0x1M20TR25 minN0x1M00TR0
+
+actions: N E S W Sample Finish Sense
+observations: o1x1xBG o1x0xMM o0x0xGG o0x0xBB o1x0xBB o0x1xBB o1x1x o1x0xMB o1x0xGB o0x1xBG o0x1xGB o0x0xGB o1x0xMG o1x0xBG o0x1xMG oStart o1x0x o1x1xGB o0x0xBG o0x0x o0x1xGG oLosing o1x1xGG o0x1xMM o0x1xMB o1x0xGG o0x1x o1x1xBB oGoal
+ start include: N0x0M01T N0x0M10T
+
+
+T: N : N0x0M00T : N0x1M00T 1.00
+T: E : N0x0M00T : N1x0M00T 1.00
+T: S : N0x0M00T : N0x0M00T 1.00
+T: W : N0x0M00T : N0x0M00T 1.00
+T: Sample : N0x0M00T : NlosingMNoneT 1.00
+T: Sense : N0x0M00T : senN0x0M00T 1.00
+T: Finish : N0x0M00T : NgoalMNoneT 1.00
+T: N : N0x0M01T : N0x1M01T 1.00
+T: E : N0x0M01T : N1x0M01T 1.00
+T: S : N0x0M01T : N0x0M01T 1.00
+T: W : N0x0M01T : N0x0M01T 1.00
+T: Sample : N0x0M01T : NlosingMNoneT 1.00
+T: Sense : N0x0M01T : senN0x0M01T 1.00
+T: Finish : N0x0M01T : NgoalMNoneT 1.00
+T: N : N0x0M02T : N0x1M02T 1.00
+T: E : N0x0M02T : N1x0M02T 1.00
+T: S : N0x0M02T : N0x0M02T 1.00
+T: W : N0x0M02T : N0x0M02T 1.00
+T: Sample : N0x0M02T : NlosingMNoneT 1.00
+T: Sense : N0x0M02T : senN0x0M02T 1.00
+T: Finish : N0x0M02T : NgoalMNoneT 1.00
+T: N : N0x0M10T : N0x1M10T 1.00
+T: E : N0x0M10T : N1x0M10T 1.00
+T: S : N0x0M10T : N0x0M10T 1.00
+T: W : N0x0M10T : N0x0M10T 1.00
+T: Sample : N0x0M10T : NlosingMNoneT 1.00
+T: Sense : N0x0M10T : senN0x0M10T 1.00
+T: Finish : N0x0M10T : NgoalMNoneT 1.00
+T: N : N0x0M20T : N0x1M20T 1.00
+T: E : N0x0M20T : N1x0M20T 1.00
+T: S : N0x0M20T : N0x0M20T 1.00
+T: W : N0x0M20T : N0x0M20T 1.00
+T: Sample : N0x0M20T : NlosingMNoneT 1.00
+T: Sense : N0x0M20T : senN0x0M20T 1.00
+T: Finish : N0x0M20T : NgoalMNoneT 1.00
+T: N : N1x0M00T : N1x1M00T 1.00
+T: E : N1x0M00T : N1x0M00T 1.00
+T: S : N1x0M00T : N1x0M00T 1.00
+T: W : N1x0M00T : N0x0M00T 1.00
+T: Sample : N1x0M00T : minN1x0M00TR-25 1.00
+T: Sense : N1x0M00T : senN1x0M00T 1.00
+T: Finish : N1x0M00T : NgoalMNoneT 1.00
+T: N : N1x0M01T : N1x1M01T 1.00
+T: E : N1x0M01T : N1x0M01T 1.00
+T: S : N1x0M01T : N1x0M01T 1.00
+T: W : N1x0M01T : N0x0M01T 1.00
+T: Sample : N1x0M01T : minN1x0M02TR25 1.00
+T: Sense : N1x0M01T : senN1x0M01T 1.00
+T: Finish : N1x0M01T : NgoalMNoneT 1.00
+T: N : N1x0M02T : N1x1M02T 1.00
+T: E : N1x0M02T : N1x0M02T 1.00
+T: S : N1x0M02T : N1x0M02T 1.00
+T: W : N1x0M02T : N0x0M02T 1.00
+T: Sample : N1x0M02T : minN1x0M00TR0 1.00
+T: Sense : N1x0M02T : senN1x0M02T 1.00
+T: Finish : N1x0M02T : NgoalMNoneT 1.00
+T: N : N1x0M10T : N1x1M10T 1.00
+T: E : N1x0M10T : N1x0M10T 1.00
+T: S : N1x0M10T : N1x0M10T 1.00
+T: W : N1x0M10T : N0x0M10T 1.00
+T: Sample : N1x0M10T : minN1x0M10TR-25 1.00
+T: Sense : N1x0M10T : senN1x0M10T 1.00
+T: Finish : N1x0M10T : NgoalMNoneT 1.00
+T: N : N1x0M20T : N1x1M20T 1.00
+T: E : N1x0M20T : N1x0M20T 1.00
+T: S : N1x0M20T : N1x0M20T 1.00
+T: W : N1x0M20T : N0x0M20T 1.00
+T: Sample : N1x0M20T : minN1x0M20TR-25 1.00
+T: Sense : N1x0M20T : senN1x0M20T 1.00
+T: Finish : N1x0M20T : NgoalMNoneT 1.00
+T: N : N0x1M00T : N0x1M00T 1.00
+T: E : N0x1M00T : N1x1M00T 1.00
+T: S : N0x1M00T : N0x0M00T 1.00
+T: W : N0x1M00T : N0x1M00T 1.00
+T: Sample : N0x1M00T : minN0x1M00TR-25 1.00
+T: Sense : N0x1M00T : senN0x1M00T 1.00
+T: Finish : N0x1M00T : NgoalMNoneT 1.00
+T: N : N0x1M01T : N0x1M01T 1.00
+T: E : N0x1M01T : N1x1M01T 1.00
+T: S : N0x1M01T : N0x0M01T 1.00
+T: W : N0x1M01T : N0x1M01T 1.00
+T: Sample : N0x1M01T : minN0x1M01TR-25 1.00
+T: Sense : N0x1M01T : senN0x1M01T 1.00
+T: Finish : N0x1M01T : NgoalMNoneT 1.00
+T: N : N0x1M02T : N0x1M02T 1.00
+T: E : N0x1M02T : N1x1M02T 1.00
+T: S : N0x1M02T : N0x0M02T 1.00
+T: W : N0x1M02T : N0x1M02T 1.00
+T: Sample : N0x1M02T : minN0x1M02TR-25 1.00
+T: Sense : N0x1M02T : senN0x1M02T 1.00
+T: Finish : N0x1M02T : NgoalMNoneT 1.00
+T: N : N0x1M10T : N0x1M10T 1.00
+T: E : N0x1M10T : N1x1M10T 1.00
+T: S : N0x1M10T : N0x0M10T 1.00
+T: W : N0x1M10T : N0x1M10T 1.00
+T: Sample : N0x1M10T : minN0x1M20TR25 1.00
+T: Sense : N0x1M10T : senN0x1M10T 1.00
+T: Finish : N0x1M10T : NgoalMNoneT 1.00
+T: N : N0x1M20T : N0x1M20T 1.00
+T: E : N0x1M20T : N1x1M20T 1.00
+T: S : N0x1M20T : N0x0M20T 1.00
+T: W : N0x1M20T : N0x1M20T 1.00
+T: Sample : N0x1M20T : minN0x1M00TR0 1.00
+T: Sense : N0x1M20T : senN0x1M20T 1.00
+T: Finish : N0x1M20T : NgoalMNoneT 1.00
+T: N : N1x1M00T : N1x1M00T 1.00
+T: E : N1x1M00T : N1x1M00T 1.00
+T: S : N1x1M00T : N1x0M00T 1.00
+T: W : N1x1M00T : N0x1M00T 1.00
+T: Sample : N1x1M00T : NlosingMNoneT 1.00
+T: Sense : N1x1M00T : senN1x1M00T 1.00
+T: Finish : N1x1M00T : NgoalMNoneT 1.00
+T: N : N1x1M01T : N1x1M01T 1.00
+T: E : N1x1M01T : N1x1M01T 1.00
+T: S : N1x1M01T : N1x0M01T 1.00
+T: W : N1x1M01T : N0x1M01T 1.00
+T: Sample : N1x1M01T : NlosingMNoneT 1.00
+T: Sense : N1x1M01T : senN1x1M01T 1.00
+T: Finish : N1x1M01T : NgoalMNoneT 1.00
+T: N : N1x1M02T : N1x1M02T 1.00
+T: E : N1x1M02T : N1x1M02T 1.00
+T: S : N1x1M02T : N1x0M02T 1.00
+T: W : N1x1M02T : N0x1M02T 1.00
+T: Sample : N1x1M02T : NlosingMNoneT 1.00
+T: Sense : N1x1M02T : senN1x1M02T 1.00
+T: Finish : N1x1M02T : NgoalMNoneT 1.00
+T: N : N1x1M10T : N1x1M10T 1.00
+T: E : N1x1M10T : N1x1M10T 1.00
+T: S : N1x1M10T : N1x0M10T 1.00
+T: W : N1x1M10T : N0x1M10T 1.00
+T: Sample : N1x1M10T : NlosingMNoneT 1.00
+T: Sense : N1x1M10T : senN1x1M10T 1.00
+T: Finish : N1x1M10T : NgoalMNoneT 1.00
+T: N : N1x1M20T : N1x1M20T 1.00
+T: E : N1x1M20T : N1x1M20T 1.00
+T: S : N1x1M20T : N1x0M20T 1.00
+T: W : N1x1M20T : N0x1M20T 1.00
+T: Sample : N1x1M20T : NlosingMNoneT 1.00
+T: Sense : N1x1M20T : senN1x1M20T 1.00
+T: Finish : N1x1M20T : NgoalMNoneT 1.00
+T: N : senN0x0M00T : N0x0M00T 1.00
+T: E : senN0x0M00T : N0x0M00T 1.00
+T: S : senN0x0M00T : N0x0M00T 1.00
+T: W : senN0x0M00T : N0x0M00T 1.00
+T: Sample : senN0x0M00T : N0x0M00T 1.00
+T: Finish : senN0x0M00T : N0x0M00T 1.00
+T: Sense : senN0x0M00T : N0x0M00T 1.00
+T: N : senN0x0M01T : N0x0M01T 1.00
+T: E : senN0x0M01T : N0x0M01T 1.00
+T: S : senN0x0M01T : N0x0M01T 1.00
+T: W : senN0x0M01T : N0x0M01T 1.00
+T: Sample : senN0x0M01T : N0x0M01T 1.00
+T: Finish : senN0x0M01T : N0x0M01T 1.00
+T: Sense : senN0x0M01T : N0x0M01T 1.00
+T: N : senN0x0M02T : N0x0M02T 1.00
+T: E : senN0x0M02T : N0x0M02T 1.00
+T: S : senN0x0M02T : N0x0M02T 1.00
+T: W : senN0x0M02T : N0x0M02T 1.00
+T: Sample : senN0x0M02T : N0x0M02T 1.00
+T: Finish : senN0x0M02T : N0x0M02T 1.00
+T: Sense : senN0x0M02T : N0x0M02T 1.00
+T: N : senN0x0M10T : N0x0M10T 1.00
+T: E : senN0x0M10T : N0x0M10T 1.00
+T: S : senN0x0M10T : N0x0M10T 1.00
+T: W : senN0x0M10T : N0x0M10T 1.00
+T: Sample : senN0x0M10T : N0x0M10T 1.00
+T: Finish : senN0x0M10T : N0x0M10T 1.00
+T: Sense : senN0x0M10T : N0x0M10T 1.00
+T: N : senN0x0M20T : N0x0M20T 1.00
+T: E : senN0x0M20T : N0x0M20T 1.00
+T: S : senN0x0M20T : N0x0M20T 1.00
+T: W : senN0x0M20T : N0x0M20T 1.00
+T: Sample : senN0x0M20T : N0x0M20T 1.00
+T: Finish : senN0x0M20T : N0x0M20T 1.00
+T: Sense : senN0x0M20T : N0x0M20T 1.00
+T: N : senN1x0M00T : N1x0M00T 1.00
+T: E : senN1x0M00T : N1x0M00T 1.00
+T: S : senN1x0M00T : N1x0M00T 1.00
+T: W : senN1x0M00T : N1x0M00T 1.00
+T: Sample : senN1x0M00T : N1x0M00T 1.00
+T: Finish : senN1x0M00T : N1x0M00T 1.00
+T: Sense : senN1x0M00T : N1x0M00T 1.00
+T: N : senN1x0M01T : N1x0M01T 1.00
+T: E : senN1x0M01T : N1x0M01T 1.00
+T: S : senN1x0M01T : N1x0M01T 1.00
+T: W : senN1x0M01T : N1x0M01T 1.00
+T: Sample : senN1x0M01T : N1x0M01T 1.00
+T: Finish : senN1x0M01T : N1x0M01T 1.00
+T: Sense : senN1x0M01T : N1x0M01T 1.00
+T: N : senN1x0M02T : N1x0M02T 1.00
+T: E : senN1x0M02T : N1x0M02T 1.00
+T: S : senN1x0M02T : N1x0M02T 1.00
+T: W : senN1x0M02T : N1x0M02T 1.00
+T: Sample : senN1x0M02T : N1x0M02T 1.00
+T: Finish : senN1x0M02T : N1x0M02T 1.00
+T: Sense : senN1x0M02T : N1x0M02T 1.00
+T: N : senN1x0M10T : N1x0M10T 1.00
+T: E : senN1x0M10T : N1x0M10T 1.00
+T: S : senN1x0M10T : N1x0M10T 1.00
+T: W : senN1x0M10T : N1x0M10T 1.00
+T: Sample : senN1x0M10T : N1x0M10T 1.00
+T: Finish : senN1x0M10T : N1x0M10T 1.00
+T: Sense : senN1x0M10T : N1x0M10T 1.00
+T: N : senN1x0M20T : N1x0M20T 1.00
+T: E : senN1x0M20T : N1x0M20T 1.00
+T: S : senN1x0M20T : N1x0M20T 1.00
+T: W : senN1x0M20T : N1x0M20T 1.00
+T: Sample : senN1x0M20T : N1x0M20T 1.00
+T: Finish : senN1x0M20T : N1x0M20T 1.00
+T: Sense : senN1x0M20T : N1x0M20T 1.00
+T: N : senN0x1M00T : N0x1M00T 1.00
+T: E : senN0x1M00T : N0x1M00T 1.00
+T: S : senN0x1M00T : N0x1M00T 1.00
+T: W : senN0x1M00T : N0x1M00T 1.00
+T: Sample : senN0x1M00T : N0x1M00T 1.00
+T: Finish : senN0x1M00T : N0x1M00T 1.00
+T: Sense : senN0x1M00T : N0x1M00T 1.00
+T: N : senN0x1M01T : N0x1M01T 1.00
+T: E : senN0x1M01T : N0x1M01T 1.00
+T: S : senN0x1M01T : N0x1M01T 1.00
+T: W : senN0x1M01T : N0x1M01T 1.00
+T: Sample : senN0x1M01T : N0x1M01T 1.00
+T: Finish : senN0x1M01T : N0x1M01T 1.00
+T: Sense : senN0x1M01T : N0x1M01T 1.00
+T: N : senN0x1M02T : N0x1M02T 1.00
+T: E : senN0x1M02T : N0x1M02T 1.00
+T: S : senN0x1M02T : N0x1M02T 1.00
+T: W : senN0x1M02T : N0x1M02T 1.00
+T: Sample : senN0x1M02T : N0x1M02T 1.00
+T: Finish : senN0x1M02T : N0x1M02T 1.00
+T: Sense : senN0x1M02T : N0x1M02T 1.00
+T: N : senN0x1M10T : N0x1M10T 1.00
+T: E : senN0x1M10T : N0x1M10T 1.00
+T: S : senN0x1M10T : N0x1M10T 1.00
+T: W : senN0x1M10T : N0x1M10T 1.00
+T: Sample : senN0x1M10T : N0x1M10T 1.00
+T: Finish : senN0x1M10T : N0x1M10T 1.00
+T: Sense : senN0x1M10T : N0x1M10T 1.00
+T: N : senN0x1M20T : N0x1M20T 1.00
+T: E : senN0x1M20T : N0x1M20T 1.00
+T: S : senN0x1M20T : N0x1M20T 1.00
+T: W : senN0x1M20T : N0x1M20T 1.00
+T: Sample : senN0x1M20T : N0x1M20T 1.00
+T: Finish : senN0x1M20T : N0x1M20T 1.00
+T: Sense : senN0x1M20T : N0x1M20T 1.00
+T: N : senN1x1M00T : N1x1M00T 1.00
+T: E : senN1x1M00T : N1x1M00T 1.00
+T: S : senN1x1M00T : N1x1M00T 1.00
+T: W : senN1x1M00T : N1x1M00T 1.00
+T: Sample : senN1x1M00T : N1x1M00T 1.00
+T: Finish : senN1x1M00T : N1x1M00T 1.00
+T: Sense : senN1x1M00T : N1x1M00T 1.00
+T: N : senN1x1M01T : N1x1M01T 1.00
+T: E : senN1x1M01T : N1x1M01T 1.00
+T: S : senN1x1M01T : N1x1M01T 1.00
+T: W : senN1x1M01T : N1x1M01T 1.00
+T: Sample : senN1x1M01T : N1x1M01T 1.00
+T: Finish : senN1x1M01T : N1x1M01T 1.00
+T: Sense : senN1x1M01T : N1x1M01T 1.00
+T: N : senN1x1M02T : N1x1M02T 1.00
+T: E : senN1x1M02T : N1x1M02T 1.00
+T: S : senN1x1M02T : N1x1M02T 1.00
+T: W : senN1x1M02T : N1x1M02T 1.00
+T: Sample : senN1x1M02T : N1x1M02T 1.00
+T: Finish : senN1x1M02T : N1x1M02T 1.00
+T: Sense : senN1x1M02T : N1x1M02T 1.00
+T: N : senN1x1M10T : N1x1M10T 1.00
+T: E : senN1x1M10T : N1x1M10T 1.00
+T: S : senN1x1M10T : N1x1M10T 1.00
+T: W : senN1x1M10T : N1x1M10T 1.00
+T: Sample : senN1x1M10T : N1x1M10T 1.00
+T: Finish : senN1x1M10T : N1x1M10T 1.00
+T: Sense : senN1x1M10T : N1x1M10T 1.00
+T: N : senN1x1M20T : N1x1M20T 1.00
+T: E : senN1x1M20T : N1x1M20T 1.00
+T: S : senN1x1M20T : N1x1M20T 1.00
+T: W : senN1x1M20T : N1x1M20T 1.00
+T: Sample : senN1x1M20T : N1x1M20T 1.00
+T: Finish : senN1x1M20T : N1x1M20T 1.00
+T: Sense : senN1x1M20T : N1x1M20T 1.00
+T: N : minN1x0M00TR-25 : N1x0M00T 1.00
+T: E : minN1x0M00TR-25 : N1x0M00T 1.00
+T: S : minN1x0M00TR-25 : N1x0M00T 1.00
+T: W : minN1x0M00TR-25 : N1x0M00T 1.00
+T: Sample : minN1x0M00TR-25 : N1x0M00T 1.00
+T: Finish : minN1x0M00TR-25 : N1x0M00T 1.00
+T: Sense : minN1x0M00TR-25 : N1x0M00T 1.00
+T: N : minN1x0M02TR25 : N1x0M02T 1.00
+T: E : minN1x0M02TR25 : N1x0M02T 1.00
+T: S : minN1x0M02TR25 : N1x0M02T 1.00
+T: W : minN1x0M02TR25 : N1x0M02T 1.00
+T: Sample : minN1x0M02TR25 : N1x0M02T 1.00
+T: Finish : minN1x0M02TR25 : N1x0M02T 1.00
+T: Sense : minN1x0M02TR25 : N1x0M02T 1.00
+T: N : minN1x0M00TR0 : N1x0M00T 1.00
+T: E : minN1x0M00TR0 : N1x0M00T 1.00
+T: S : minN1x0M00TR0 : N1x0M00T 1.00
+T: W : minN1x0M00TR0 : N1x0M00T 1.00
+T: Sample : minN1x0M00TR0 : N1x0M00T 1.00
+T: Finish : minN1x0M00TR0 : N1x0M00T 1.00
+T: Sense : minN1x0M00TR0 : N1x0M00T 1.00
+T: N : minN1x0M10TR-25 : N1x0M10T 1.00
+T: E : minN1x0M10TR-25 : N1x0M10T 1.00
+T: S : minN1x0M10TR-25 : N1x0M10T 1.00
+T: W : minN1x0M10TR-25 : N1x0M10T 1.00
+T: Sample : minN1x0M10TR-25 : N1x0M10T 1.00
+T: Finish : minN1x0M10TR-25 : N1x0M10T 1.00
+T: Sense : minN1x0M10TR-25 : N1x0M10T 1.00
+T: N : minN1x0M20TR-25 : N1x0M20T 1.00
+T: E : minN1x0M20TR-25 : N1x0M20T 1.00
+T: S : minN1x0M20TR-25 : N1x0M20T 1.00
+T: W : minN1x0M20TR-25 : N1x0M20T 1.00
+T: Sample : minN1x0M20TR-25 : N1x0M20T 1.00
+T: Finish : minN1x0M20TR-25 : N1x0M20T 1.00
+T: Sense : minN1x0M20TR-25 : N1x0M20T 1.00
+T: N : minN0x1M00TR-25 : N0x1M00T 1.00
+T: E : minN0x1M00TR-25 : N0x1M00T 1.00
+T: S : minN0x1M00TR-25 : N0x1M00T 1.00
+T: W : minN0x1M00TR-25 : N0x1M00T 1.00
+T: Sample : minN0x1M00TR-25 : N0x1M00T 1.00
+T: Finish : minN0x1M00TR-25 : N0x1M00T 1.00
+T: Sense : minN0x1M00TR-25 : N0x1M00T 1.00
+T: N : minN0x1M01TR-25 : N0x1M01T 1.00
+T: E : minN0x1M01TR-25 : N0x1M01T 1.00
+T: S : minN0x1M01TR-25 : N0x1M01T 1.00
+T: W : minN0x1M01TR-25 : N0x1M01T 1.00
+T: Sample : minN0x1M01TR-25 : N0x1M01T 1.00
+T: Finish : minN0x1M01TR-25 : N0x1M01T 1.00
+T: Sense : minN0x1M01TR-25 : N0x1M01T 1.00
+T: N : minN0x1M02TR-25 : N0x1M02T 1.00
+T: E : minN0x1M02TR-25 : N0x1M02T 1.00
+T: S : minN0x1M02TR-25 : N0x1M02T 1.00
+T: W : minN0x1M02TR-25 : N0x1M02T 1.00
+T: Sample : minN0x1M02TR-25 : N0x1M02T 1.00
+T: Finish : minN0x1M02TR-25 : N0x1M02T 1.00
+T: Sense : minN0x1M02TR-25 : N0x1M02T 1.00
+T: N : minN0x1M20TR25 : N0x1M20T 1.00
+T: E : minN0x1M20TR25 : N0x1M20T 1.00
+T: S : minN0x1M20TR25 : N0x1M20T 1.00
+T: W : minN0x1M20TR25 : N0x1M20T 1.00
+T: Sample : minN0x1M20TR25 : N0x1M20T 1.00
+T: Finish : minN0x1M20TR25 : N0x1M20T 1.00
+T: Sense : minN0x1M20TR25 : N0x1M20T 1.00
+T: N : minN0x1M00TR0 : N0x1M00T 1.00
+T: E : minN0x1M00TR0 : N0x1M00T 1.00
+T: S : minN0x1M00TR0 : N0x1M00T 1.00
+T: W : minN0x1M00TR0 : N0x1M00T 1.00
+T: Sample : minN0x1M00TR0 : N0x1M00T 1.00
+T: Finish : minN0x1M00TR0 : N0x1M00T 1.00
+T: Sense : minN0x1M00TR0 : N0x1M00T 1.00
+T: * : NgoalMNoneT : NgoalMNoneT 1.0
+T: * : NlosingMNoneT : NlosingMNoneT 1.0
+
+O: * : N0x0M00T : o0x0x 1.0
+O: * : N0x0M01T : o0x0x 1.0
+O: * : N0x0M02T : o0x0x 1.0
+O: * : N0x0M10T : o0x0x 1.0
+O: * : N0x0M20T : o0x0x 1.0
+O: * : N1x0M00T : o1x0x 1.0
+O: * : N1x0M01T : o1x0x 1.0
+O: * : N1x0M02T : o1x0x 1.0
+O: * : N1x0M10T : o1x0x 1.0
+O: * : N1x0M20T : o1x0x 1.0
+O: * : N0x1M00T : o0x1x 1.0
+O: * : N0x1M01T : o0x1x 1.0
+O: * : N0x1M02T : o0x1x 1.0
+O: * : N0x1M10T : o0x1x 1.0
+O: * : N0x1M20T : o0x1x 1.0
+O: * : N1x1M00T : o1x1x 1.0
+O: * : N1x1M01T : o1x1x 1.0
+O: * : N1x1M02T : o1x1x 1.0
+O: * : N1x1M10T : o1x1x 1.0
+O: * : N1x1M20T : o1x1x 1.0
+O: * : senN0x0M00T : o0x0xBG 0.090000
+O: * : senN0x0M00T : o0x0xBB 0.810000
+O: * : senN0x0M00T : o0x0xGB 0.090000
+O: * : senN0x0M00T : o0x0xGG 0.010000
+O: * : senN0x0M01T : o0x0xBG 0.810000
+O: * : senN0x0M01T : o0x0xBB 0.090000
+O: * : senN0x0M01T : o0x0xGB 0.010000
+O: * : senN0x0M01T : o0x0xGG 0.090000
+O: * : senN0x0M02T : o0x0xBG 0.810000
+O: * : senN0x0M02T : o0x0xBB 0.090000
+O: * : senN0x0M02T : o0x0xGB 0.010000
+O: * : senN0x0M02T : o0x0xGG 0.090000
+O: * : senN0x0M10T : o0x0xBG 0.010000
+O: * : senN0x0M10T : o0x0xBB 0.090000
+O: * : senN0x0M10T : o0x0xGB 0.810000
+O: * : senN0x0M10T : o0x0xGG 0.090000
+O: * : senN0x0M20T : o0x0xBG 0.010000
+O: * : senN0x0M20T : o0x0xBB 0.090000
+O: * : senN0x0M20T : o0x0xGB 0.810000
+O: * : senN0x0M20T : o0x0xGG 0.090000
+O: * : senN1x0M00T : o1x0xBG 0.000000
+O: * : senN1x0M00T : o1x0xBB 0.800000
+O: * : senN1x0M00T : o1x0xGB 0.200000
+O: * : senN1x0M00T : o1x0xGG 0.000000
+O: * : senN1x0M01T : o1x0xBG 0.800000
+O: * : senN1x0M01T : o1x0xBB 0.000000
+O: * : senN1x0M01T : o1x0xGB 0.000000
+O: * : senN1x0M01T : o1x0xGG 0.200000
+O: * : senN1x0M02T : o1x0xBG 0.800000
+O: * : senN1x0M02T : o1x0xBB 0.000000
+O: * : senN1x0M02T : o1x0xGB 0.000000
+O: * : senN1x0M02T : o1x0xGG 0.200000
+O: * : senN1x0M10T : o1x0xBG 0.000000
+O: * : senN1x0M10T : o1x0xBB 0.200000
+O: * : senN1x0M10T : o1x0xGB 0.800000
+O: * : senN1x0M10T : o1x0xGG 0.000000
+O: * : senN1x0M20T : o1x0xBG 0.000000
+O: * : senN1x0M20T : o1x0xBB 0.200000
+O: * : senN1x0M20T : o1x0xGB 0.800000
+O: * : senN1x0M20T : o1x0xGG 0.000000
+O: * : senN0x1M00T : o0x1xBG 0.200000
+O: * : senN0x1M00T : o0x1xBB 0.800000
+O: * : senN0x1M00T : o0x1xGB 0.000000
+O: * : senN0x1M00T : o0x1xGG 0.000000
+O: * : senN0x1M01T : o0x1xBG 0.800000
+O: * : senN0x1M01T : o0x1xBB 0.200000
+O: * : senN0x1M01T : o0x1xGB 0.000000
+O: * : senN0x1M01T : o0x1xGG 0.000000
+O: * : senN0x1M02T : o0x1xBG 0.800000
+O: * : senN0x1M02T : o0x1xBB 0.200000
+O: * : senN0x1M02T : o0x1xGB 0.000000
+O: * : senN0x1M02T : o0x1xGG 0.000000
+O: * : senN0x1M10T : o0x1xBG 0.000000
+O: * : senN0x1M10T : o0x1xBB 0.000000
+O: * : senN0x1M10T : o0x1xGB 0.800000
+O: * : senN0x1M10T : o0x1xGG 0.200000
+O: * : senN0x1M20T : o0x1xBG 0.000000
+O: * : senN0x1M20T : o0x1xBB 0.000000
+O: * : senN0x1M20T : o0x1xGB 0.800000
+O: * : senN0x1M20T : o0x1xGG 0.200000
+O: * : senN1x1M00T : o1x1xBG 0.090000
+O: * : senN1x1M00T : o1x1xBB 0.810000
+O: * : senN1x1M00T : o1x1xGB 0.090000
+O: * : senN1x1M00T : o1x1xGG 0.010000
+O: * : senN1x1M01T : o1x1xBG 0.810000
+O: * : senN1x1M01T : o1x1xBB 0.090000
+O: * : senN1x1M01T : o1x1xGB 0.010000
+O: * : senN1x1M01T : o1x1xGG 0.090000
+O: * : senN1x1M02T : o1x1xBG 0.810000
+O: * : senN1x1M02T : o1x1xBB 0.090000
+O: * : senN1x1M02T : o1x1xGB 0.010000
+O: * : senN1x1M02T : o1x1xGG 0.090000
+O: * : senN1x1M10T : o1x1xBG 0.010000
+O: * : senN1x1M10T : o1x1xBB 0.090000
+O: * : senN1x1M10T : o1x1xGB 0.810000
+O: * : senN1x1M10T : o1x1xGG 0.090000
+O: * : senN1x1M20T : o1x1xBG 0.010000
+O: * : senN1x1M20T : o1x1xBB 0.090000
+O: * : senN1x1M20T : o1x1xGB 0.810000
+O: * : senN1x1M20T : o1x1xGG 0.090000
+O: * : minN1x0M00TR-25 : o1x0xMB 1.0
+O: * : minN1x0M02TR25 : o1x0xMG 1.0
+O: * : minN1x0M00TR0 : o1x0xMM 1.0
+O: * : minN1x0M10TR-25 : o1x0xMB 1.0
+O: * : minN1x0M20TR-25 : o1x0xMB 1.0
+O: * : minN0x1M00TR-25 : o0x1xMB 1.0
+O: * : minN0x1M01TR-25 : o0x1xMB 1.0
+O: * : minN0x1M02TR-25 : o0x1xMB 1.0
+O: * : minN0x1M20TR25 : o0x1xMG 1.0
+O: * : minN0x1M00TR0 : o0x1xMM 1.0
+O: * : NlosingMNoneT : oLosing 1.0
+O: * : NgoalMNoneT : oGoal 1.0
+R: * : NgoalMNoneT : * : * 0.0
+R: * : NlosingMNoneT : * : * 0.0
+R: N : N0x0M00T : * : * -1
+R:  E  :  N0x0M00T  :  *  :  *   -1
+R:  S  :  N0x0M00T  :  *  :  *   -100
+R:  W  :  N0x0M00T  :  *  :  *   -100
+R:  Sample  :  N0x0M00T  :  *  :  *   -100
+R:  Sense  :  N0x0M00T  :  *  :  *   -5
+R:  Finish  :  N0x0M00T  :  *  :  *   0
+R:  N  :  N0x0M01T  :  *  :  *   -1
+R:  E  :  N0x0M01T  :  *  :  *   -1
+R:  S  :  N0x0M01T  :  *  :  *   -100
+R:  W  :  N0x0M01T  :  *  :  *   -100
+R:  Sample  :  N0x0M01T  :  *  :  *   -100
+R:  Sense  :  N0x0M01T  :  *  :  *   -5
+R:  Finish  :  N0x0M01T  :  *  :  *   0
+R:  N  :  N0x0M02T  :  *  :  *   -1
+R:  E  :  N0x0M02T  :  *  :  *   -1
+R:  S  :  N0x0M02T  :  *  :  *   -100
+R:  W  :  N0x0M02T  :  *  :  *   -100
+R:  Sample  :  N0x0M02T  :  *  :  *   -100
+R:  Sense  :  N0x0M02T  :  *  :  *   -5
+R:  Finish  :  N0x0M02T  :  *  :  *   0
+R:  N  :  N0x0M10T  :  *  :  *   -1
+R:  E  :  N0x0M10T  :  *  :  *   -1
+R:  S  :  N0x0M10T  :  *  :  *   -100
+R:  W  :  N0x0M10T  :  *  :  *   -100
+R:  Sample  :  N0x0M10T  :  *  :  *   -100
+R:  Sense  :  N0x0M10T  :  *  :  *   -5
+R:  Finish  :  N0x0M10T  :  *  :  *   0
+R:  N  :  N0x0M20T  :  *  :  *   -1
+R:  E  :  N0x0M20T  :  *  :  *   -1
+R:  S  :  N0x0M20T  :  *  :  *   -100
+R:  W  :  N0x0M20T  :  *  :  *   -100
+R:  Sample  :  N0x0M20T  :  *  :  *   -100
+R:  Sense  :  N0x0M20T  :  *  :  *   -5
+R:  Finish  :  N0x0M20T  :  *  :  *   0
+R:  N  :  N1x0M00T  :  *  :  *   -1
+R:  E  :  N1x0M00T  :  *  :  *   -100
+R:  S  :  N1x0M00T  :  *  :  *   -100
+R:  W  :  N1x0M00T  :  *  :  *   -1
+R:  Sample  :  N1x0M00T  :  *  :  *   0
+R:  Sense  :  N1x0M00T  :  *  :  *   -5
+R:  Finish  :  N1x0M00T  :  *  :  *   0
+R:  N  :  N1x0M01T  :  *  :  *   -1
+R:  E  :  N1x0M01T  :  *  :  *   -100
+R:  S  :  N1x0M01T  :  *  :  *   -100
+R:  W  :  N1x0M01T  :  *  :  *   -1
+R:  Sample  :  N1x0M01T  :  *  :  *   0
+R:  Sense  :  N1x0M01T  :  *  :  *   -5
+R:  Finish  :  N1x0M01T  :  *  :  *   0
+R:  N  :  N1x0M02T  :  *  :  *   -1
+R:  E  :  N1x0M02T  :  *  :  *   -100
+R:  S  :  N1x0M02T  :  *  :  *   -100
+R:  W  :  N1x0M02T  :  *  :  *   -1
+R:  Sample  :  N1x0M02T  :  *  :  *   0
+R:  Sense  :  N1x0M02T  :  *  :  *   -5
+R:  Finish  :  N1x0M02T  :  *  :  *   0
+R:  N  :  N1x0M10T  :  *  :  *   -1
+R:  E  :  N1x0M10T  :  *  :  *   -100
+R:  S  :  N1x0M10T  :  *  :  *   -100
+R:  W  :  N1x0M10T  :  *  :  *   -1
+R:  Sample  :  N1x0M10T  :  *  :  *   0
+R:  Sense  :  N1x0M10T  :  *  :  *   -5
+R:  Finish  :  N1x0M10T  :  *  :  *   0
+R:  N  :  N1x0M20T  :  *  :  *   -1
+R:  E  :  N1x0M20T  :  *  :  *   -100
+R:  S  :  N1x0M20T  :  *  :  *   -100
+R:  W  :  N1x0M20T  :  *  :  *   -1
+R:  Sample  :  N1x0M20T  :  *  :  *   0
+R:  Sense  :  N1x0M20T  :  *  :  *   -5
+R:  Finish  :  N1x0M20T  :  *  :  *   0
+R:  N  :  N0x1M00T  :  *  :  *   -100
+R:  E  :  N0x1M00T  :  *  :  *   -1
+R:  S  :  N0x1M00T  :  *  :  *   -1
+R:  W  :  N0x1M00T  :  *  :  *   -100
+R:  Sample  :  N0x1M00T  :  *  :  *   0
+R:  Sense  :  N0x1M00T  :  *  :  *   -5
+R:  Finish  :  N0x1M00T  :  *  :  *   0
+R:  N  :  N0x1M01T  :  *  :  *   -100
+R:  E  :  N0x1M01T  :  *  :  *   -1
+R:  S  :  N0x1M01T  :  *  :  *   -1
+R:  W  :  N0x1M01T  :  *  :  *   -100
+R:  Sample  :  N0x1M01T  :  *  :  *   0
+R:  Sense  :  N0x1M01T  :  *  :  *   -5
+R:  Finish  :  N0x1M01T  :  *  :  *   0
+R:  N  :  N0x1M02T  :  *  :  *   -100
+R:  E  :  N0x1M02T  :  *  :  *   -1
+R:  S  :  N0x1M02T  :  *  :  *   -1
+R:  W  :  N0x1M02T  :  *  :  *   -100
+R:  Sample  :  N0x1M02T  :  *  :  *   0
+R:  Sense  :  N0x1M02T  :  *  :  *   -5
+R:  Finish  :  N0x1M02T  :  *  :  *   0
+R:  N  :  N0x1M10T  :  *  :  *   -100
+R:  E  :  N0x1M10T  :  *  :  *   -1
+R:  S  :  N0x1M10T  :  *  :  *   -1
+R:  W  :  N0x1M10T  :  *  :  *   -100
+R:  Sample  :  N0x1M10T  :  *  :  *   0
+R:  Sense  :  N0x1M10T  :  *  :  *   -5
+R:  Finish  :  N0x1M10T  :  *  :  *   0
+R:  N  :  N0x1M20T  :  *  :  *   -100
+R:  E  :  N0x1M20T  :  *  :  *   -1
+R:  S  :  N0x1M20T  :  *  :  *   -1
+R:  W  :  N0x1M20T  :  *  :  *   -100
+R:  Sample  :  N0x1M20T  :  *  :  *   0
+R:  Sense  :  N0x1M20T  :  *  :  *   -5
+R:  Finish  :  N0x1M20T  :  *  :  *   0
+R:  N  :  N1x1M00T  :  *  :  *   -100
+R:  E  :  N1x1M00T  :  *  :  *   -100
+R:  S  :  N1x1M00T  :  *  :  *   -1
+R:  W  :  N1x1M00T  :  *  :  *   -1
+R:  Sample  :  N1x1M00T  :  *  :  *   -100
+R:  Sense  :  N1x1M00T  :  *  :  *   -5
+R:  Finish  :  N1x1M00T  :  *  :  *   0
+R:  N  :  N1x1M01T  :  *  :  *   -100
+R:  E  :  N1x1M01T  :  *  :  *   -100
+R:  S  :  N1x1M01T  :  *  :  *   -1
+R:  W  :  N1x1M01T  :  *  :  *   -1
+R:  Sample  :  N1x1M01T  :  *  :  *   -100
+R:  Sense  :  N1x1M01T  :  *  :  *   -5
+R:  Finish  :  N1x1M01T  :  *  :  *   0
+R:  N  :  N1x1M02T  :  *  :  *   -100
+R:  E  :  N1x1M02T  :  *  :  *   -100
+R:  S  :  N1x1M02T  :  *  :  *   -1
+R:  W  :  N1x1M02T  :  *  :  *   -1
+R:  Sample  :  N1x1M02T  :  *  :  *   -100
+R:  Sense  :  N1x1M02T  :  *  :  *   -5
+R:  Finish  :  N1x1M02T  :  *  :  *   0
+R:  N  :  N1x1M10T  :  *  :  *   -100
+R:  E  :  N1x1M10T  :  *  :  *   -100
+R:  S  :  N1x1M10T  :  *  :  *   -1
+R:  W  :  N1x1M10T  :  *  :  *   -1
+R:  Sample  :  N1x1M10T  :  *  :  *   -100
+R:  Sense  :  N1x1M10T  :  *  :  *   -5
+R:  Finish  :  N1x1M10T  :  *  :  *   0
+R:  N  :  N1x1M20T  :  *  :  *   -100
+R:  E  :  N1x1M20T  :  *  :  *   -100
+R:  S  :  N1x1M20T  :  *  :  *   -1
+R:  W  :  N1x1M20T  :  *  :  *   -1
+R:  Sample  :  N1x1M20T  :  *  :  *   -100
+R:  Sense  :  N1x1M20T  :  *  :  *   -5
+R:  Finish  :  N1x1M20T  :  *  :  *   0
+R:  N  :  senN0x0M00T  :  *  :  *   0
+R:  E  :  senN0x0M00T  :  *  :  *   0
+R:  S  :  senN0x0M00T  :  *  :  *   0
+R:  W  :  senN0x0M00T  :  *  :  *   0
+R:  Sample  :  senN0x0M00T  :  *  :  *   0
+R:  Finish  :  senN0x0M00T  :  *  :  *   0
+R:  Sense  :  senN0x0M00T  :  *  :  *   0
+R:  N  :  senN0x0M01T  :  *  :  *   0
+R:  E  :  senN0x0M01T  :  *  :  *   0
+R:  S  :  senN0x0M01T  :  *  :  *   0
+R:  W  :  senN0x0M01T  :  *  :  *   0
+R:  Sample  :  senN0x0M01T  :  *  :  *   0
+R:  Finish  :  senN0x0M01T  :  *  :  *   0
+R:  Sense  :  senN0x0M01T  :  *  :  *   0
+R:  N  :  senN0x0M02T  :  *  :  *   0
+R:  E  :  senN0x0M02T  :  *  :  *   0
+R:  S  :  senN0x0M02T  :  *  :  *   0
+R:  W  :  senN0x0M02T  :  *  :  *   0
+R:  Sample  :  senN0x0M02T  :  *  :  *   0
+R:  Finish  :  senN0x0M02T  :  *  :  *   0
+R:  Sense  :  senN0x0M02T  :  *  :  *   0
+R:  N  :  senN0x0M10T  :  *  :  *   0
+R:  E  :  senN0x0M10T  :  *  :  *   0
+R:  S  :  senN0x0M10T  :  *  :  *   0
+R:  W  :  senN0x0M10T  :  *  :  *   0
+R:  Sample  :  senN0x0M10T  :  *  :  *   0
+R:  Finish  :  senN0x0M10T  :  *  :  *   0
+R:  Sense  :  senN0x0M10T  :  *  :  *   0
+R:  N  :  senN0x0M20T  :  *  :  *   0
+R:  E  :  senN0x0M20T  :  *  :  *   0
+R:  S  :  senN0x0M20T  :  *  :  *   0
+R:  W  :  senN0x0M20T  :  *  :  *   0
+R:  Sample  :  senN0x0M20T  :  *  :  *   0
+R:  Finish  :  senN0x0M20T  :  *  :  *   0
+R:  Sense  :  senN0x0M20T  :  *  :  *   0
+R:  N  :  senN1x0M00T  :  *  :  *   0
+R:  E  :  senN1x0M00T  :  *  :  *   0
+R:  S  :  senN1x0M00T  :  *  :  *   0
+R:  W  :  senN1x0M00T  :  *  :  *   0
+R:  Sample  :  senN1x0M00T  :  *  :  *   0
+R:  Finish  :  senN1x0M00T  :  *  :  *   0
+R:  Sense  :  senN1x0M00T  :  *  :  *   0
+R:  N  :  senN1x0M01T  :  *  :  *   0
+R:  E  :  senN1x0M01T  :  *  :  *   0
+R:  S  :  senN1x0M01T  :  *  :  *   0
+R:  W  :  senN1x0M01T  :  *  :  *   0
+R:  Sample  :  senN1x0M01T  :  *  :  *   0
+R:  Finish  :  senN1x0M01T  :  *  :  *   0
+R:  Sense  :  senN1x0M01T  :  *  :  *   0
+R:  N  :  senN1x0M02T  :  *  :  *   0
+R:  E  :  senN1x0M02T  :  *  :  *   0
+R:  S  :  senN1x0M02T  :  *  :  *   0
+R:  W  :  senN1x0M02T  :  *  :  *   0
+R:  Sample  :  senN1x0M02T  :  *  :  *   0
+R:  Finish  :  senN1x0M02T  :  *  :  *   0
+R:  Sense  :  senN1x0M02T  :  *  :  *   0
+R:  N  :  senN1x0M10T  :  *  :  *   0
+R:  E  :  senN1x0M10T  :  *  :  *   0
+R:  S  :  senN1x0M10T  :  *  :  *   0
+R:  W  :  senN1x0M10T  :  *  :  *   0
+R:  Sample  :  senN1x0M10T  :  *  :  *   0
+R:  Finish  :  senN1x0M10T  :  *  :  *   0
+R:  Sense  :  senN1x0M10T  :  *  :  *   0
+R:  N  :  senN1x0M20T  :  *  :  *   0
+R:  E  :  senN1x0M20T  :  *  :  *   0
+R:  S  :  senN1x0M20T  :  *  :  *   0
+R:  W  :  senN1x0M20T  :  *  :  *   0
+R:  Sample  :  senN1x0M20T  :  *  :  *   0
+R:  Finish  :  senN1x0M20T  :  *  :  *   0
+R:  Sense  :  senN1x0M20T  :  *  :  *   0
+R:  N  :  senN0x1M00T  :  *  :  *   0
+R:  E  :  senN0x1M00T  :  *  :  *   0
+R:  S  :  senN0x1M00T  :  *  :  *   0
+R:  W  :  senN0x1M00T  :  *  :  *   0
+R:  Sample  :  senN0x1M00T  :  *  :  *   0
+R:  Finish  :  senN0x1M00T  :  *  :  *   0
+R:  Sense  :  senN0x1M00T  :  *  :  *   0
+R:  N  :  senN0x1M01T  :  *  :  *   0
+R:  E  :  senN0x1M01T  :  *  :  *   0
+R:  S  :  senN0x1M01T  :  *  :  *   0
+R:  W  :  senN0x1M01T  :  *  :  *   0
+R:  Sample  :  senN0x1M01T  :  *  :  *   0
+R:  Finish  :  senN0x1M01T  :  *  :  *   0
+R:  Sense  :  senN0x1M01T  :  *  :  *   0
+R:  N  :  senN0x1M02T  :  *  :  *   0
+R:  E  :  senN0x1M02T  :  *  :  *   0
+R:  S  :  senN0x1M02T  :  *  :  *   0
+R:  W  :  senN0x1M02T  :  *  :  *   0
+R:  Sample  :  senN0x1M02T  :  *  :  *   0
+R:  Finish  :  senN0x1M02T  :  *  :  *   0
+R:  Sense  :  senN0x1M02T  :  *  :  *   0
+R:  N  :  senN0x1M10T  :  *  :  *   0
+R:  E  :  senN0x1M10T  :  *  :  *   0
+R:  S  :  senN0x1M10T  :  *  :  *   0
+R:  W  :  senN0x1M10T  :  *  :  *   0
+R:  Sample  :  senN0x1M10T  :  *  :  *   0
+R:  Finish  :  senN0x1M10T  :  *  :  *   0
+R:  Sense  :  senN0x1M10T  :  *  :  *   0
+R:  N  :  senN0x1M20T  :  *  :  *   0
+R:  E  :  senN0x1M20T  :  *  :  *   0
+R:  S  :  senN0x1M20T  :  *  :  *   0
+R:  W  :  senN0x1M20T  :  *  :  *   0
+R:  Sample  :  senN0x1M20T  :  *  :  *   0
+R:  Finish  :  senN0x1M20T  :  *  :  *   0
+R:  Sense  :  senN0x1M20T  :  *  :  *   0
+R:  N  :  senN1x1M00T  :  *  :  *   0
+R:  E  :  senN1x1M00T  :  *  :  *   0
+R:  S  :  senN1x1M00T  :  *  :  *   0
+R:  W  :  senN1x1M00T  :  *  :  *   0
+R:  Sample  :  senN1x1M00T  :  *  :  *   0
+R:  Finish  :  senN1x1M00T  :  *  :  *   0
+R:  Sense  :  senN1x1M00T  :  *  :  *   0
+R:  N  :  senN1x1M01T  :  *  :  *   0
+R:  E  :  senN1x1M01T  :  *  :  *   0
+R:  S  :  senN1x1M01T  :  *  :  *   0
+R:  W  :  senN1x1M01T  :  *  :  *   0
+R:  Sample  :  senN1x1M01T  :  *  :  *   0
+R:  Finish  :  senN1x1M01T  :  *  :  *   0
+R:  Sense  :  senN1x1M01T  :  *  :  *   0
+R:  N  :  senN1x1M02T  :  *  :  *   0
+R:  E  :  senN1x1M02T  :  *  :  *   0
+R:  S  :  senN1x1M02T  :  *  :  *   0
+R:  W  :  senN1x1M02T  :  *  :  *   0
+R:  Sample  :  senN1x1M02T  :  *  :  *   0
+R:  Finish  :  senN1x1M02T  :  *  :  *   0
+R:  Sense  :  senN1x1M02T  :  *  :  *   0
+R:  N  :  senN1x1M10T  :  *  :  *   0
+R:  E  :  senN1x1M10T  :  *  :  *   0
+R:  S  :  senN1x1M10T  :  *  :  *   0
+R:  W  :  senN1x1M10T  :  *  :  *   0
+R:  Sample  :  senN1x1M10T  :  *  :  *   0
+R:  Finish  :  senN1x1M10T  :  *  :  *   0
+R:  Sense  :  senN1x1M10T  :  *  :  *   0
+R:  N  :  senN1x1M20T  :  *  :  *   0
+R:  E  :  senN1x1M20T  :  *  :  *   0
+R:  S  :  senN1x1M20T  :  *  :  *   0
+R:  W  :  senN1x1M20T  :  *  :  *   0
+R:  Sample  :  senN1x1M20T  :  *  :  *   0
+R:  Finish  :  senN1x1M20T  :  *  :  *   0
+R:  Sense  :  senN1x1M20T  :  *  :  *   0
+R:  N  :  minN1x0M00TR-25  :  *  :  *   -25
+R:  E  :  minN1x0M00TR-25  :  *  :  *   -25
+R:  S  :  minN1x0M00TR-25  :  *  :  *   -25
+R:  W  :  minN1x0M00TR-25  :  *  :  *   -25
+R:  Sample  :  minN1x0M00TR-25  :  *  :  *   -25
+R:  Finish  :  minN1x0M00TR-25  :  *  :  *   -25
+R:  Sense  :  minN1x0M00TR-25  :  *  :  *   -25
+R:  N  :  minN1x0M02TR25  :  *  :  *   25
+R:  E  :  minN1x0M02TR25  :  *  :  *   25
+R:  S  :  minN1x0M02TR25  :  *  :  *   25
+R:  W  :  minN1x0M02TR25  :  *  :  *   25
+R:  Sample  :  minN1x0M02TR25  :  *  :  *   25
+R:  Finish  :  minN1x0M02TR25  :  *  :  *   25
+R:  Sense  :  minN1x0M02TR25  :  *  :  *   25
+R:  N  :  minN1x0M00TR0  :  *  :  *   0
+R:  E  :  minN1x0M00TR0  :  *  :  *   0
+R:  S  :  minN1x0M00TR0  :  *  :  *   0
+R:  W  :  minN1x0M00TR0  :  *  :  *   0
+R:  Sample  :  minN1x0M00TR0  :  *  :  *   0
+R:  Finish  :  minN1x0M00TR0  :  *  :  *   0
+R:  Sense  :  minN1x0M00TR0  :  *  :  *   0
+R:  N  :  minN1x0M10TR-25  :  *  :  *   -25
+R:  E  :  minN1x0M10TR-25  :  *  :  *   -25
+R:  S  :  minN1x0M10TR-25  :  *  :  *   -25
+R:  W  :  minN1x0M10TR-25  :  *  :  *   -25
+R:  Sample  :  minN1x0M10TR-25  :  *  :  *   -25
+R:  Finish  :  minN1x0M10TR-25  :  *  :  *   -25
+R:  Sense  :  minN1x0M10TR-25  :  *  :  *   -25
+R:  N  :  minN1x0M20TR-25  :  *  :  *   -25
+R:  E  :  minN1x0M20TR-25  :  *  :  *   -25
+R:  S  :  minN1x0M20TR-25  :  *  :  *   -25
+R:  W  :  minN1x0M20TR-25  :  *  :  *   -25
+R:  Sample  :  minN1x0M20TR-25  :  *  :  *   -25
+R:  Finish  :  minN1x0M20TR-25  :  *  :  *   -25
+R:  Sense  :  minN1x0M20TR-25  :  *  :  *   -25
+R:  N  :  minN0x1M00TR-25  :  *  :  *   -25
+R:  E  :  minN0x1M00TR-25  :  *  :  *   -25
+R:  S  :  minN0x1M00TR-25  :  *  :  *   -25
+R:  W  :  minN0x1M00TR-25  :  *  :  *   -25
+R:  Sample  :  minN0x1M00TR-25  :  *  :  *   -25
+R:  Finish  :  minN0x1M00TR-25  :  *  :  *   -25
+R:  Sense  :  minN0x1M00TR-25  :  *  :  *   -25
+R:  N  :  minN0x1M01TR-25  :  *  :  *   -25
+R:  E  :  minN0x1M01TR-25  :  *  :  *   -25
+R:  S  :  minN0x1M01TR-25  :  *  :  *   -25
+R:  W  :  minN0x1M01TR-25  :  *  :  *   -25
+R:  Sample  :  minN0x1M01TR-25  :  *  :  *   -25
+R:  Finish  :  minN0x1M01TR-25  :  *  :  *   -25
+R:  Sense  :  minN0x1M01TR-25  :  *  :  *   -25
+R:  N  :  minN0x1M02TR-25  :  *  :  *   -25
+R:  E  :  minN0x1M02TR-25  :  *  :  *   -25
+R:  S  :  minN0x1M02TR-25  :  *  :  *   -25
+R:  W  :  minN0x1M02TR-25  :  *  :  *   -25
+R:  Sample  :  minN0x1M02TR-25  :  *  :  *   -25
+R:  Finish  :  minN0x1M02TR-25  :  *  :  *   -25
+R:  Sense  :  minN0x1M02TR-25  :  *  :  *   -25
+R:  N  :  minN0x1M20TR25  :  *  :  *   25
+R:  E  :  minN0x1M20TR25  :  *  :  *   25
+R:  S  :  minN0x1M20TR25  :  *  :  *   25
+R:  W  :  minN0x1M20TR25  :  *  :  *   25
+R:  Sample  :  minN0x1M20TR25  :  *  :  *   25
+R:  Finish  :  minN0x1M20TR25  :  *  :  *   25
+R:  Sense  :  minN0x1M20TR25  :  *  :  *   25
+R:  N  :  minN0x1M00TR0  :  *  :  *   0
+R:  E  :  minN0x1M00TR0  :  *  :  *   0
+R:  S  :  minN0x1M00TR0  :  *  :  *   0
+R:  W  :  minN0x1M00TR0  :  *  :  *   0
+R:  Sample  :  minN0x1M00TR0  :  *  :  *   0
+R:  Finish  :  minN0x1M00TR0  :  *  :  *   0
+R:  Sense  :  minN0x1M00TR0  :  *  :  *   0

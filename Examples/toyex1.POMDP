@@ -1,0 +1,34 @@
+discount: 0.5
+values: reward
+states: s0 s1 s2 s3
+
+actions: a b
+
+observations: o0 o1 o2 o3
+
+start include: s0
+
+T: a : s0 : s1 0.5
+T: a : s0 : s2 0.5
+T: b : s0 : s3 1.0
+T: a : s1 : s1 1.0
+T: b : s1 : s1 1.0
+T: a : s2 : s2 1.0
+T: b : s2 : s2 1.0
+T: a : s3 : s3 1.0
+T: b : s3 : s3 1.0
+
+O: * : s0 : o0 1.0
+O: * : s1 : o1 1.0
+O: * : s2 : o2 1.0
+O: * : s3 : o3 1.0
+
+R: a : s0 : s1 : * 1.0
+R: a : s0 : s2 : * 2.0
+R: b : s0 : s3 : * 0.0
+R: a : s1 : s1 : * 2.0
+R: b : s1 : s1 : * 0.0
+R: a : s2 : s2 : * 1.0
+R: a : s3 : s3 : * 4.0
+R: b : s2 : s2 : * 0.0
+R: b : s3 : s3 : * 0.0

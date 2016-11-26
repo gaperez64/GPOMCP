@@ -1,0 +1,41 @@
+discount: 0.5
+values: reward
+states: fail t1 t2 tp1 tp2 mnd fin
+
+actions: sense m1 m2 ms
+
+observations: o0 o1 o2 omnd ofail ofin
+
+start: 0.0 0.9 0.1 0.0 0.0 0.0 0.0
+
+T: * : fail : fail 1.0
+T: * : fin : fin 1.0
+T: * : tp1 : mnd 1.0
+T: * : tp2 : mnd 1.0
+T: * : mnd : fin 1.0
+T: sense : t1 : tp1 1.0
+T: m1 : t1 : mnd 1.0
+T: m2 : t1 : fail 1.0
+T: ms : t1 : mnd 0.60000
+T: ms : t1 : t1 0.40000
+T: sense : t2 : tp2 1.0
+T: m1 : t2 : fail 1.0
+T: m2 : t2 : mnd 1.0
+T: ms : t2 : t2 0.40000
+T: ms : t2 : mnd 0.60000
+
+O: * : fail : ofail 1.0
+O: * : fin : ofin 1.0
+O: * : t1 : o0 1.0
+O: * : t2 : o0 1.0
+O: * : tp1 : o1 1.0
+O: * : tp2 : o2 1.0
+O: * : mnd : omnd 1.0
+
+R: * : fail : * : * 0.0
+R: * : fin : * : * 0.0
+R: * : t1 : * : * 0.0
+R: * : t2 : * : * 0.0
+R: * : tp1 : * : * 0.0
+R: * : tp2 : * : * 0.0
+R: * : mnd : fin : * 100.0
